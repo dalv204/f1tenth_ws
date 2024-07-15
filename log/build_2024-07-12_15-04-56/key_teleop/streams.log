@@ -1,0 +1,21 @@
+[1.737s] Invoking command in '/home/dalv204/sandbox/f1tenth_ws/src/f1tenth_system/teleop_tools/key_teleop': PYTHONPATH=/home/dalv204/sandbox/f1tenth_ws/build/key_teleop/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/dalv204/sandbox/f1tenth_ws/install/key_teleop/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base ../../../../build/key_teleop build --build-base /home/dalv204/sandbox/f1tenth_ws/build/key_teleop/build install --record /home/dalv204/sandbox/f1tenth_ws/build/key_teleop/install.log --install-scripts $base/lib/key_teleop --single-version-externally-managed install_data
+[2.252s] running egg_info
+[2.253s] writing ../../../../build/key_teleop/key_teleop.egg-info/PKG-INFO
+[2.253s] writing dependency_links to ../../../../build/key_teleop/key_teleop.egg-info/dependency_links.txt
+[2.256s] writing entry points to ../../../../build/key_teleop/key_teleop.egg-info/entry_points.txt
+[2.257s] writing requirements to ../../../../build/key_teleop/key_teleop.egg-info/requires.txt
+[2.257s] writing top-level names to ../../../../build/key_teleop/key_teleop.egg-info/top_level.txt
+[2.272s] reading manifest file '../../../../build/key_teleop/key_teleop.egg-info/SOURCES.txt'
+[2.273s] writing manifest file '../../../../build/key_teleop/key_teleop.egg-info/SOURCES.txt'
+[2.274s] running build
+[2.274s] running build_py
+[2.275s] running install
+[2.276s] running install_lib
+[2.285s] running install_data
+[2.286s] running install_egg_info
+[2.286s] removing '/home/dalv204/sandbox/f1tenth_ws/install/key_teleop/lib/python3.8/site-packages/key_teleop-0.3.0-py3.8.egg-info' (and everything under it)
+[2.286s] Copying ../../../../build/key_teleop/key_teleop.egg-info to /home/dalv204/sandbox/f1tenth_ws/install/key_teleop/lib/python3.8/site-packages/key_teleop-0.3.0-py3.8.egg-info
+[2.286s] running install_scripts
+[2.325s] Installing key_teleop script to /home/dalv204/sandbox/f1tenth_ws/install/key_teleop/lib/key_teleop
+[2.326s] writing list of installed files to '/home/dalv204/sandbox/f1tenth_ws/build/key_teleop/install.log'
+[2.831s] Invoked command in '/home/dalv204/sandbox/f1tenth_ws/src/f1tenth_system/teleop_tools/key_teleop' returned '0': PYTHONPATH=/home/dalv204/sandbox/f1tenth_ws/build/key_teleop/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/dalv204/sandbox/f1tenth_ws/install/key_teleop/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base ../../../../build/key_teleop build --build-base /home/dalv204/sandbox/f1tenth_ws/build/key_teleop/build install --record /home/dalv204/sandbox/f1tenth_ws/build/key_teleop/install.log --install-scripts $base/lib/key_teleop --single-version-externally-managed install_data

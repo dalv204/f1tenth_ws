@@ -1,0 +1,15 @@
+/home/dalv204/sandbox/f1tenth_ws/install/vesc/share/ament_index/resource_index/package_run_dependencies/vesc
+/home/dalv204/sandbox/f1tenth_ws/install/vesc/share/ament_index/resource_index/parent_prefix_path/vesc
+/home/dalv204/sandbox/f1tenth_ws/install/vesc/share/vesc/environment/ament_prefix_path.sh
+/home/dalv204/sandbox/f1tenth_ws/install/vesc/share/vesc/environment/ament_prefix_path.dsv
+/home/dalv204/sandbox/f1tenth_ws/install/vesc/share/vesc/environment/path.sh
+/home/dalv204/sandbox/f1tenth_ws/install/vesc/share/vesc/environment/path.dsv
+/home/dalv204/sandbox/f1tenth_ws/install/vesc/share/vesc/local_setup.bash
+/home/dalv204/sandbox/f1tenth_ws/install/vesc/share/vesc/local_setup.sh
+/home/dalv204/sandbox/f1tenth_ws/install/vesc/share/vesc/local_setup.zsh
+/home/dalv204/sandbox/f1tenth_ws/install/vesc/share/vesc/local_setup.dsv
+/home/dalv204/sandbox/f1tenth_ws/install/vesc/share/vesc/package.dsv
+/home/dalv204/sandbox/f1tenth_ws/install/vesc/share/ament_index/resource_index/packages/vesc
+/home/dalv204/sandbox/f1tenth_ws/install/vesc/share/vesc/cmake/vescConfig.cmake
+/home/dalv204/sandbox/f1tenth_ws/install/vesc/share/vesc/cmake/vescConfig-version.cmake
+/home/dalv204/sandbox/f1tenth_ws/install/vesc/share/vesc/package.xml

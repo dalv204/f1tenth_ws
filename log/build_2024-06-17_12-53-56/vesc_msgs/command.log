@@ -1,0 +1,6 @@
+Invoking command in '/home/dalv204/sandbox/f1tenth_ws/build/vesc_msgs': /usr/bin/cmake /home/dalv204/sandbox/f1tenth_ws/src/f1tenth_system/vesc/vesc_msgs -DCMAKE_INSTALL_PREFIX=/home/dalv204/sandbox/f1tenth_ws/install/vesc_msgs
+Invoked command in '/home/dalv204/sandbox/f1tenth_ws/build/vesc_msgs' returned '0': /usr/bin/cmake /home/dalv204/sandbox/f1tenth_ws/src/f1tenth_system/vesc/vesc_msgs -DCMAKE_INSTALL_PREFIX=/home/dalv204/sandbox/f1tenth_ws/install/vesc_msgs
+Invoking command in '/home/dalv204/sandbox/f1tenth_ws/build/vesc_msgs': /usr/bin/cmake --build /home/dalv204/sandbox/f1tenth_ws/build/vesc_msgs -- -j6 -l6
+Invoked command in '/home/dalv204/sandbox/f1tenth_ws/build/vesc_msgs' returned '0': /usr/bin/cmake --build /home/dalv204/sandbox/f1tenth_ws/build/vesc_msgs -- -j6 -l6
+Invoking command in '/home/dalv204/sandbox/f1tenth_ws/build/vesc_msgs': /usr/bin/cmake --install /home/dalv204/sandbox/f1tenth_ws/build/vesc_msgs
+Invoked command in '/home/dalv204/sandbox/f1tenth_ws/build/vesc_msgs' returned '0': /usr/bin/cmake --install /home/dalv204/sandbox/f1tenth_ws/build/vesc_msgs

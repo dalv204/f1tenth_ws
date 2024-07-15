@@ -1,0 +1,2 @@
+Invoking command in '/home/dalv204/sandbox/f1tenth_ws/build/urg_node': /usr/bin/cmake /home/dalv204/sandbox/f1tenth_ws/src/urg_node -DCMAKE_INSTALL_PREFIX=/home/dalv204/sandbox/f1tenth_ws/install/urg_node
+Invoked command in '/home/dalv204/sandbox/f1tenth_ws/build/urg_node' returned '1': /usr/bin/cmake /home/dalv204/sandbox/f1tenth_ws/src/urg_node -DCMAKE_INSTALL_PREFIX=/home/dalv204/sandbox/f1tenth_ws/install/urg_node

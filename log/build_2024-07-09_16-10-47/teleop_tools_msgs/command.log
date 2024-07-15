@@ -1,0 +1,4 @@
+Invoking command in '/home/dalv204/sandbox/f1tenth_ws/build/teleop_tools_msgs': /usr/bin/cmake --build /home/dalv204/sandbox/f1tenth_ws/build/teleop_tools_msgs -- -j6 -l6
+Invoked command in '/home/dalv204/sandbox/f1tenth_ws/build/teleop_tools_msgs' returned '0': /usr/bin/cmake --build /home/dalv204/sandbox/f1tenth_ws/build/teleop_tools_msgs -- -j6 -l6
+Invoking command in '/home/dalv204/sandbox/f1tenth_ws/build/teleop_tools_msgs': /usr/bin/cmake --install /home/dalv204/sandbox/f1tenth_ws/build/teleop_tools_msgs
+Invoked command in '/home/dalv204/sandbox/f1tenth_ws/build/teleop_tools_msgs' returned '0': /usr/bin/cmake --install /home/dalv204/sandbox/f1tenth_ws/build/teleop_tools_msgs

@@ -1,0 +1,36 @@
+[0.071s] Invoking command in '/home/dalv204/sandbox/f1tenth_ws/build/wall_follow': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/dalv204/sandbox/f1tenth_ws/install/f1tenth_stack:/home/dalv204/sandbox/f1tenth_ws/install/joy_teleop:/home/dalv204/sandbox/f1tenth_ws/install/particle_filter:/home/dalv204/sandbox/f1tenth_ws/install/mouse_teleop:/home/dalv204/sandbox/f1tenth_ws/install/key_teleop /usr/bin/cmake --build /home/dalv204/sandbox/f1tenth_ws/build/wall_follow -- -j6 -l6
+[0.113s] make: Warning: File 'Makefile' has modification time 1720692011 s in the future
+[0.186s] make[1]: Warning: File 'CMakeFiles/Makefile2' has modification time 1720692011 s in the future
+[0.192s] make[2]: Warning: File 'CMakeFiles/wall_follow_node.dir/flags.make' has modification time 1720692011 s in the future
+[0.231s] make[2]: warning:  Clock skew detected.  Your build may be incomplete.
+[0.239s] make[2]: Warning: File 'CMakeFiles/wall_follow_node.dir/flags.make' has modification time 1720692011 s in the future
+[0.271s] make[2]: warning:  Clock skew detected.  Your build may be incomplete.
+[0.296s] [100%] Built target wall_follow_node
+[0.296s] make[1]: warning:  Clock skew detected.  Your build may be incomplete.
+[0.316s] make: warning:  Clock skew detected.  Your build may be incomplete.
+[0.321s] Invoked command in '/home/dalv204/sandbox/f1tenth_ws/build/wall_follow' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/dalv204/sandbox/f1tenth_ws/install/f1tenth_stack:/home/dalv204/sandbox/f1tenth_ws/install/joy_teleop:/home/dalv204/sandbox/f1tenth_ws/install/particle_filter:/home/dalv204/sandbox/f1tenth_ws/install/mouse_teleop:/home/dalv204/sandbox/f1tenth_ws/install/key_teleop /usr/bin/cmake --build /home/dalv204/sandbox/f1tenth_ws/build/wall_follow -- -j6 -l6
+[0.416s] Invoking command in '/home/dalv204/sandbox/f1tenth_ws/build/wall_follow': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/dalv204/sandbox/f1tenth_ws/install/f1tenth_stack:/home/dalv204/sandbox/f1tenth_ws/install/joy_teleop:/home/dalv204/sandbox/f1tenth_ws/install/particle_filter:/home/dalv204/sandbox/f1tenth_ws/install/mouse_teleop:/home/dalv204/sandbox/f1tenth_ws/install/key_teleop /usr/bin/cmake --install /home/dalv204/sandbox/f1tenth_ws/build/wall_follow
+[0.443s] -- Install configuration: ""
+[0.445s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/wall_follow/lib/wall_follow/wall_follow_node
+[0.446s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/wall_follow/share/wall_follow/environment/pythonpath.sh
+[0.447s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/wall_follow/share/wall_follow/environment/pythonpath.dsv
+[0.447s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/wall_follow/lib/python3.8/site-packages/wall_follow
+[0.449s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/wall_follow/lib/python3.8/site-packages/wall_follow/__init__.py
+[0.523s] Listing '/home/dalv204/sandbox/f1tenth_ws/install/wall_follow/lib/python3.8/site-packages/wall_follow'...
+[0.537s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/wall_follow/lib/wall_follow/wall_follow_node.py
+[0.538s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/wall_follow/share/ament_index/resource_index/package_run_dependencies/wall_follow
+[0.538s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/wall_follow/share/ament_index/resource_index/parent_prefix_path/wall_follow
+[0.538s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/wall_follow/share/wall_follow/environment/ament_prefix_path.sh
+[0.538s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/wall_follow/share/wall_follow/environment/ament_prefix_path.dsv
+[0.539s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/wall_follow/share/wall_follow/environment/path.sh
+[0.540s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/wall_follow/share/wall_follow/environment/path.dsv
+[0.540s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/wall_follow/share/wall_follow/local_setup.bash
+[0.540s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/wall_follow/share/wall_follow/local_setup.sh
+[0.540s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/wall_follow/share/wall_follow/local_setup.zsh
+[0.540s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/wall_follow/share/wall_follow/local_setup.dsv
+[0.541s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/wall_follow/share/wall_follow/package.dsv
+[0.542s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/wall_follow/share/ament_index/resource_index/packages/wall_follow
+[0.544s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/wall_follow/share/wall_follow/cmake/wall_followConfig.cmake
+[0.550s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/wall_follow/share/wall_follow/cmake/wall_followConfig-version.cmake
+[0.554s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/wall_follow/share/wall_follow/package.xml
+[0.558s] Invoked command in '/home/dalv204/sandbox/f1tenth_ws/build/wall_follow' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/dalv204/sandbox/f1tenth_ws/install/f1tenth_stack:/home/dalv204/sandbox/f1tenth_ws/install/joy_teleop:/home/dalv204/sandbox/f1tenth_ws/install/particle_filter:/home/dalv204/sandbox/f1tenth_ws/install/mouse_teleop:/home/dalv204/sandbox/f1tenth_ws/install/key_teleop /usr/bin/cmake --install /home/dalv204/sandbox/f1tenth_ws/build/wall_follow
