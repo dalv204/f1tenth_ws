@@ -1,0 +1,210 @@
+[0.000000] (-) TimerEvent: {}
+[0.000658] (pure_pursuit) JobQueued: {'identifier': 'pure_pursuit', 'dependencies': OrderedDict()}
+[0.000725] (pure_pursuit) JobStarted: {'identifier': 'pure_pursuit'}
+[0.012512] (pure_pursuit) JobProgress: {'identifier': 'pure_pursuit', 'progress': 'cmake'}
+[0.012774] (pure_pursuit) Command: {'cmd': ['/usr/bin/cmake', '/home/dalv204/f1tenth_ws/src/pure_pursuit/pure_pursuit', '-DCMAKE_INSTALL_PREFIX=/home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit'], 'cwd': '/home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'dalv204'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/x86_64-linux-gnu:/opt/ros/foxy/lib'), ('WT_PROFILE_ID', '{4dd1e689-b517-5f39-947d-78e8a8bdf958}'), ('MOTD_SHOWN', 'update-motd'), ('HOME', '/home/dalv204'), ('OLDPWD', '/home/dalv204/f1tenth_ws'), ('ROS_PYTHON_VERSION', '3'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('WSL_DISTRO_NAME', 'Ubuntu-20.04'), ('WAYLAND_DISPLAY', 'wayland-0'), ('ROS_DISTRO', 'foxy'), ('LOGNAME', 'dalv204'), ('NAME', 'dlp-204'), ('WSL_INTEROP', '/run/WSL/836_interop'), ('PULSE_SERVER', 'unix:/mnt/wslg/PulseServer'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'xterm-256color'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/foxy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Program Files (x86)/VMware/VMware Player/bin/:/mnt/c/Program Files/Python312/Scripts/:/mnt/c/Program Files/Python312/:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA NvDLISR:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files (x86)/Arduino/hardware/tools/avr/bin:/mnt/c/Program Files (x86)/GnuWin32/bin:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/Calibre2/:/mnt/c/Program Files/Microsoft SQL Server/Client SDK/ODBC/170/Tools/Binn/:/mnt/c/Program Files (x86)/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/150/DTS/Binn/:/mnt/c/Program Files (x86)/Windows Kits/8.1/Windows Performance Toolkit/:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/ffmpeg/ffmpeg-6.1.1-essentials_build/bin/:/mnt/c/Program Files/LAStools/bin/:/mnt/c/Users/diego/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0/LocalCache/local-packages/Python312/Scripts:/mnt/c/Program Files/PuTTY/:/mnt/c/Users/diego/AppData/Local/Programs/Python/Launcher/:/mnt/c/Users/diego/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/diego/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/diego/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Users/diego/.dotnet/tools:/mnt/c/Program Files/ffmpeg/ffmpeg-6.1.1-essentials_build/bin/:/mnt/c/Program Files/LAStools/bin/:/mnt/c/Users/diego/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0/LocalCache/local-packages/Python312/Scripts:/mnt/c/Program Files/JetBrains/PyCharm Community Edition 2023.3.3/bin:/snap/bin'), ('WT_SESSION', '253cc6f9-0752-4c14-ad7c-6e89a0a2e11b'), ('XDG_RUNTIME_DIR', '/run/user/1000/'), ('DISPLAY', ':0'), ('LANG', 'en_US.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('AMENT_PREFIX_PATH', '/opt/ros/foxy'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('PWD', '/home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit'), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/foxy/lib/python3.8/site-packages'), ('COLCON', '1'), ('WSL2_GUI_APPS_ENABLED', '1'), ('HOSTTYPE', 'x86_64'), ('WSLENV', 'WT_SESSION:WT_PROFILE_ID:'), ('CMAKE_PREFIX_PATH', '/opt/ros/foxy')]), 'shell': False}
+[0.099249] (-) TimerEvent: {}
+[0.199739] (-) TimerEvent: {}
+[0.293990] (pure_pursuit) StdoutLine: {'line': b'-- The C compiler identification is GNU 9.4.0\n'}
+[0.299816] (-) TimerEvent: {}
+[0.400081] (-) TimerEvent: {}
+[0.500477] (-) TimerEvent: {}
+[0.600983] (-) TimerEvent: {}
+[0.614399] (pure_pursuit) StdoutLine: {'line': b'-- The CXX compiler identification is GNU 9.4.0\n'}
+[0.701143] (-) TimerEvent: {}
+[0.743063] (pure_pursuit) StdoutLine: {'line': b'-- Check for working C compiler: /usr/bin/cc\n'}
+[0.801470] (-) TimerEvent: {}
+[0.889267] (pure_pursuit) StdoutLine: {'line': b'-- Check for working C compiler: /usr/bin/cc -- works\n'}
+[0.892255] (pure_pursuit) StdoutLine: {'line': b'-- Detecting C compiler ABI info\n'}
+[0.901614] (-) TimerEvent: {}
+[1.002058] (-) TimerEvent: {}
+[1.029740] (pure_pursuit) StdoutLine: {'line': b'-- Detecting C compiler ABI info - done\n'}
+[1.037514] (pure_pursuit) StdoutLine: {'line': b'-- Detecting C compile features\n'}
+[1.038114] (pure_pursuit) StdoutLine: {'line': b'-- Detecting C compile features - done\n'}
+[1.041353] (pure_pursuit) StdoutLine: {'line': b'-- Check for working CXX compiler: /usr/bin/c++\n'}
+[1.102173] (-) TimerEvent: {}
+[1.189801] (pure_pursuit) StdoutLine: {'line': b'-- Check for working CXX compiler: /usr/bin/c++ -- works\n'}
+[1.190460] (pure_pursuit) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info\n'}
+[1.202324] (-) TimerEvent: {}
+[1.302767] (-) TimerEvent: {}
+[1.332863] (pure_pursuit) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info - done\n'}
+[1.339898] (pure_pursuit) StdoutLine: {'line': b'-- Detecting CXX compile features\n'}
+[1.340219] (pure_pursuit) StdoutLine: {'line': b'-- Detecting CXX compile features - done\n'}
+[1.346701] (pure_pursuit) StdoutLine: {'line': b'-- Found ament_cmake: 0.9.12 (/opt/ros/foxy/share/ament_cmake/cmake)\n'}
+[1.371194] (pure_pursuit) StdoutLine: {'line': b'-- Found PythonInterp: /usr/bin/python3 (found suitable version "3.8.10", minimum required is "3") \n'}
+[1.371501] (pure_pursuit) StdoutLine: {'line': b'-- Using PYTHON_EXECUTABLE: /usr/bin/python3\n'}
+[1.402957] (-) TimerEvent: {}
+[1.503357] (-) TimerEvent: {}
+[1.528673] (pure_pursuit) StdoutLine: {'line': b'-- Found rclcpp: 2.4.3 (/opt/ros/foxy/share/rclcpp/cmake)\n'}
+[1.603553] (-) TimerEvent: {}
+[1.703980] (-) TimerEvent: {}
+[1.760192] (pure_pursuit) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c\n'}
+[1.769327] (pure_pursuit) StdoutLine: {'line': b'-- Found rosidl_adapter: 1.3.1 (/opt/ros/foxy/share/rosidl_adapter/cmake)\n'}
+[1.804068] (-) TimerEvent: {}
+[1.904427] (-) TimerEvent: {}
+[2.004902] (-) TimerEvent: {}
+[2.105381] (-) TimerEvent: {}
+[2.205782] (-) TimerEvent: {}
+[2.306210] (-) TimerEvent: {}
+[2.406599] (-) TimerEvent: {}
+[2.506957] (-) TimerEvent: {}
+[2.607366] (-) TimerEvent: {}
+[2.707725] (-) TimerEvent: {}
+[2.808125] (-) TimerEvent: {}
+[2.908516] (-) TimerEvent: {}
+[3.000800] (pure_pursuit) StdoutLine: {'line': b'-- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "1.1.1f")  \n'}
+[3.009105] (-) TimerEvent: {}
+[3.109508] (-) TimerEvent: {}
+[3.209956] (-) TimerEvent: {}
+[3.310339] (-) TimerEvent: {}
+[3.410756] (-) TimerEvent: {}
+[3.511164] (-) TimerEvent: {}
+[3.611521] (-) TimerEvent: {}
+[3.711916] (-) TimerEvent: {}
+[3.812294] (-) TimerEvent: {}
+[3.912661] (-) TimerEvent: {}
+[4.013122] (-) TimerEvent: {}
+[4.113480] (-) TimerEvent: {}
+[4.213903] (-) TimerEvent: {}
+[4.266475] (pure_pursuit) StdoutLine: {'line': b'-- Found FastRTPS: /opt/ros/foxy/include  \n'}
+[4.314040] (-) TimerEvent: {}
+[4.414461] (-) TimerEvent: {}
+[4.514864] (-) TimerEvent: {}
+[4.615241] (-) TimerEvent: {}
+[4.715712] (-) TimerEvent: {}
+[4.816221] (-) TimerEvent: {}
+[4.916670] (-) TimerEvent: {}
+[5.017034] (-) TimerEvent: {}
+[5.117425] (-) TimerEvent: {}
+[5.217870] (-) TimerEvent: {}
+[5.318272] (-) TimerEvent: {}
+[5.418793] (-) TimerEvent: {}
+[5.519214] (-) TimerEvent: {}
+[5.619711] (-) TimerEvent: {}
+[5.720131] (-) TimerEvent: {}
+[5.820611] (-) TimerEvent: {}
+[5.920976] (-) TimerEvent: {}
+[6.021441] (-) TimerEvent: {}
+[6.121922] (-) TimerEvent: {}
+[6.222313] (-) TimerEvent: {}
+[6.322679] (-) TimerEvent: {}
+[6.423063] (-) TimerEvent: {}
+[6.523437] (-) TimerEvent: {}
+[6.541823] (pure_pursuit) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp\n'}
+[6.608435] (pure_pursuit) StdoutLine: {'line': b'-- Found rmw_implementation_cmake: 1.0.4 (/opt/ros/foxy/share/rmw_implementation_cmake/cmake)\n'}
+[6.610448] (pure_pursuit) StdoutLine: {'line': b"-- Using RMW implementation 'rmw_fastrtps_cpp' as default\n"}
+[6.612451] (pure_pursuit) StdoutLine: {'line': b'-- Looking for pthread.h\n'}
+[6.623544] (-) TimerEvent: {}
+[6.723939] (-) TimerEvent: {}
+[6.756458] (pure_pursuit) StdoutLine: {'line': b'-- Looking for pthread.h - found\n'}
+[6.756749] (pure_pursuit) StdoutLine: {'line': b'-- Performing Test CMAKE_HAVE_LIBC_PTHREAD\n'}
+[6.824063] (-) TimerEvent: {}
+[6.904505] (pure_pursuit) StdoutLine: {'line': b'-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed\n'}
+[6.904766] (pure_pursuit) StdoutLine: {'line': b'-- Looking for pthread_create in pthreads\n'}
+[6.924214] (-) TimerEvent: {}
+[7.024686] (-) TimerEvent: {}
+[7.046859] (pure_pursuit) StdoutLine: {'line': b'-- Looking for pthread_create in pthreads - not found\n'}
+[7.047199] (pure_pursuit) StdoutLine: {'line': b'-- Looking for pthread_create in pthread\n'}
+[7.124825] (-) TimerEvent: {}
+[7.174879] (pure_pursuit) StdoutLine: {'line': b'-- Looking for pthread_create in pthread - found\n'}
+[7.175665] (pure_pursuit) StdoutLine: {'line': b'-- Found Threads: TRUE  \n'}
+[7.224943] (-) TimerEvent: {}
+[7.309790] (pure_pursuit) StdoutLine: {'line': b'-- Found rclpy: 1.0.13 (/opt/ros/foxy/share/rclpy/cmake)\n'}
+[7.312360] (pure_pursuit) StdoutLine: {'line': b'-- Found geometry_msgs: 2.0.5 (/opt/ros/foxy/share/geometry_msgs/cmake)\n'}
+[7.325064] (-) TimerEvent: {}
+[7.342947] (pure_pursuit) StdoutLine: {'line': b'-- Found nav_msgs: 2.0.5 (/opt/ros/foxy/share/nav_msgs/cmake)\n'}
+[7.397569] (pure_pursuit) StdoutLine: {'line': b'-- Found ackermann_msgs: 2.0.2 (/opt/ros/foxy/share/ackermann_msgs/cmake)\n'}
+[7.425168] (-) TimerEvent: {}
+[7.427186] (pure_pursuit) StdoutLine: {'line': b'-- Found sensor_msgs: 2.0.5 (/opt/ros/foxy/share/sensor_msgs/cmake)\n'}
+[7.482956] (pure_pursuit) StdoutLine: {'line': b'-- Found visualization_msgs: 2.0.5 (/opt/ros/foxy/share/visualization_msgs/cmake)\n'}
+[7.525346] (-) TimerEvent: {}
+[7.543748] (pure_pursuit) StdoutLine: {'line': b'-- Found tf2_ros: 0.13.14 (/opt/ros/foxy/share/tf2_ros/cmake)\n'}
+[7.625541] (-) TimerEvent: {}
+[7.726629] (-) TimerEvent: {}
+[7.827072] (-) TimerEvent: {}
+[7.854771] (pure_pursuit) StdoutLine: {'line': b'-- Found ament_lint_auto: 0.9.8 (/opt/ros/foxy/share/ament_lint_auto/cmake)\n'}
+[7.924566] (pure_pursuit) StdoutLine: {'line': b"-- Added test 'copyright' to check source files copyright and LICENSE\n"}
+[7.926008] (pure_pursuit) StdoutLine: {'line': b"-- Added test 'cppcheck' to perform static code analysis on C / C++ code\n"}
+[7.926384] (pure_pursuit) StdoutLine: {'line': b'-- Configured cppcheck include dirs: /home/dalv204/f1tenth_ws/src/pure_pursuit/pure_pursuit/include\n'}
+[7.926582] (pure_pursuit) StdoutLine: {'line': b'-- Configured cppcheck exclude dirs and/or files: \n'}
+[7.927167] (-) TimerEvent: {}
+[7.927813] (pure_pursuit) StdoutLine: {'line': b"-- Added test 'cpplint' to check C / C++ code against the Google style\n"}
+[7.927982] (pure_pursuit) StdoutLine: {'line': b'-- Configured cpplint exclude dirs and/or files: \n'}
+[7.928862] (pure_pursuit) StdoutLine: {'line': b"-- Added test 'flake8' to check Python code syntax and style conventions\n"}
+[7.930284] (pure_pursuit) StdoutLine: {'line': b"-- Added test 'lint_cmake' to check CMake code style\n"}
+[7.931576] (pure_pursuit) StdoutLine: {'line': b"-- Added test 'pep257' to check Python code against some of the style conventions in PEP 257\n"}
+[7.933629] (pure_pursuit) StdoutLine: {'line': b"-- Added test 'uncrustify' to check C / C++ code style\n"}
+[7.933790] (pure_pursuit) StdoutLine: {'line': b'-- Configured uncrustify additional arguments: \n'}
+[7.934782] (pure_pursuit) StdoutLine: {'line': b"-- Added test 'xmllint' to check XML markup files\n"}
+[7.939422] (pure_pursuit) StdoutLine: {'line': b'-- Configuring done\n'}
+[7.950799] (pure_pursuit) StdoutLine: {'line': b'-- Generating done\n'}
+[7.952278] (pure_pursuit) StdoutLine: {'line': b'-- Build files have been written to: /home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit\n'}
+[7.961345] (pure_pursuit) CommandEnded: {'returncode': 0}
+[7.964316] (pure_pursuit) JobProgress: {'identifier': 'pure_pursuit', 'progress': 'build'}
+[7.964669] (pure_pursuit) Command: {'cmd': ['/usr/bin/cmake', '--build', '/home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit', '--', '-j16', '-l16'], 'cwd': '/home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'dalv204'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/x86_64-linux-gnu:/opt/ros/foxy/lib'), ('WT_PROFILE_ID', '{4dd1e689-b517-5f39-947d-78e8a8bdf958}'), ('MOTD_SHOWN', 'update-motd'), ('HOME', '/home/dalv204'), ('OLDPWD', '/home/dalv204/f1tenth_ws'), ('ROS_PYTHON_VERSION', '3'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('WSL_DISTRO_NAME', 'Ubuntu-20.04'), ('WAYLAND_DISPLAY', 'wayland-0'), ('ROS_DISTRO', 'foxy'), ('LOGNAME', 'dalv204'), ('NAME', 'dlp-204'), ('WSL_INTEROP', '/run/WSL/836_interop'), ('PULSE_SERVER', 'unix:/mnt/wslg/PulseServer'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'xterm-256color'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/foxy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Program Files (x86)/VMware/VMware Player/bin/:/mnt/c/Program Files/Python312/Scripts/:/mnt/c/Program Files/Python312/:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA NvDLISR:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files (x86)/Arduino/hardware/tools/avr/bin:/mnt/c/Program Files (x86)/GnuWin32/bin:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/Calibre2/:/mnt/c/Program Files/Microsoft SQL Server/Client SDK/ODBC/170/Tools/Binn/:/mnt/c/Program Files (x86)/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/150/DTS/Binn/:/mnt/c/Program Files (x86)/Windows Kits/8.1/Windows Performance Toolkit/:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/ffmpeg/ffmpeg-6.1.1-essentials_build/bin/:/mnt/c/Program Files/LAStools/bin/:/mnt/c/Users/diego/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0/LocalCache/local-packages/Python312/Scripts:/mnt/c/Program Files/PuTTY/:/mnt/c/Users/diego/AppData/Local/Programs/Python/Launcher/:/mnt/c/Users/diego/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/diego/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/diego/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Users/diego/.dotnet/tools:/mnt/c/Program Files/ffmpeg/ffmpeg-6.1.1-essentials_build/bin/:/mnt/c/Program Files/LAStools/bin/:/mnt/c/Users/diego/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0/LocalCache/local-packages/Python312/Scripts:/mnt/c/Program Files/JetBrains/PyCharm Community Edition 2023.3.3/bin:/snap/bin'), ('WT_SESSION', '253cc6f9-0752-4c14-ad7c-6e89a0a2e11b'), ('XDG_RUNTIME_DIR', '/run/user/1000/'), ('DISPLAY', ':0'), ('LANG', 'en_US.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('AMENT_PREFIX_PATH', '/opt/ros/foxy'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('PWD', '/home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit'), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/foxy/lib/python3.8/site-packages'), ('COLCON', '1'), ('WSL2_GUI_APPS_ENABLED', '1'), ('HOSTTYPE', 'x86_64'), ('WSLENV', 'WT_SESSION:WT_PROFILE_ID:'), ('CMAKE_PREFIX_PATH', '/opt/ros/foxy')]), 'shell': False}
+[7.996789] (pure_pursuit) StdoutLine: {'line': b'\x1b[35m\x1b[1mScanning dependencies of target pure_pursuit_node\x1b[0m\n'}
+[8.027870] (-) TimerEvent: {}
+[8.128213] (-) TimerEvent: {}
+[8.144298] (pure_pursuit) StdoutLine: {'line': b'[ 50%] \x1b[32mBuilding CXX object CMakeFiles/pure_pursuit_node.dir/src/pure_pursuit_node.cpp.o\x1b[0m\n'}
+[8.228381] (-) TimerEvent: {}
+[8.329203] (-) TimerEvent: {}
+[8.429870] (-) TimerEvent: {}
+[8.530346] (-) TimerEvent: {}
+[8.630847] (-) TimerEvent: {}
+[8.731374] (-) TimerEvent: {}
+[8.832385] (-) TimerEvent: {}
+[8.932907] (-) TimerEvent: {}
+[9.033474] (-) TimerEvent: {}
+[9.120088] (pure_pursuit) StderrLine: {'line': b'\x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/pure_pursuit/pure_pursuit/src/pure_pursuit_node.cpp:32:81:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[K\xe2\x80\x98\x1b[01m\x1b[Kgeometry_msgs::msg::PoseStamped_<std::allocator<void> >::ConstPtr\x1b[m\x1b[K\xe2\x80\x99 is deprecated [\x1b[01;35m\x1b[K-Wdeprecated-declarations\x1b[m\x1b[K]\n'}
+[9.120428] (pure_pursuit) StderrLine: {'line': b'   32 |     void pose_callback(const geometry_msgs::msg::PoseStamped::ConstPtr &pose_msg\x1b[01;35m\x1b[K)\x1b[m\x1b[K\n'}
+[9.120769] (pure_pursuit) StderrLine: {'line': b'      |                                                                                 \x1b[01;35m\x1b[K^\x1b[m\x1b[K\n'}
+[9.120885] (pure_pursuit) StderrLine: {'line': b'In file included from \x1b[01m\x1b[K/opt/ros/foxy/include/geometry_msgs/msg/pose_stamped.hpp:7\x1b[m\x1b[K,\n'}
+[9.120980] (pure_pursuit) StderrLine: {'line': b'                 from \x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/pure_pursuit/pure_pursuit/src/pure_pursuit_node.cpp:10\x1b[m\x1b[K:\n'}
+[9.121078] (pure_pursuit) StderrLine: {'line': b'\x1b[01m\x1b[K/opt/ros/foxy/include/geometry_msgs/msg/detail/pose_stamped__struct.hpp:114:5:\x1b[m\x1b[K \x1b[01;36m\x1b[Knote: \x1b[m\x1b[Kdeclared here\n'}
+[9.121159] (pure_pursuit) StderrLine: {'line': b'  114 |     \x1b[01;36m\x1b[KConstPtr\x1b[m\x1b[K;\n'}
+[9.121238] (pure_pursuit) StderrLine: {'line': b'      |     \x1b[01;36m\x1b[K^~~~~~~~\x1b[m\x1b[K\n'}
+[9.121360] (pure_pursuit) StderrLine: {'line': b'\x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/pure_pursuit/pure_pursuit/src/pure_pursuit_node.cpp:\x1b[m\x1b[K In member function \xe2\x80\x98\x1b[01m\x1b[Kvoid PurePursuit::pose_callback(const ConstPtr&)\x1b[m\x1b[K\xe2\x80\x99:\n'}
+[9.121489] (pure_pursuit) StderrLine: {'line': b'\x1b[01m\x1b[K/home/dalv204/f1tenth_ws/src/pure_pursuit/pure_pursuit/src/pure_pursuit_node.cpp:32:73:\x1b[m\x1b[K \x1b[01;35m\x1b[Kwarning: \x1b[m\x1b[Kunused parameter \xe2\x80\x98\x1b[01m\x1b[Kpose_msg\x1b[m\x1b[K\xe2\x80\x99 [\x1b[01;35m\x1b[K-Wunused-parameter\x1b[m\x1b[K]\n'}
+[9.121587] (pure_pursuit) StderrLine: {'line': b'   32 |     void pose_callback(\x1b[01;35m\x1b[Kconst geometry_msgs::msg::PoseStamped::ConstPtr &pose_msg\x1b[m\x1b[K)\n'}
+[9.121664] (pure_pursuit) StderrLine: {'line': b'      |                        \x1b[01;35m\x1b[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~\x1b[m\x1b[K\n'}
+[9.133651] (-) TimerEvent: {}
+[9.234067] (-) TimerEvent: {}
+[9.334752] (-) TimerEvent: {}
+[9.435625] (-) TimerEvent: {}
+[9.497220] (pure_pursuit) StdoutLine: {'line': b'[100%] \x1b[32m\x1b[1mLinking CXX executable pure_pursuit_node\x1b[0m\n'}
+[9.535760] (-) TimerEvent: {}
+[9.636229] (-) TimerEvent: {}
+[9.736707] (-) TimerEvent: {}
+[9.748248] (pure_pursuit) StdoutLine: {'line': b'[100%] Built target pure_pursuit_node\n'}
+[9.757603] (pure_pursuit) CommandEnded: {'returncode': 0}
+[9.782449] (pure_pursuit) JobProgress: {'identifier': 'pure_pursuit', 'progress': 'install'}
+[9.790161] (pure_pursuit) Command: {'cmd': ['/usr/bin/cmake', '--install', '/home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit'], 'cwd': '/home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit', 'env': OrderedDict([('LESSOPEN', '| /usr/bin/lesspipe %s'), ('USER', 'dalv204'), ('SHLVL', '1'), ('LD_LIBRARY_PATH', '/opt/ros/foxy/opt/yaml_cpp_vendor/lib:/opt/ros/foxy/opt/rviz_ogre_vendor/lib:/opt/ros/foxy/lib/x86_64-linux-gnu:/opt/ros/foxy/lib'), ('WT_PROFILE_ID', '{4dd1e689-b517-5f39-947d-78e8a8bdf958}'), ('MOTD_SHOWN', 'update-motd'), ('HOME', '/home/dalv204'), ('OLDPWD', '/home/dalv204/f1tenth_ws'), ('ROS_PYTHON_VERSION', '3'), ('DBUS_SESSION_BUS_ADDRESS', 'unix:path=/run/user/1000/bus'), ('WSL_DISTRO_NAME', 'Ubuntu-20.04'), ('WAYLAND_DISPLAY', 'wayland-0'), ('ROS_DISTRO', 'foxy'), ('LOGNAME', 'dalv204'), ('NAME', 'dlp-204'), ('WSL_INTEROP', '/run/WSL/836_interop'), ('PULSE_SERVER', 'unix:/mnt/wslg/PulseServer'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('TERM', 'xterm-256color'), ('ROS_LOCALHOST_ONLY', '0'), ('PATH', '/opt/ros/foxy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Program Files (x86)/VMware/VMware Player/bin/:/mnt/c/Program Files/Python312/Scripts/:/mnt/c/Program Files/Python312/:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA NvDLISR:/mnt/c/WINDOWS/system32:/mnt/c/WINDOWS:/mnt/c/WINDOWS/System32/Wbem:/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/:/mnt/c/WINDOWS/System32/OpenSSH/:/mnt/c/Program Files (x86)/Arduino/hardware/tools/avr/bin:/mnt/c/Program Files (x86)/GnuWin32/bin:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/Calibre2/:/mnt/c/Program Files/Microsoft SQL Server/Client SDK/ODBC/170/Tools/Binn/:/mnt/c/Program Files (x86)/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/150/DTS/Binn/:/mnt/c/Program Files (x86)/Windows Kits/8.1/Windows Performance Toolkit/:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/ffmpeg/ffmpeg-6.1.1-essentials_build/bin/:/mnt/c/Program Files/LAStools/bin/:/mnt/c/Users/diego/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0/LocalCache/local-packages/Python312/Scripts:/mnt/c/Program Files/PuTTY/:/mnt/c/Users/diego/AppData/Local/Programs/Python/Launcher/:/mnt/c/Users/diego/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/diego/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/diego/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Users/diego/.dotnet/tools:/mnt/c/Program Files/ffmpeg/ffmpeg-6.1.1-essentials_build/bin/:/mnt/c/Program Files/LAStools/bin/:/mnt/c/Users/diego/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0/LocalCache/local-packages/Python312/Scripts:/mnt/c/Program Files/JetBrains/PyCharm Community Edition 2023.3.3/bin:/snap/bin'), ('WT_SESSION', '253cc6f9-0752-4c14-ad7c-6e89a0a2e11b'), ('XDG_RUNTIME_DIR', '/run/user/1000/'), ('DISPLAY', ':0'), ('LANG', 'en_US.UTF-8'), ('LS_COLORS', 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:'), ('AMENT_PREFIX_PATH', '/opt/ros/foxy'), ('SHELL', '/bin/bash'), ('LESSCLOSE', '/usr/bin/lesspipe %s %s'), ('PWD', '/home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit'), ('XDG_DATA_DIRS', '/usr/local/share:/usr/share:/var/lib/snapd/desktop'), ('PYTHONPATH', '/opt/ros/foxy/lib/python3.8/site-packages'), ('COLCON', '1'), ('WSL2_GUI_APPS_ENABLED', '1'), ('HOSTTYPE', 'x86_64'), ('WSLENV', 'WT_SESSION:WT_PROFILE_ID:'), ('CMAKE_PREFIX_PATH', '/opt/ros/foxy')]), 'shell': False}
+[9.797831] (pure_pursuit) StdoutLine: {'line': b'-- Install configuration: ""\n'}
+[9.798282] (pure_pursuit) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/lib/pure_pursuit/pure_pursuit_node\n'}
+[9.798634] (pure_pursuit) StdoutLine: {'line': b'-- Set runtime path of "/home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/lib/pure_pursuit/pure_pursuit_node" to ""\n'}
+[9.798902] (pure_pursuit) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/environment/pythonpath.sh\n'}
+[9.799172] (pure_pursuit) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/environment/pythonpath.dsv\n'}
+[9.799296] (pure_pursuit) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/lib/python3.8/site-packages/pure_pursuit\n'}
+[9.799593] (pure_pursuit) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/lib/python3.8/site-packages/pure_pursuit/__init__.py\n'}
+[9.820162] (pure_pursuit) StdoutLine: {'line': b"Listing '/home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/lib/python3.8/site-packages/pure_pursuit'...\n"}
+[9.820393] (pure_pursuit) StdoutLine: {'line': b"Compiling '/home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/lib/python3.8/site-packages/pure_pursuit/__init__.py'...\n"}
+[9.822622] (pure_pursuit) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/lib/pure_pursuit/pure_pursuit_node.py\n'}
+[9.824632] (pure_pursuit) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/ament_index/resource_index/package_run_dependencies/pure_pursuit\n'}
+[9.825153] (pure_pursuit) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/ament_index/resource_index/parent_prefix_path/pure_pursuit\n'}
+[9.825443] (pure_pursuit) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/environment/ament_prefix_path.sh\n'}
+[9.825657] (pure_pursuit) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/environment/ament_prefix_path.dsv\n'}
+[9.825718] (pure_pursuit) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/environment/path.sh\n'}
+[9.825820] (pure_pursuit) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/environment/path.dsv\n'}
+[9.825889] (pure_pursuit) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/local_setup.bash\n'}
+[9.826049] (pure_pursuit) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/local_setup.sh\n'}
+[9.826213] (pure_pursuit) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/local_setup.zsh\n'}
+[9.826324] (pure_pursuit) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/local_setup.dsv\n'}
+[9.826481] (pure_pursuit) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/package.dsv\n'}
+[9.826537] (pure_pursuit) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/ament_index/resource_index/packages/pure_pursuit\n'}
+[9.826775] (pure_pursuit) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/cmake/pure_pursuitConfig.cmake\n'}
+[9.826891] (pure_pursuit) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/cmake/pure_pursuitConfig-version.cmake\n'}
+[9.826983] (pure_pursuit) StdoutLine: {'line': b'-- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/package.xml\n'}
+[9.828948] (pure_pursuit) CommandEnded: {'returncode': 0}
+[9.836798] (-) TimerEvent: {}
+[9.887539] (pure_pursuit) JobEnded: {'identifier': 'pure_pursuit', 'rc': 0}
+[9.888692] (-) EventReactorShutdown: {}

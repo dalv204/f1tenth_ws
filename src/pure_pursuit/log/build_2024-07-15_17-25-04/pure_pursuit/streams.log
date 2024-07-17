@@ -1,0 +1,104 @@
+[0.013s] Invoking command in '/home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake /home/dalv204/f1tenth_ws/src/pure_pursuit/pure_pursuit -DCMAKE_INSTALL_PREFIX=/home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit
+[0.293s] -- The C compiler identification is GNU 9.4.0
+[0.614s] -- The CXX compiler identification is GNU 9.4.0
+[0.742s] -- Check for working C compiler: /usr/bin/cc
+[0.889s] -- Check for working C compiler: /usr/bin/cc -- works
+[0.892s] -- Detecting C compiler ABI info
+[1.029s] -- Detecting C compiler ABI info - done
+[1.037s] -- Detecting C compile features
+[1.037s] -- Detecting C compile features - done
+[1.041s] -- Check for working CXX compiler: /usr/bin/c++
+[1.189s] -- Check for working CXX compiler: /usr/bin/c++ -- works
+[1.190s] -- Detecting CXX compiler ABI info
+[1.332s] -- Detecting CXX compiler ABI info - done
+[1.339s] -- Detecting CXX compile features
+[1.340s] -- Detecting CXX compile features - done
+[1.346s] -- Found ament_cmake: 0.9.12 (/opt/ros/foxy/share/ament_cmake/cmake)
+[1.371s] -- Found PythonInterp: /usr/bin/python3 (found suitable version "3.8.10", minimum required is "3") 
+[1.371s] -- Using PYTHON_EXECUTABLE: /usr/bin/python3
+[1.528s] -- Found rclcpp: 2.4.3 (/opt/ros/foxy/share/rclcpp/cmake)
+[1.760s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[1.769s] -- Found rosidl_adapter: 1.3.1 (/opt/ros/foxy/share/rosidl_adapter/cmake)
+[3.000s] -- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "1.1.1f")  
+[4.266s] -- Found FastRTPS: /opt/ros/foxy/include  
+[6.541s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[6.608s] -- Found rmw_implementation_cmake: 1.0.4 (/opt/ros/foxy/share/rmw_implementation_cmake/cmake)
+[6.610s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[6.612s] -- Looking for pthread.h
+[6.756s] -- Looking for pthread.h - found
+[6.756s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+[6.904s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+[6.904s] -- Looking for pthread_create in pthreads
+[7.046s] -- Looking for pthread_create in pthreads - not found
+[7.047s] -- Looking for pthread_create in pthread
+[7.174s] -- Looking for pthread_create in pthread - found
+[7.175s] -- Found Threads: TRUE  
+[7.309s] -- Found rclpy: 1.0.13 (/opt/ros/foxy/share/rclpy/cmake)
+[7.312s] -- Found geometry_msgs: 2.0.5 (/opt/ros/foxy/share/geometry_msgs/cmake)
+[7.342s] -- Found nav_msgs: 2.0.5 (/opt/ros/foxy/share/nav_msgs/cmake)
+[7.397s] -- Found ackermann_msgs: 2.0.2 (/opt/ros/foxy/share/ackermann_msgs/cmake)
+[7.427s] -- Found sensor_msgs: 2.0.5 (/opt/ros/foxy/share/sensor_msgs/cmake)
+[7.482s] -- Found visualization_msgs: 2.0.5 (/opt/ros/foxy/share/visualization_msgs/cmake)
+[7.543s] -- Found tf2_ros: 0.13.14 (/opt/ros/foxy/share/tf2_ros/cmake)
+[7.854s] -- Found ament_lint_auto: 0.9.8 (/opt/ros/foxy/share/ament_lint_auto/cmake)
+[7.924s] -- Added test 'copyright' to check source files copyright and LICENSE
+[7.925s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[7.926s] -- Configured cppcheck include dirs: /home/dalv204/f1tenth_ws/src/pure_pursuit/pure_pursuit/include
+[7.926s] -- Configured cppcheck exclude dirs and/or files: 
+[7.927s] -- Added test 'cpplint' to check C / C++ code against the Google style
+[7.927s] -- Configured cpplint exclude dirs and/or files: 
+[7.928s] -- Added test 'flake8' to check Python code syntax and style conventions
+[7.930s] -- Added test 'lint_cmake' to check CMake code style
+[7.931s] -- Added test 'pep257' to check Python code against some of the style conventions in PEP 257
+[7.933s] -- Added test 'uncrustify' to check C / C++ code style
+[7.933s] -- Configured uncrustify additional arguments: 
+[7.934s] -- Added test 'xmllint' to check XML markup files
+[7.939s] -- Configuring done
+[7.950s] -- Generating done
+[7.952s] -- Build files have been written to: /home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit
+[7.961s] Invoked command in '/home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake /home/dalv204/f1tenth_ws/src/pure_pursuit/pure_pursuit -DCMAKE_INSTALL_PREFIX=/home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit
+[7.965s] Invoking command in '/home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit -- -j16 -l16
+[7.996s] [35m[1mScanning dependencies of target pure_pursuit_node[0m
+[8.144s] [ 50%] [32mBuilding CXX object CMakeFiles/pure_pursuit_node.dir/src/pure_pursuit_node.cpp.o[0m
+[9.120s] [01m[K/home/dalv204/f1tenth_ws/src/pure_pursuit/pure_pursuit/src/pure_pursuit_node.cpp:32:81:[m[K [01;35m[Kwarning: [m[K‘[01m[Kgeometry_msgs::msg::PoseStamped_<std::allocator<void> >::ConstPtr[m[K’ is deprecated [[01;35m[K-Wdeprecated-declarations[m[K]
+[9.120s]    32 |     void pose_callback(const geometry_msgs::msg::PoseStamped::ConstPtr &pose_msg[01;35m[K)[m[K
+[9.120s]       |                                                                                 [01;35m[K^[m[K
+[9.120s] In file included from [01m[K/opt/ros/foxy/include/geometry_msgs/msg/pose_stamped.hpp:7[m[K,
+[9.120s]                  from [01m[K/home/dalv204/f1tenth_ws/src/pure_pursuit/pure_pursuit/src/pure_pursuit_node.cpp:10[m[K:
+[9.120s] [01m[K/opt/ros/foxy/include/geometry_msgs/msg/detail/pose_stamped__struct.hpp:114:5:[m[K [01;36m[Knote: [m[Kdeclared here
+[9.120s]   114 |     [01;36m[KConstPtr[m[K;
+[9.121s]       |     [01;36m[K^~~~~~~~[m[K
+[9.121s] [01m[K/home/dalv204/f1tenth_ws/src/pure_pursuit/pure_pursuit/src/pure_pursuit_node.cpp:[m[K In member function ‘[01m[Kvoid PurePursuit::pose_callback(const ConstPtr&)[m[K’:
+[9.121s] [01m[K/home/dalv204/f1tenth_ws/src/pure_pursuit/pure_pursuit/src/pure_pursuit_node.cpp:32:73:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kpose_msg[m[K’ [[01;35m[K-Wunused-parameter[m[K]
+[9.121s]    32 |     void pose_callback([01;35m[Kconst geometry_msgs::msg::PoseStamped::ConstPtr &pose_msg[m[K)
+[9.121s]       |                        [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~[m[K
+[9.497s] [100%] [32m[1mLinking CXX executable pure_pursuit_node[0m
+[9.748s] [100%] Built target pure_pursuit_node
+[9.759s] Invoked command in '/home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit -- -j16 -l16
+[9.791s] Invoking command in '/home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit
+[9.797s] -- Install configuration: ""
+[9.798s] -- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/lib/pure_pursuit/pure_pursuit_node
+[9.798s] -- Set runtime path of "/home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/lib/pure_pursuit/pure_pursuit_node" to ""
+[9.798s] -- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/environment/pythonpath.sh
+[9.799s] -- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/environment/pythonpath.dsv
+[9.799s] -- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/lib/python3.8/site-packages/pure_pursuit
+[9.799s] -- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/lib/python3.8/site-packages/pure_pursuit/__init__.py
+[9.820s] Listing '/home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/lib/python3.8/site-packages/pure_pursuit'...
+[9.820s] Compiling '/home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/lib/python3.8/site-packages/pure_pursuit/__init__.py'...
+[9.823s] -- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/lib/pure_pursuit/pure_pursuit_node.py
+[9.824s] -- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/ament_index/resource_index/package_run_dependencies/pure_pursuit
+[9.825s] -- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/ament_index/resource_index/parent_prefix_path/pure_pursuit
+[9.825s] -- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/environment/ament_prefix_path.sh
+[9.825s] -- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/environment/ament_prefix_path.dsv
+[9.825s] -- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/environment/path.sh
+[9.825s] -- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/environment/path.dsv
+[9.825s] -- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/local_setup.bash
+[9.825s] -- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/local_setup.sh
+[9.826s] -- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/local_setup.zsh
+[9.826s] -- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/local_setup.dsv
+[9.826s] -- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/package.dsv
+[9.826s] -- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/ament_index/resource_index/packages/pure_pursuit
+[9.826s] -- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/cmake/pure_pursuitConfig.cmake
+[9.826s] -- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/cmake/pure_pursuitConfig-version.cmake
+[9.826s] -- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/package.xml
+[9.828s] Invoked command in '/home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit

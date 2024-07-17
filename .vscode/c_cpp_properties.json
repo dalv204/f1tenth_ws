@@ -1,0 +1,28 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/dalv204/f1tenth_ws/install/vesc_driver/include/**",
+        "/home/dalv204/f1tenth_ws/install/vesc_ackermann/include/**",
+        "/home/dalv204/f1tenth_ws/install/vesc_msgs/include/**",
+        "/home/dalv204/f1tenth_ws/install/teleop_tools_msgs/include/**",
+        "/home/dalv204/f1tenth_ws/install/ackermann_mux/include/**",
+        "/opt/ros/foxy/include/**",
+        "/home/dalv204/f1tenth_ws/src/f1tenth_system/ackermann_mux/include/**",
+        "/home/dalv204/f1tenth_ws/src/f1tenth_system/vesc/vesc_ackermann/include/**",
+        "/home/dalv204/f1tenth_ws/src/f1tenth_system/vesc/vesc_driver/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}

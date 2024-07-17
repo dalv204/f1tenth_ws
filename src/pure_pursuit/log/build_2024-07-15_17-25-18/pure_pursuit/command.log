@@ -1,0 +1,4 @@
+Invoking command in '/home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit -- -j16 -l16
+Invoked command in '/home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit -- -j16 -l16
+Invoking command in '/home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit
+Invoked command in '/home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit

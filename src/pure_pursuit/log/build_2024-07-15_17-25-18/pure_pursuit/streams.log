@@ -1,0 +1,28 @@
+[0.013s] Invoking command in '/home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit -- -j16 -l16
+[0.061s] [100%] Built target pure_pursuit_node
+[0.070s] Invoked command in '/home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit -- -j16 -l16
+[0.102s] Invoking command in '/home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit
+[0.107s] -- Install configuration: ""
+[0.107s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/lib/pure_pursuit/pure_pursuit_node
+[0.107s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/environment/pythonpath.sh
+[0.107s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/environment/pythonpath.dsv
+[0.107s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/lib/python3.8/site-packages/pure_pursuit
+[0.107s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/lib/python3.8/site-packages/pure_pursuit/__init__.py
+[0.126s] Listing '/home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/lib/python3.8/site-packages/pure_pursuit'...
+[0.128s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/lib/pure_pursuit/pure_pursuit_node.py
+[0.128s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/ament_index/resource_index/package_run_dependencies/pure_pursuit
+[0.128s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/ament_index/resource_index/parent_prefix_path/pure_pursuit
+[0.128s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/environment/ament_prefix_path.sh
+[0.128s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/environment/ament_prefix_path.dsv
+[0.128s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/environment/path.sh
+[0.129s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/environment/path.dsv
+[0.129s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/local_setup.bash
+[0.129s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/local_setup.sh
+[0.129s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/local_setup.zsh
+[0.129s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/local_setup.dsv
+[0.129s] -- Installing: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/package.dsv
+[0.129s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/ament_index/resource_index/packages/pure_pursuit
+[0.129s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/cmake/pure_pursuitConfig.cmake
+[0.129s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/cmake/pure_pursuitConfig-version.cmake
+[0.129s] -- Up-to-date: /home/dalv204/f1tenth_ws/src/pure_pursuit/install/pure_pursuit/share/pure_pursuit/package.xml
+[0.132s] Invoked command in '/home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /home/dalv204/f1tenth_ws/src/pure_pursuit/build/pure_pursuit
