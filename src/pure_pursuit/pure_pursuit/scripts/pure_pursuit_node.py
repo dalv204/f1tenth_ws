@@ -6,7 +6,7 @@ from sensor_msgs.msg import LaserScan, Joy
 from ackermann_msgs.msg import AckermannDriveStamped, AckermannDrive
 from geometry_msgs.msg import PoseStamped, Point
 from visualization_msgs.msg import Marker, MarkerArray
-from nav_msgs.msg import Odometry
+from nav_msgs.msg import Odometry, OccupancyGrid
 import csv
 
 class PurePursuit(Node):
@@ -30,6 +30,12 @@ class PurePursuit(Node):
             "/ego_racecar/odom",
             self.pose_callback,
             10,
+        )
+        self.map_sub = self.create_subscription(
+            OccupancyGrid,
+            '/map',
+            self.map_callback,
+            10
         )
         
         qos = rclpy.qos.QoSProfile(history=rclpy.qos.QoSHistoryPolicy.KEEP_LAST,
@@ -75,7 +81,19 @@ class PurePursuit(Node):
         self.publish_waypoints()
         self.set_speed = 3.0
 
+    def map_callback(self,msg):
+        """ checks the map data """
+        print("got something?")
+        occupancy_data = msg.data
+        print(type(occupancy_data))
+        print(f"watch this: {len(occupancy_data)//141} == 124")
+        
+        self.get_logger().info(f"Received map: {msg.info.width} x {msg.info.height}")
+        self.get_logger().info(f"Received map: {msg.info.height}")
+        self.get_logger().info(f"Received map: {msg.info.resolution}")
+        self.get_logger().info(f"Received map: {msg.info.origin}")
 
+        # print(f"{occupancy_data=}")
     def subscription_joy(self):
         """function likely used to stop in unsafe scenarios for the real world :)"""
         pass
@@ -153,7 +171,7 @@ class PurePursuit(Node):
                     break 
                     
         if goal_waypoint is None: 
-            self.get_logger().info("No valid waypoint found within lookahead distance")
+            # self.get_logger().info("No valid waypoint found within lookahead distance")
             return
         # transform goal point to the car's reference point
         goal_x, goal_y = self.transform_goal_point(goal_waypoint, current_position, yaw)
@@ -179,13 +197,13 @@ class PurePursuit(Node):
         logs info twice a second,
         good for debugging
         """
-        if self.current_position is not None:
-            self.get_logger().info(f'Current position: x={self.current_position[0]}, y={self.current_position[1]}')
-            if self.current_goal is not None:
-                self.get_logger().info(f'Goal waypoint: x={self.current_goal[0]}, y={self.current_goal[1]}')
-            self.get_logger().info(f'Transformed goal: x={self.transformed_goal[0]}, y={self.transformed_goal[1]}')
-            self.get_logger().info(f'Steering angle: {self.steering_angle}')
-            print('\n')
+        # if self.current_position is not None:
+            # self.get_logger().info(f'Current position: x={self.current_position[0]}, y={self.current_position[1]}')
+            # if self.current_goal is not None:
+            #     self.get_logger().info(f'Goal waypoint: x={self.current_goal[0]}, y={self.current_goal[1]}')
+            # self.get_logger().info(f'Transformed goal: x={self.transformed_goal[0]}, y={self.transformed_goal[1]}')
+            # self.get_logger().info(f'Steering angle: {self.steering_angle}')
+            # print('\n')
 
 
     def transform_goal_point(self, goal_point, current_position, yaw):
