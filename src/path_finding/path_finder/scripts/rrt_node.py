@@ -449,7 +449,7 @@ class RRT(Node):
             tree ([]): current tree as a list of Nodes
             node (Node): current node we're finding neighbors for
         Returns:
-            neighborhood ([]): neighborhood of nodes as a list of Nodes
+            neighbors ([]): neighborhood of nodes as a list of Nodes
         """
         # make radius 1
         radius = 1.0
