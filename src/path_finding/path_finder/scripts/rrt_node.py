@@ -88,8 +88,8 @@ class Occupancy:
         return set((index - (self.width * (y:=index//self.width)), y) for 
                    index, value in enumerate(static_grid) if value == 100)
     
-            # modulo operator is slow, could mitigate this by seeing where the y value 
-            # is... 
+        # modulo operator is slow, mitigating by seeing where the y value 
+        # is... 
         
     def random_point(self, limiter):
         """ 
@@ -342,10 +342,21 @@ class RRT(Node):
         # will depend on the resolution of the map
         new_pos = np.array([new_node.x, new_node.y])
         near_pos = np.array([nearest_node.x, nearest_node.y])
-        collision_path = ...
-
-        return any(value in self.Grid for value in collision_path)
-        # will implement actual collision checking later
+        stop, start = new_pos, near_pos
+        width = self.car_width / self.Grid.scale  # gives us the car width in terms of coordinate squares 
+        # assuming new_node is the target (stop) and near_pos is start
+        direct_vector = stop-start
+        length = int(np.linalg.norm(direct_vector))
+        direct_vector = direct_vector / length
+        offset = width // 2
+        square = [np.array([x,y]) for x in range(start[0]-offset, start[0]+(offset+1)) for y in range(start[1]-offset, start[1]+(offset+1))]
+        path = set(tuple((array+(mult*direct_vector)).astype(int)) for mult in range(1, length+1) for array in square)
+        return any(location in self.Grid for location in path) 
+        
+        # TODO - for the more optimized search, (circle mode), can just check IITC, or sensor 
+        #   data for soon collision
+        # TODO - I also dont think this current method is good for complex maneouvers 
+        #   collision checking does feel quite linear... 
 
     def is_goal(self, latest_added_node, goal_x, goal_y):
         """
@@ -360,7 +371,6 @@ class RRT(Node):
             close_enough (bool): true if node is close enoughg to the goal
         """
         return LA.norm([goal_x - latest_added_node.x, goal_y - latest_added_node.y]) <= self.goal_tolerance
-        # return False
 
     def find_path(self, tree, latest_added_node):
         """
@@ -392,6 +402,7 @@ class RRT(Node):
         Returns:
             cost (float): the cost value of the node
         """
+        assert NotImplementedError
         return node.cost
 
     def line_cost(self, n1, n2):
