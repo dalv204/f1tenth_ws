@@ -216,7 +216,7 @@ class RRT(Node):
         calculates reasonable number of iterations for system 
         based on speed and computational resources
         """
-        # TODO - incorporate this later
+        # TODO - incorporate this later - may also depend on speed of vehicle
         return 100
 
     def pose_callback(self, pose_msg):
@@ -466,15 +466,8 @@ class RRT(Node):
         length = len(tuple(map(self.Grid.coord_to_pos, path)))
         msg.data = str(tuple(map(self.Grid.coord_to_pos, path)))
         self.waypoint_pub.publish(msg)
+        # TODO- MAY NEED TO INTERPOLATE POINTS BEFORE SENDING 
         self.get_logger().info(f"Sent waypoints containing {length} points")
-        # TODO - at this point it really just does what the path 
-        #  follower was trained to do, toss some of that code over here. 
-        # drive_msg = AckermannDriveStamped()
-        # # TODO - simplified, needs to be calculated
-        # drive_msg.drive.steering_angle = 0.0
-        # # TODO - simplified, needs to be calculated
-        # drive_msg.drive.speed = 1.0 
-        # self.drive_pub.publish(drive_msg)
 
 
 def main(args=None):
