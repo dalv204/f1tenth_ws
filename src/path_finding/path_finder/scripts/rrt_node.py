@@ -8,16 +8,13 @@ import math
 
 import rclpy
 from rclpy.node import Node
+from std_msgs.msg import String
 from sensor_msgs.msg import LaserScan
-from geometry_msgs.msg import PoseStamped
-from geometry_msgs.msg import PointStamped
-from geometry_msgs.msg import Pose
-from geometry_msgs.msg import Point
+from geometry_msgs.msg import PoseStamped, PointStamped, Pose, Point
 from nav_msgs.msg import Odometry, OccupancyGrid
 from visualization_msgs.msg import Marker, MarkerArray
 import csv  # may need this?
 from ackermann_msgs.msg import AckermannDriveStamped, AckermannDrive
-from nav_msgs.msg import OccupancyGrid
 
 # TODO: import as you need
 
@@ -100,17 +97,18 @@ class Occupancy:
             # not free - search again 
             value = self.random_point(limiter)
         return value 
-    
-    def transform_pos(self):
-        """ transforms into the car's perspective 
-        TODO - this may be better suited outside the class
-        """
 
     
-    def un_transform(self):
+    def coord_to_pos(self, coords):
         """ transforms into the map's perspective 
         TODO - this may be better suited outside the class
         """
+        min_x = self.origin[0]
+        min_y = self.origin[1]
+        x = (coords[0] * self.scale)+min_x
+        y = (coords[1]* self.scale)+min_y
+        return (x,y)
+
 
 # class def for RRT
 class RRT(Node):
@@ -153,19 +151,39 @@ class RRT(Node):
             10
         )
 
+        self.waypoint_pub = self.create_publisher(
+            String,
+            "/custom_waypoints",
+            10
+        )
+        # GRID STUFF -------------------
         self.Grid = None  
         self.mapped=False
         self.tree = []
         self.goal = (10,10) # goal for example (CHANGE FOR ACTUAL?)
         self.goal_tolerance = 0.5
         self.car_width = .3 # meters
+        # ------------------------------
+
+        # PATH FOLLOWING STUFF ----------
+        self.lookahead_distance = 1.0
+        self.current_pose = None
+        self.last_position = None
+        self.current_position = None
+        self.transformed_goal = None
+        self.current_goal = None
+        # -------------------------------
+
+        # WAYPOINT  STUFF ---------------
+        self.marker_pub = self.create_publisher(Marker, "waypoints_marker", 10)
+        # -------------------------------
 
         # TODO: create a drive message publisher, and other publishers that you might need
 
         # class attributes
         # TODO: maybe create your occupancy grid here
     
-    def map_sub_(self, msg):
+    def map_callback(self, msg):
         """ only want to create one instance"""
         if not self.mapped: # only want to create 1 class instance
             # I believe width corresponds to x and height to y
@@ -185,6 +203,12 @@ class RRT(Node):
             2nd layer to the ocupancy grid
 
         """
+        # logic will be implemented later perhaps... is a little complicated 
+        # because it depends on the accuracy of positioning system... 
+        # might be better for shorter term obstacles , like cars
+        # like dynamic should be used for moving objects / quick reactions.. focus on latr
+        assert NotImplementedError
+
         pass
 
     def get_iteration_count(self):
@@ -318,12 +342,11 @@ class RRT(Node):
         Returns:
             new_node (Node): new node created from steering
         """
-        # TODO - needs to be mofidified to fit the coordinate stuff
         direction = np.array([sampled_point[0] - nearest_node.x, sampled_point[1]-nearest_node.y])
         length = LA.norm(direction)
         direction = direction/length
         step_size = 0.5
-        new_point = (nearest_node.x + direction[0] * step_size, nearest_node.y + direction[1] * step_size)
+        new_point = (int(nearest_node.x + direction[0] * step_size), int(nearest_node.y + direction[1] * step_size))
         return TreeNode(new_point[0], new_point[1], parent=nearest_node)
 
     def check_collision(self, nearest_node, new_node):
@@ -439,12 +462,19 @@ class RRT(Node):
     
 
     def publish_path(self, path):
-        drive_msg = AckermannDriveStamped()
-        # TODO - simplified, needs to be calculated
-        drive_msg.drive.steering_angle = 0.0
-        # TODO - simplified, needs to be calculated
-        drive_msg.drive.speed = 1.0 
-        self.drive_pub.publish(drive_msg)
+        msg = String
+        length = len(tuple(map(self.Grid.coord_to_pos, path)))
+        msg.data = str(tuple(map(self.Grid.coord_to_pos, path)))
+        self.waypoint_pub.publish(msg)
+        self.get_logger().info(f"Sent waypoints containing {length} points")
+        # TODO - at this point it really just does what the path 
+        #  follower was trained to do, toss some of that code over here. 
+        # drive_msg = AckermannDriveStamped()
+        # # TODO - simplified, needs to be calculated
+        # drive_msg.drive.steering_angle = 0.0
+        # # TODO - simplified, needs to be calculated
+        # drive_msg.drive.speed = 1.0 
+        # self.drive_pub.publish(drive_msg)
 
 
 def main(args=None):
