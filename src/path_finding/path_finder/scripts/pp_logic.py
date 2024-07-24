@@ -131,6 +131,28 @@ class PurePursuit(Node):
     #     return waypoints
     
     def publish_waypoints(self):
+        start_marker = self.init_marker(g=1.0)
+        start_marker.points.append(self.waypoints[0])
+
+        end_marker = self.init_marker(r=1.0)
+        end_marker.points.append(self.waypoints[-1])
+
+        path_markers = self.init_marker(r=1.0, b=1.0)
+
+        for x, y in self.waypoints[1:-1]:
+            point = Point()
+            point.x = x
+            point.y = y
+            point.z = 0.0
+            path_markers.points.append(point)
+
+        self.marker_pub.publish(start_marker)
+        self.marker_pub.publish(end_marker)
+        self.marker_pub.publish(path_markers)
+        self.get_logger().info('Published waypoints marker.')
+
+    def init_marker(self, r=0, g=0, b=0):
+        """ gets the standard settings"""
         marker = Marker()
         marker.header.frame_id = "map"
         marker.header.stamp = self.get_clock().now().to_msg()
@@ -141,21 +163,12 @@ class PurePursuit(Node):
         marker.pose.orientation.w = 1.0
         marker.scale.x = 0.2
         marker.scale.y = 0.2
-
         marker.color.a = 1.0
-        marker.color.r = 1.0
-        marker.color.g = 0.0
-        marker.color.b = 1.0
+        marker.color.r = r
+        marker.color.g = g
+        marker.color.b = b
+        return marker
 
-        for x, y in self.waypoints:
-            point = Point()
-            point.x = x
-            point.y = y
-            point.z = 0.0
-            marker.points.append(point)
-
-        self.marker_pub.publish(marker)
-        self.get_logger().info('Published waypoints marker.')
 
     def pose_callback(self, pose_msg):
         # TODO - need to change how positions are read for the actual car

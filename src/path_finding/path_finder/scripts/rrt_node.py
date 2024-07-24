@@ -1,7 +1,5 @@
-"""
-This file contains the class definition for tree nodes and RRT
-Before you start, please read: https://arxiv.org/pdf/1105.1186.pdf
-"""
+#!/usr/bin/env python3
+
 import numpy as np
 from numpy import linalg as LA
 import math
@@ -39,13 +37,16 @@ class Occupancy:
             dimensions - tuple width and height
             static_grid - tuple of all map locations
         """
+        
 
-        self.static_grid = self.initialize_static(static_grid)
+        
         self.dynamic_grid = set()
         self.scale = scale
         self.width = dimensions[0]
         self.height = dimensions[1]
         self.origin = origin
+        self.static_grid = self.initialize_static(static_grid)
+        print(self.scale, self.width,self.height, self.origin)
 
     # possible functions I will need
 
@@ -61,12 +62,12 @@ class Occupancy:
         return pos in self.static_grid | self.dynamic_grid
 
     
-    def __del__(self, pos):
-        """ if something was present in the dynamic before,
-        but is no longer, remove it 
-        """
-        if pos in self.dynamic_grid:
-            self.dynamic_grid.remove(pos)
+    # def __del__(self, pos):
+    #     """ if something was present in the dynamic before,
+    #     but is no longer, remove it 
+    #     """
+    #     if pos in self.dynamic_grid:
+    #         self.dynamic_grid.remove(pos)
 
     def pos_to_coord(self, x, y):
         """ finds pixel x and y given real world position"""
@@ -121,6 +122,7 @@ class RRT(Node):
         super().__init__('rrt_node')
         pose_topic = "ego_racecar/odom"
         scan_topic = "/scan"
+        clicked_topic = "/clicked_point"
 
         # you could add your own parameters to the rrt_params.yaml file,
         # and get them here as class attributes as shown above.
@@ -143,6 +145,13 @@ class RRT(Node):
             scan_topic,
             self.scan_callback,
             1)
+        
+        self.point_sub = self.create_subscription(
+            PointStamped,
+            clicked_topic,
+            self.goal_callback,
+            10
+        )
 
         # publishers
         self.drive_pub = self.create_publisher(
@@ -156,11 +165,12 @@ class RRT(Node):
             "/custom_waypoints",
             10
         )
+
         # GRID STUFF -------------------
         self.Grid = None  
         self.mapped=False
         self.tree = []
-        self.goal = (10,10) # goal for example (CHANGE FOR ACTUAL?)
+        self.goal = None # goal for example (CHANGE FOR ACTUAL?)
         self.goal_tolerance = 0.5
         self.car_width = .3 # meters
         # ------------------------------
@@ -174,14 +184,23 @@ class RRT(Node):
         self.current_goal = None
         # -------------------------------
 
-        # WAYPOINT  STUFF ---------------
-        self.marker_pub = self.create_publisher(Marker, "waypoints_marker", 10)
         # -------------------------------
 
-        # TODO: create a drive message publisher, and other publishers that you might need
 
-        # class attributes
-        # TODO: maybe create your occupancy grid here
+    def goal_callback(self, msg):
+        """ 
+        this should be the point clicked on the map for where
+        we would like to go - every time a new goal is published, 
+        the tree must be remade :)
+        """
+        x = msg.point.x
+        y = msg.point.y
+        z = msg.point.z  # don't need for now...
+        self.goal = self.Grid.pos_to_coord(x, y)
+        self.get_logger().info(f"Goal set for {self.goal}")
+        self.replan()
+
+
     
     def map_callback(self, msg):
         """ only want to create one instance"""
@@ -190,7 +209,10 @@ class RRT(Node):
             # TODO - assumes "static" map doesn't update
             self.Grid = \
                 Occupancy(msg.info.resolution, 
-                          (msg.info.width, msg.info.height), msg.info.origin, msg.data )
+                          (msg.info.width, msg.info.height), 
+                          (msg.info.origin.position.x,
+                          msg.info.origin.position.y),
+                          msg.data )
             self.mapped=True
 
     def scan_callback(self, scan_msg):
@@ -267,36 +289,36 @@ class RRT(Node):
     
     def grow_tree(self):
         """ expands the current tree"""
+        if self.goal is not None:
+            for _ in range(self.get_iteration_count()): # number of iterations
+                sampled_point = self.sample()
+                nearest_index = self.nearest(self.tree, sampled_point)
+                nearest_node = self.tree[nearest_index]
+                new_node = self.steer(nearest_node, sampled_point)
 
-        for _ in range(self.get_iteration_count()): # number of iterations
-            sampled_point = self.sample()
-            nearest_index = self.nearest(self.tree, sampled_point)
-            nearest_node = self.tree[nearest_index]
-            new_node = self.steer(nearest_node, sampled_point)
+                if self.check_collision(nearest_node, new_node):
+                    neighbors = self.near(self.tree, new_node)
+                    min_cost_node = nearest_node
+                    min_cost = nearest_node.cost + self.line_cost(nearest_node, new_node)
 
-            if self.check_collision(nearest_node, new_node):
-                neighbors = self.near(self.tree, new_node)
-                min_cost_node = nearest_node
-                min_cost = nearest_node.cost + self.line_cost(nearest_node, new_node)
+                    for neighbor in neighbors:
+                        cost = neighbor.cost + self.line_cost(neighbor, new_node)
+                        if cost < min_cost and not self.check_collision(neighbor, new_node):
+                            min_cost = cost
+                            min_cost_node = neighbor
+                    new_node.parent = min_cost_node
+                    new_node.cost = min_cost
+                    self.tree.append(new_node)
 
-                for neighbor in neighbors:
-                    cost = neighbor.cost + self.line_cost(neighbor, new_node)
-                    if cost < min_cost and not self.check_collision(neighbor, new_node):
-                        min_cost = cost
-                        min_cost_node = neighbor
-                new_node.parent = min_cost_node
-                new_node.cost = min_cost
-                self.tree.append(new_node)
-
-                for neighbor in neighbors:
-                    cost = new_node.cost + self.line_cost(new_node, neighbor)
-                    if cost < neighbor.cost and not self.check_collision(new_node, neighbor):
-                        neighbor.parent = new_node
-                        neighbor.cost = cost
-                if self.is_goal(new_node, *self.goal):
-                    path = self.find_path(self.tree, new_node)
-                    self.publish_path(path)
-                    break
+                    for neighbor in neighbors:
+                        cost = new_node.cost + self.line_cost(new_node, neighbor)
+                        if cost < neighbor.cost and not self.check_collision(new_node, neighbor):
+                            neighbor.parent = new_node
+                            neighbor.cost = cost
+                    if self.is_goal(new_node, *self.goal):
+                        path = self.find_path(self.tree, new_node)
+                        self.publish_path(path)
+                        break
 
     def sample(self):
         """
