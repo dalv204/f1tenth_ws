@@ -23,8 +23,10 @@ def find_grid_path(start, stop, width):
     """ finds the affected coordinates """
     direct_vector = stop-start
     length = int(np.linalg.norm(direct_vector))
+    print(f"{length=}")
     direct_vector = direct_vector / length
-    offset = width // 2
+    offset = int(width / 2)
+    print(f"{offset=}")
     path = []
     square = [np.array([x,y]) for x in range(start[0]-offset, start[0]+(offset+1)) for y in range(start[1]-offset, start[1]+(offset+1))]
     path = set(tuple((array+(mult*direct_vector)).astype(int)) for mult in range(1, length+1) for array in square)
@@ -32,9 +34,39 @@ def find_grid_path(start, stop, width):
     print(path)
     # for 
 
-start = np.array([0,0])
-stop = np.array([5,7])
-width = 4
+
+start = np.array([31, 27])
+stop = np.array([30, 27])
+width = .3/.05
 
 find_grid_path(start, stop, width)
 
+
+def random_point(limiter):
+        """ 
+        finds a random point in the 'open space' 
+        """
+        value = np.random.uniform(0, limiter)
+        return int(value) 
+
+def sample():
+        """
+        This method should randomly sample the free space, and returns a viable point
+
+        Args:
+        Returns:
+            (x, y) (float float): a tuple representing the sampled point
+
+        """
+        x = random_point(142) 
+        y = random_point(125)
+
+        return (x, y)
+
+print(sample())
+
+
+import numpy as np
+
+length = np.linalg.norm([-2-3, -5-18])
+print(f"LENGTH IS {length}")

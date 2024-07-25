@@ -10,8 +10,9 @@ from std_msgs.msg import String
 from sensor_msgs.msg import LaserScan
 from geometry_msgs.msg import PoseStamped, PointStamped, Pose, Point
 from nav_msgs.msg import Odometry, OccupancyGrid
-from visualization_msgs.msg import Marker, MarkerArray
+from visualization_msgs.msg import Marker
 import csv  # may need this?
+import ast
 from ackermann_msgs.msg import AckermannDriveStamped, AckermannDrive
 
 # TODO: import as you need
@@ -38,7 +39,10 @@ class Occupancy:
             static_grid - tuple of all map locations
         """
         
-
+        # with open("data_file.json", 'w') as dt:
+        #     dt.write(str(list(static_grid)))
+        #     print("wrote the file")
+        # dt.close()
         
         self.dynamic_grid = set()
         self.scale = scale
@@ -69,12 +73,13 @@ class Occupancy:
     #     if pos in self.dynamic_grid:
     #         self.dynamic_grid.remove(pos)
 
+
     def pos_to_coord(self, x, y):
         """ finds pixel x and y given real world position"""
         min_x = self.origin[0]
-        pos_x = max(min((x - min_x)//self.scale, self.width), 0)
+        pos_x = int(max(min((x - min_x)//self.scale, self.width), 0))
         min_y = self.origin[1]
-        pos_y = max(min((y-min_y)//self.scale, self.height), 0)
+        pos_y = int(max(min((y-min_y)//self.scale, self.height), 0))
         # ensure it stays within bounds ^^ 
         return pos_x, pos_y
 
@@ -93,21 +98,22 @@ class Occupancy:
         """ 
         finds a random point in the 'open space' 
         """
+
         value = np.random.uniform(0, limiter)
         if value in self:
             # not free - search again 
             value = self.random_point(limiter)
-        return value 
+        return int(value) 
 
     
-    def coord_to_pos(self, coords):
+    def coord_to_pos(self, node):
         """ transforms into the map's perspective 
         TODO - this may be better suited outside the class
         """
         min_x = self.origin[0]
         min_y = self.origin[1]
-        x = (coords[0] * self.scale)+min_x
-        y = (coords[1]* self.scale)+min_y
+        x = (node.x * self.scale)+min_x
+        y = (node.y* self.scale)+min_y
         return (x,y)
 
 
@@ -120,22 +126,24 @@ class RRT(Node):
     """
     def __init__(self):
         super().__init__('rrt_node')
-        pose_topic = "ego_racecar/odom"
+        pose_topic = "/ego_racecar/odom"
         scan_topic = "/scan"
         clicked_topic = "/clicked_point"
 
         # you could add your own parameters to the rrt_params.yaml file,
         # and get them here as class attributes as shown above.
 
-        self.map_sub_ = self.create_subscription(
-            OccupancyGrid,
-            '/map',
-            self.map_callback,
-            10,
-        )
+        # self.map_sub_ = self.create_subscription(
+        #     OccupancyGrid,
+        #     '/map',
+        #     self.map_callback,
+        #     10,
+        # )
+
+        # TODO- PAUSE MAP SUB FOR TESTING
 
         self.pose_sub_ = self.create_subscription(
-            PoseStamped,
+            Odometry,
             pose_topic,
             self.pose_callback,
             1)
@@ -166,23 +174,28 @@ class RRT(Node):
             10
         )
 
+        self.marker_pub = self.create_publisher(Marker, 'waypoints_marker', 10)
+        self.waypoints = []
+
         # GRID STUFF -------------------
         self.Grid = None  
         self.mapped=False
         self.tree = []
         self.goal = None # goal for example (CHANGE FOR ACTUAL?)
-        self.goal_tolerance = 0.5
-        self.car_width = .3 # meters
+        self.new_goal=False
+        self.goal_tolerance = None
+        self.car_width = .4 # meters
+        self.path=None
+        self.yaw = 0  # initialize yaw for not_allowed_circle
         # ------------------------------
 
-        # PATH FOLLOWING STUFF ----------
-        self.lookahead_distance = 1.0
-        self.current_pose = None
-        self.last_position = None
-        self.current_position = None
-        self.transformed_goal = None
-        self.current_goal = None
-        # -------------------------------
+        # MAP TESTING -----_@__!_!_!_#)@#@(_@#(_#@()#))
+        with open("data_file.json", 'r') as dt:
+            info = dt.read()
+            map_info = ast.literal_eval(info)
+        dt.close()
+        self.Grid = Occupancy(.05, (141, 124), (-1.31, -4.25), map_info)
+        self.goal_tolerance = int(0.5/self.Grid.scale)
 
         # -------------------------------
 
@@ -197,8 +210,8 @@ class RRT(Node):
         y = msg.point.y
         z = msg.point.z  # don't need for now...
         self.goal = self.Grid.pos_to_coord(x, y)
+        self.new_goal=True
         self.get_logger().info(f"Goal set for {self.goal}")
-        self.replan()
 
 
     
@@ -207,12 +220,13 @@ class RRT(Node):
         if not self.mapped: # only want to create 1 class instance
             # I believe width corresponds to x and height to y
             # TODO - assumes "static" map doesn't update
-            self.Grid = \
-                Occupancy(msg.info.resolution, 
+            self.Grid = Occupancy(msg.info.resolution, 
                           (msg.info.width, msg.info.height), 
                           (msg.info.origin.position.x,
                           msg.info.origin.position.y),
                           msg.data )
+            print(self.Grid)
+            self.goal_tolerance = int(0.5/self.Grid.scale)
             self.mapped=True
 
     def scan_callback(self, scan_msg):
@@ -229,7 +243,7 @@ class RRT(Node):
         # because it depends on the accuracy of positioning system... 
         # might be better for shorter term obstacles , like cars
         # like dynamic should be used for moving objects / quick reactions.. focus on latr
-        assert NotImplementedError
+        # assert NotImplementedError
 
         pass
 
@@ -252,18 +266,27 @@ class RRT(Node):
 
         """
         # pretty sure pose_msg.pose.pose.position.x is required (remove verify later?)
-        x = pose_msg.pose.pose.position.x
-        y = pose_msg.pose.pose.position.y
-        pos_x, pos_y = self.Grid.pos_to_coord(x,y)
+        # print("GETTING POSITION")
+        self.yaw = self.quaternion_to_yaw(pose_msg.pose.pose.orientation)
+        if self.Grid is not None:
+            # TODO - there must be another way to say... don't listen until you have this
 
-        if not self.tree:
-            start = TreeNode(pos_x, pos_y)
-            self.tree.append(start)
-        else:
-            if self.no_longer_valid(pos_x, pos_y):
-                self.replan(pos_x, pos_y)
+            x = pose_msg.pose.pose.position.x
+            y = pose_msg.pose.pose.position.y
+            self.coord_x, self.coord_y = self.Grid.pos_to_coord(x,y)
+
+            if not self.tree:
+                # print("MADE A TREE")
+                start = TreeNode(self.coord_x, self.coord_y)
+                self.tree.append(start)
             else:
-                self.grow_tree()
+                # print("GETTING CAUGHT HERE")
+                if self.no_longer_valid(self.coord_x, self.coord_y) or self.new_goal:
+                    self.new_goal=False
+                    self.replan(self.coord_x, self.coord_y)
+                else:
+                    # print("CHOOSING TO GROW TREE")
+                    self.grow_tree()
 
     def no_longer_valid(self, x, y):
         """ checks if current tree no longer valid, possible reasons:
@@ -287,38 +310,89 @@ class RRT(Node):
         self.tree.append(start)
         self.grow_tree()
     
-    def grow_tree(self):
+    def grow_tree(self): 
+        # TODO - problem does not have to do with the origin
+        # TODO - problem also does not have to do with random sampling
         """ expands the current tree"""
+        # print(f"{self.goal=}")
         if self.goal is not None:
+            # print("doing something?")
             for _ in range(self.get_iteration_count()): # number of iterations
                 sampled_point = self.sample()
+
+                #  TODO - JUST FOR FINDING ERRORS 
+                # print("still checking for top right")
+                # sampled_point =  self.Grid.pos_to_coord(.4674, -3.1547)
+                # sampled_point = self.Grid.pos_to_coord(4.4626, -2.1473)
+
+                # print(f"{sampled_point=}")
+                # print(f"{self.tree=}")
                 nearest_index = self.nearest(self.tree, sampled_point)
                 nearest_node = self.tree[nearest_index]
                 new_node = self.steer(nearest_node, sampled_point)
 
-                if self.check_collision(nearest_node, new_node):
+                if not self.check_collision(nearest_node, new_node):
                     neighbors = self.near(self.tree, new_node)
                     min_cost_node = nearest_node
                     min_cost = nearest_node.cost + self.line_cost(nearest_node, new_node)
 
                     for neighbor in neighbors:
                         cost = neighbor.cost + self.line_cost(neighbor, new_node)
+                        # print(f"{cost=}, {min_cost=}")
                         if cost < min_cost and not self.check_collision(neighbor, new_node):
+                            # print("DID SOMETHING")
                             min_cost = cost
                             min_cost_node = neighbor
                     new_node.parent = min_cost_node
                     new_node.cost = min_cost
                     self.tree.append(new_node)
-
+                    self.waypoints.append(self.Grid.coord_to_pos(new_node))
+                    # self.waypoints.append(self.Grid.coord_to_pos((sampled_point[0], sampled_point[1])))
+                    self.waypoint_publish()
                     for neighbor in neighbors:
                         cost = new_node.cost + self.line_cost(new_node, neighbor)
                         if cost < neighbor.cost and not self.check_collision(new_node, neighbor):
+                            # print("DID SOMETHING")
                             neighbor.parent = new_node
                             neighbor.cost = cost
+                    
                     if self.is_goal(new_node, *self.goal):
+                        print("found goal?")
                         path = self.find_path(self.tree, new_node)
                         self.publish_path(path)
                         break
+
+    def waypoint_publish(self):
+        if self.path is None:
+            self.path = self.init_marker(r=1.0)
+            
+        # print(f"{self.waypoints}")
+        x,y = self.waypoints[-1]
+        point = Point()
+        point.x = x
+        point.y = y
+        point.z = 0.0
+        self.path.points.append(point)
+
+        self.marker_pub.publish(self.path)
+
+    def init_marker(self, r=0.0, g=0.0, b=0.0):
+        """ gets the standard settings"""
+        marker = Marker()
+        marker.header.frame_id = "map"
+        marker.header.stamp = self.get_clock().now().to_msg()
+        marker.ns = "waypoints"
+        marker.id = 0
+        marker.type = Marker.POINTS
+        marker.action = Marker.ADD
+        marker.pose.orientation.w = 1.0
+        marker.scale.x = 0.1
+        marker.scale.y = 0.1
+        marker.color.a = 1.0
+        marker.color.r = r
+        marker.color.g = g
+        marker.color.b = b
+        return marker
 
     def sample(self):
         """
@@ -329,10 +403,42 @@ class RRT(Node):
             (x, y) (float float): a tuple representing the sampled point
 
         """
+          # max turn angle
+
+
         x = self.Grid.random_point(self.Grid.width) 
         y = self.Grid.random_point(self.Grid.height)
 
-        return (x, y)
+        if not self.in_no_sample_zone(x,y):
+            return (x, y)
+        return self.sample()
+    
+    def in_no_sample_zone(self, x, y):
+        # print(f"{self.coord_x=} {self.coord_y=}")
+        turning_radius = 0.8 / self.Grid.scale  # meters to pixels
+        # yaw is zero when in tune with the x-axis, not y axis 
+        # print(f"{self.yaw=}")
+        yaw = self.yaw +np.pi/2
+        left_circle_center = (
+            self.coord_x - turning_radius * np.cos(yaw),
+            self.coord_y - turning_radius * np.sin(yaw)
+        )
+
+        right_circle_center = (
+            self.coord_x + turning_radius * np.cos(yaw),
+            self.coord_y + turning_radius * np.sin(yaw)
+        )
+        # print(f"{left_circle_center=}{right_circle_center=}")
+        dist_to_left = np.sqrt((x-left_circle_center[0]**2 + (y-left_circle_center[1]**2)))
+        dist_to_right = np.sqrt((x-right_circle_center[0])**2 + (y-right_circle_center[1])**2)
+
+        return dist_to_left <= turning_radius or dist_to_right<=turning_radius
+    
+    def quaternion_to_yaw(self, orientation):
+        """ convert quaternion to yaw angle. (converts to vehicle frame)"""
+        siny_cosp = 2 * (orientation.w * orientation.z + orientation.x * orientation.y)
+        cosy_cosp = 1 - 2 * (orientation.y * orientation.y + orientation.z*orientation.z)
+        return np.arctan2(siny_cosp, cosy_cosp)
 
     def nearest(self, tree, sampled_point):
         """
@@ -365,10 +471,18 @@ class RRT(Node):
             new_node (Node): new node created from steering
         """
         direction = np.array([sampled_point[0] - nearest_node.x, sampled_point[1]-nearest_node.y])
+        # print(f"{direction=}")
         length = LA.norm(direction)
-        direction = direction/length
-        step_size = 0.5
-        new_point = (int(nearest_node.x + direction[0] * step_size), int(nearest_node.y + direction[1] * step_size))
+        # print(f"{length=}")
+        if length==0.0:
+            direction=np.array([0,0])
+        else: direction = direction/length
+        step_size = int(0.2 / self.Grid.scale)
+        new_point = (int(nearest_node.x + (direction[0] * step_size)), int(nearest_node.y + (direction[1] * step_size)))
+        # print(f"current point = {nearest_node.x, nearest_node.y}")
+        # print(f"{new_point=}")
+        # print(f"new point should be {nearest_node.x + direction[0]*step_size}")
+        # print(f"goal point = {sampled_point[0], sampled_point[1]}")
         return TreeNode(new_point[0], new_point[1], parent=nearest_node)
 
     def check_collision(self, nearest_node, new_node):
@@ -387,16 +501,20 @@ class RRT(Node):
         # will depend on the resolution of the map
         new_pos = np.array([new_node.x, new_node.y])
         near_pos = np.array([nearest_node.x, nearest_node.y])
+        # print(f"{new_pos=}, {near_pos=}")
         stop, start = new_pos, near_pos
         width = self.car_width / self.Grid.scale  # gives us the car width in terms of coordinate squares 
         # assuming new_node is the target (stop) and near_pos is start
         direct_vector = stop-start
         length = int(np.linalg.norm(direct_vector))
         direct_vector = direct_vector / length
-        offset = width // 2
+        offset = int(width/2)
         square = [np.array([x,y]) for x in range(start[0]-offset, start[0]+(offset+1)) for y in range(start[1]-offset, start[1]+(offset+1))]
         path = set(tuple((array+(mult*direct_vector)).astype(int)) for mult in range(1, length+1) for array in square)
-        return any(location in self.Grid for location in path) 
+        truthy = any(location in self.Grid for location in path) 
+        # if truthy:
+        #     print(f"{direct_vector=}")
+        return truthy
         
         # TODO - for the more optimized search, (circle mode), can just check IITC, or sensor 
         #   data for soon collision
@@ -447,8 +565,8 @@ class RRT(Node):
         Returns:
             cost (float): the cost value of the node
         """
-        assert NotImplementedError
         return node.cost
+        assert NotImplementedError
 
     def line_cost(self, n1, n2):
         """
@@ -460,7 +578,9 @@ class RRT(Node):
         Returns:
             cost (float): the cost value of the line
         """
-        return LA.norm([n1.x - n2.x, n1.y-n2.y])  
+        # TODO - remember that distances are in terms of pixels
+        cost = LA.norm([n1.x - n2.x, n1.y-n2.y])  
+        return cost
         # for now cost is just determined by distance
 
     def near(self, tree, node):
@@ -474,7 +594,7 @@ class RRT(Node):
             neighbors ([]): neighborhood of nodes as a list of Nodes
         """
         # make radius 1
-        radius = 1.0
+        radius = int(1 / self.Grid.scale)
         neighbors = []
         for n in tree:
             if LA.norm([node.x - n.x, node.y-n.y]) <= radius:
@@ -484,12 +604,17 @@ class RRT(Node):
     
 
     def publish_path(self, path):
-        msg = String
-        length = len(tuple(map(self.Grid.coord_to_pos, path)))
-        msg.data = str(tuple(map(self.Grid.coord_to_pos, path)))
+        while True:
+            print("AHAHAHAHA")
+        msg = String()
+        data = tuple(map(self.Grid.coord_to_pos, path))
+        msg.data = str(data)
+        # print(msg.data)
+        length = len(data)
         self.waypoint_pub.publish(msg)
         # TODO- MAY NEED TO INTERPOLATE POINTS BEFORE SENDING 
         self.get_logger().info(f"Sent waypoints containing {length} points")
+        
 
 
 def main(args=None):

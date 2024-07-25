@@ -94,7 +94,7 @@ class PurePursuit(Node):
         # change the csv file if doing in real life :)
         self.logging_timer = self.create_timer(.5, self.log_info)
         # self.publish_waypoints()
-        self.set_speed = 3.0
+        self.set_speed = 1.0
 
     def waypoint_callback(self, msg):
         """ should get it back as a group of tuples"""
@@ -129,29 +129,42 @@ class PurePursuit(Node):
     #             x, y, theta = map(float, row)
     #             waypoints.append((x,y))
     #     return waypoints
+
+    def make_point(self, point_):
+        point = Point()
+        point.x = point_[0]
+        point.y = point_[1]
+        point.z = 0.0
+        return point
     
     def publish_waypoints(self):
+        print("MADE IT HERE")
         start_marker = self.init_marker(g=1.0)
-        start_marker.points.append(self.waypoints[0])
+        start_marker.points.append(self.make_point(self.waypoints[0]))
+        print("MADE IT FURTHER")
 
         end_marker = self.init_marker(r=1.0)
-        end_marker.points.append(self.waypoints[-1])
+        end_marker.points.append(self.make_point(self.waypoints[-1]))
+        print("ALMOST THERE")
 
         path_markers = self.init_marker(r=1.0, b=1.0)
 
-        for x, y in self.waypoints[1:-1]:
-            point = Point()
-            point.x = x
-            point.y = y
-            point.z = 0.0
-            path_markers.points.append(point)
+        for point in self.waypoints[1:-1]:
+            # point = Point()
+            # point.x = x
+            # point.y = y
+            # point.z = 0.0
+            path_markers.points.append(self.make_point(point))
+        print("MADE IT EVEN FURTHER")
 
         self.marker_pub.publish(start_marker)
+        print("PASSED FIRST PUBLISH")
         self.marker_pub.publish(end_marker)
+        print("PASSED SECOND PUBLISH")
         self.marker_pub.publish(path_markers)
         self.get_logger().info('Published waypoints marker.')
 
-    def init_marker(self, r=0, g=0, b=0):
+    def init_marker(self, r=0.0, g=0.0, b=0.0):
         """ gets the standard settings"""
         marker = Marker()
         marker.header.frame_id = "map"
