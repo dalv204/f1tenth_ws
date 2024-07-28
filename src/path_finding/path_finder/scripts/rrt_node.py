@@ -14,12 +14,21 @@ from visualization_msgs.msg import Marker
 import csv  # may need this?
 import ast
 from ackermann_msgs.msg import AckermannDriveStamped, AckermannDrive
+import time
 
 # TODO: import as you need
 
 # class def for tree nodes
 # It's up to you if you want to use this
+
+
+# TODO - so, I think with the global node, I should be able to pick a point, and draw a line between 
+# TODO - that "checkpoint" and the borders of the track; 
+
 class TreeNode:
+    # TODO - ADD FUNCTIONS TO EASILY SUBTRACT TREE NODES 
+    # TODO - ALSO SEE IF YOU CAN ADD SOME SORT OF LEN() 
+    # TO FIND THE DISTANCE BETWEEN THEM
     def __init__(self, x, y, parent=None):
         self.x = x
         self.y = y
@@ -116,20 +125,14 @@ class Occupancy:
         y = (node.y* self.scale)+min_y
         return (x,y)
 
-
-# class def for RRT
-class RRT(Node):
-    """
-    have to modify this code skeleton to fit the RRT* algorithm
-    current skeleton is better suited for the RRT algorithm
-
-    """
+class DualSearch(Node):
+    """ class to handle global and local search """
     def __init__(self):
-        super().__init__('rrt_node')
+        super().__init__('dual_search_node')
         pose_topic = "/ego_racecar/odom"
         scan_topic = "/scan"
         clicked_topic = "/clicked_point"
-
+        
         # you could add your own parameters to the rrt_params.yaml file,
         # and get them here as class attributes as shown above.
 
@@ -175,59 +178,26 @@ class RRT(Node):
         )
 
         self.marker_pub = self.create_publisher(Marker, 'waypoints_marker', 10)
-        self.waypoints = []
 
-        # GRID STUFF -------------------
-        self.Grid = None  
-        self.mapped=False
-        self.tree = []
-        self.goal = None # goal for example (CHANGE FOR ACTUAL?)
-        self.new_goal=False
-        self.goal_tolerance = None
-        self.car_width = .4 # meters
-        self.path=None
-        self.yaw = 0  # initialize yaw for not_allowed_circle
-        # ------------------------------
+        # TODO - include the other listeners I have here
 
-        # MAP TESTING -----_@__!_!_!_#)@#@(_@#(_#@()#))
-        with open("data_file.json", 'r') as dt:
-            info = dt.read()
-            map_info = ast.literal_eval(info)
-        dt.close()
-        self.Grid = Occupancy(.05, (141, 124), (-1.31, -4.25), map_info)
-        self.goal_tolerance = int(0.5/self.Grid.scale)
+        self.global_path=(False)
+        self.local_path = (True)
+        self.last_global_update = time.time()
+        self.global_update_interval = 5.0
 
-        # -------------------------------
+        # TODO - want to create the grids here so they 
+        # TODO -- can both access the occupancy grid
 
-
-    def goal_callback(self, msg):
-        """ 
-        this should be the point clicked on the map for where
-        we would like to go - every time a new goal is published, 
-        the tree must be remade :)
-        """
-        x = msg.point.x
-        y = msg.point.y
-        z = msg.point.z  # don't need for now...
-        self.goal = self.Grid.pos_to_coord(x, y)
-        self.new_goal=True
-        self.get_logger().info(f"Goal set for {self.goal}")
-
-
-    
-    def map_callback(self, msg):
-        """ only want to create one instance"""
-        if not self.mapped: # only want to create 1 class instance
-            # I believe width corresponds to x and height to y
-            # TODO - assumes "static" map doesn't update
-            self.Grid = Occupancy(msg.info.resolution, 
-                          (msg.info.width, msg.info.height), 
-                          (msg.info.origin.position.x,
-                          msg.info.origin.position.y),
-                          msg.data )
-            print(self.Grid)
-            self.goal_tolerance = int(0.5/self.Grid.scale)
-            self.mapped=True
+        self.global_planner = RRT()
+        self.local_planner = RRT()
+        self.Grid = Occupancy()
+        self.current_position = None, None
+        self.goal = None
+        self.goal_tolerance=None
+        self.yaw = None
+        self.coord_x,self.coord_y = None, None
+        # self.goal represents the "global" goal
 
     def scan_callback(self, scan_msg):
         """
@@ -247,6 +217,106 @@ class RRT(Node):
 
         pass
 
+    def map_callback(self, msg):
+        """ only want to create one instance"""
+        if not self.mapped: # only want to create 1 class instance
+            # I believe width corresponds to x and height to y
+            # TODO - assumes "static" map doesn't update
+            self.Grid = Occupancy(msg.info.resolution, 
+                            (msg.info.width, msg.info.height), 
+                            (msg.info.origin.position.x,
+                            msg.info.origin.position.y),
+                            msg.data )
+            print(self.Grid)
+            self.goal_tolerance = int(0.5/self.Grid.scale)
+            self.mapped=True
+    
+    def pose_callback(self, pose_msg):
+        self.yaw = self.quaternion_to_yaw(pose_msg.pose.pose.orientation)
+        self.update_current_position(pose_msg)
+        x = pose_msg.pose.pose.position.x
+        y = pose_msg.pose.pose.position.y
+        self.coord_x, self.coord_y = self.Grid.pose_to_coord(x,y)
+        # updates pos for both trees ^^
+
+        current_time = time.time()
+        if (current_time - self.last_global_update > self.global_update_interval) \
+                or self.global_plan is None:
+            self.last_global_update = current_time
+            self.update_global_path()
+
+        self.update_local_path()
+
+        self.publish_local_path()
+    
+    def quaternion_to_yaw(self, orientation):
+        """ convert quaternion to yaw angle. (converts to vehicle frame)"""
+        siny_cosp = 2 * (orientation.w * orientation.z + orientation.x * orientation.y)
+        cosy_cosp = 1 - 2 * (orientation.y * orientation.y + orientation.z*orientation.z)
+        return np.arctan2(siny_cosp, cosy_cosp)
+
+    
+    def update_global_path(self):
+        if self.global_path is None:
+            while self.global_path is None:
+                self.global_path = self.global_path.plan()
+
+    def update_local_path(self):
+        local_goal = self.extract_local_goal()
+        self.local_path = self.local_planner.plan(local_goal)
+
+    def publish_local_path(self):
+        """ sends the path to waypoint follower """
+         # while True:
+        #     print("AHAHAHAHA")
+        msg = String()
+        data = tuple(map(self.Grid.coord_to_pos, self.local_path))
+        msg.data = str(data)
+        # print(msg.data)
+        length = len(data)
+        self.waypoint_pub.publish(msg)
+        # TODO- MAY NEED TO INTERPOLATE POINTS BEFORE SENDING 
+        self.get_logger().info(f"Sent waypoints containing {length} points")
+
+
+# class def for RRT
+class RRT(DualSearch):  # TODO - could make it a child class of dual search node
+    """
+    have to modify this code skeleton to fit the RRT* algorithm
+    current skeleton is better suited for the RRT algorithm
+
+    """
+    def __init__(self, am_i_local):
+        # super().__init__('rrt_node')
+        self.am_i_local = am_i_local
+        # TODO - want specific behavior out of the local planner ^^
+        self.waypoints = []
+
+        # GRID STUFF -------------------
+        self.Grid = None  
+        self.mapped=False
+        self.tree = []
+        self.goal = None # goal for example (CHANGE FOR ACTUAL?)
+        self.new_goal=False
+        self.goal_tolerance = None
+        self.car_width = .4 # meters
+        self.path=None
+        self.yaw = 0  # initialize yaw for not_allowed_circle
+        self.am_local = am_i_local
+        
+        # ------------------------------
+
+        # MAP TESTING -----_@__!_!_!_#)@#@(_@#(_#@()#))
+        with open("data_file.json", 'r') as dt:
+            info = dt.read()
+            map_info = ast.literal_eval(info)
+        dt.close()
+        self.Grid = Occupancy(.05, (141, 124), (-1.31, -4.25), map_info)
+        self.goal_tolerance = int(0.5/self.Grid.scale)
+
+        # -------------------------------
+
+
     def get_iteration_count(self):
         """
         calculates reasonable number of iterations for system 
@@ -255,7 +325,7 @@ class RRT(Node):
         # TODO - incorporate this later - may also depend on speed of vehicle
         return 100
 
-    def pose_callback(self, pose_msg):
+    def plan(self):
         """
         The pose callback when subscribed to particle filter's inferred pose
         Here is where the main RRT loop happens
@@ -267,13 +337,7 @@ class RRT(Node):
         """
         # pretty sure pose_msg.pose.pose.position.x is required (remove verify later?)
         # print("GETTING POSITION")
-        self.yaw = self.quaternion_to_yaw(pose_msg.pose.pose.orientation)
         if self.Grid is not None:
-            # TODO - there must be another way to say... don't listen until you have this
-
-            x = pose_msg.pose.pose.position.x
-            y = pose_msg.pose.pose.position.y
-            self.coord_x, self.coord_y = self.Grid.pos_to_coord(x,y)
 
             if not self.tree:
                 # print("MADE A TREE")
@@ -338,9 +402,7 @@ class RRT(Node):
 
                     for neighbor in neighbors:
                         cost = neighbor.cost + self.line_cost(neighbor, new_node)
-                        # print(f"{cost=}, {min_cost=}")
                         if cost < min_cost and not self.check_collision(neighbor, new_node):
-                            # print("DID SOMETHING")
                             min_cost = cost
                             min_cost_node = neighbor
                     new_node.parent = min_cost_node
@@ -359,8 +421,14 @@ class RRT(Node):
                     if self.is_goal(new_node, *self.goal):
                         print("found goal?")
                         path = self.find_path(self.tree, new_node)
-                        self.publish_path(path)
-                        break
+                        if self.am_local:
+                            # first want to get the bars
+                            return self.identify_critical_points(ang_tolerance=2, dist_tolerance=1, coords=path)
+                        else:
+                            return path
+                        # should correctly send the path back
+                        # self.publish_path(path)
+                        # break
 
     def waypoint_publish(self):
         if self.path is None:
@@ -401,11 +469,7 @@ class RRT(Node):
         Args:
         Returns:
             (x, y) (float float): a tuple representing the sampled point
-
         """
-          # max turn angle
-
-
         x = self.Grid.random_point(self.Grid.width) 
         y = self.Grid.random_point(self.Grid.height)
 
@@ -415,7 +479,7 @@ class RRT(Node):
     
     def in_no_sample_zone(self, x, y):
         # print(f"{self.coord_x=} {self.coord_y=}")
-        turning_radius = 0.8 / self.Grid.scale  # meters to pixels
+        turning_radius = 0.7 / self.Grid.scale  # meters to pixels
         # yaw is zero when in tune with the x-axis, not y axis 
         # print(f"{self.yaw=}")
         yaw = self.yaw +np.pi/2
@@ -433,12 +497,6 @@ class RRT(Node):
         dist_to_right = np.sqrt((x-right_circle_center[0])**2 + (y-right_circle_center[1])**2)
 
         return dist_to_left <= turning_radius or dist_to_right<=turning_radius
-    
-    def quaternion_to_yaw(self, orientation):
-        """ convert quaternion to yaw angle. (converts to vehicle frame)"""
-        siny_cosp = 2 * (orientation.w * orientation.z + orientation.x * orientation.y)
-        cosy_cosp = 1 - 2 * (orientation.y * orientation.y + orientation.z*orientation.z)
-        return np.arctan2(siny_cosp, cosy_cosp)
 
     def nearest(self, tree, sampled_point):
         """
@@ -477,13 +535,113 @@ class RRT(Node):
         if length==0.0:
             direction=np.array([0,0])
         else: direction = direction/length
-        step_size = int(0.2 / self.Grid.scale)
+        step_size = int(0.1 / self.Grid.scale)
         new_point = (int(nearest_node.x + (direction[0] * step_size)), int(nearest_node.y + (direction[1] * step_size)))
         # print(f"current point = {nearest_node.x, nearest_node.y}")
         # print(f"{new_point=}")
         # print(f"new point should be {nearest_node.x + direction[0]*step_size}")
         # print(f"goal point = {sampled_point[0], sampled_point[1]}")
         return TreeNode(new_point[0], new_point[1], parent=nearest_node)
+    
+
+    def candidate_selection(self, angle, candidates, control_point_dist = 1, num_angles=5):
+        """ uses possible points and entry_angle buffer to decide best paths """
+        # TODO - NEED TO INTEGRATE THIS WITH OTHER LOCAL BEHAVIOR!! AND TEST THIS HAHAHA
+        # TODO - MAKE SURE TO ALSO TEST THE BAND CREATION, DON'T KNOW IF THAT WORKS YET
+        p0 = self.coord_x, self.coord_y
+        entry_angle = angle
+        best_path = None
+        best_cost = float('inf')
+        best_p1 = best_p2 = None
+        angle_buffer = np.radians(5) # current degree buffer in radians
+        angle_range = np.linspace(entry_angle-angle_buffer, entry_angle+angle_buffer, num_angles)
+
+        for candidate in candidates:
+            for angle in angle_range:
+                # create the control points 
+                direction_vector = np.array([np.cos(angle), np.sin(angle)])
+                p1 = p0 + control_point_dist * direction_vector
+                p2 = candidate - control_point_dist * direction_vector
+
+                path = self.bezier_cubic(p0, p1, p2, candidate)
+
+                cost = self.compute_cost(path)
+                if cost < best_cost:
+                    best_cost = cost
+                    best_path = path
+                    best_p1, best_p2 = p1, p2
+        return best_path, best_cost, best_p1, best_p2
+
+                # now
+
+    def bezier_cubic(self, p0, p1, p2, p3, num_points=50):
+        """ creates bezier cubic points based on 4 contact points"""
+        t_values = np.linspace(0, 1, num_points)
+        curve = []
+        for t in t_values:
+            point = (1-t)**3 * np.array(p0) + 3*(1-t)**2 * t * np.array(p1) + 3*(1-t)*t**2 * np.array(p2) + t**3*np.array(p3)
+            curve.append(point)
+        return np.array(curve)
+
+    def compute_cost(self, path):
+        """ simple cost estimation based on length and curvature """
+        length = np.sum(np.sqrt(np.sum(np.diff(path, axis=0)**2, axis=1)))
+        curvature = np.sum(np.abs(np.diff(np.arctan2(np.diff(path[:, 1]), np.diff(path[:, 0])))))
+        return length + 10*curvature
+    
+    
+
+    def angle_within_band(self, desired_angle, band_min, band_max):
+        return band_min <= desired_angle <= band_max
+
+    def identify_critical_points(self, ang_tolerance, dist_tolerance, coords):
+        """ 
+        simplifies the path found from RRT to what is needed 
+        
+        returns the critical points :)
+        """
+        # TODO - CAN PROBABLY ALSO EXTRACT HEADING OUT OF THIS (COULD BE USEFUL FOR PATH FINDING)
+        # critical_points = [coords[0]]
+        critical_points = []
+        length = len(coords)
+        count=0
+        for i in range(1, length-1):
+            count+=1
+            v1 = np.array([coords[i].x, coords[i].y]) - np.array(coords[i-1].x, coords[i-1].y)
+            v2 = np.array(coords[i+1].x, coords[i+1].y) - np.array(coords[i].x, coords[i].y)
+            
+            angle = self.calculate_angle(v1, v2)
+            if angle > np.radians(ang_tolerance) or count==2:
+                count=0
+                v21 = v2 - v1
+                perp = np.linalg.norm(v21)/v21
+                bar = set()
+                new_pos = TreeNode(coords[i].x, coords[i].y)
+                while not self.check_collision(coords[i], new_pos):
+                    mult +=1
+                    bar.add((new_pos.x, new_pos.y))
+                    new_pos.x = int(new_pos.x +perp[0]*mult)
+                    new_pos.y = int(new_pos.y +perp[1]*mult)
+
+                while not self.check_collision(coords[i], new_pos):
+                    mult -=1
+                    bar.add((new_pos.x, new_pos.y))
+                    new_pos.x = int(new_pos.x -perp[0]*mult)
+                    new_pos.y = int(new_pos.y -perp[1]*mult)
+                critical_points.append((coords[i], bar))
+
+            # else:
+            #     dist = np.linalg.norm(np.array[coords[i].x, coords[i].y] - np.array(critical_points[-1].x, critical_points[-1].y))
+            #     if dist > dist_tolerance:
+            #         critical_points.append(coords[i])
+            # critical_points.append(coords[-1])
+
+    def calculate_angle(self, v1, v2):
+            """ calculates the angle between consecutive points """
+            unit_v1 = v1 / np.linalg.norm(v1)
+            unit_v2 = v2 / np.linalg.norm(v2)
+            dot_product = np.dot(unit_v1, unit_v2)
+            return np.arccos(dot_product)
 
     def check_collision(self, nearest_node, new_node):
         """
@@ -604,8 +762,8 @@ class RRT(Node):
     
 
     def publish_path(self, path):
-        while True:
-            print("AHAHAHAHA")
+        # while True:
+        #     print("AHAHAHAHA")
         msg = String()
         data = tuple(map(self.Grid.coord_to_pos, path))
         msg.data = str(data)
@@ -615,6 +773,7 @@ class RRT(Node):
         # TODO- MAY NEED TO INTERPOLATE POINTS BEFORE SENDING 
         self.get_logger().info(f"Sent waypoints containing {length} points")
         
+
 
 
 def main(args=None):
