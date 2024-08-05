@@ -15,6 +15,7 @@ import csv  # may need this?
 import ast
 from ackermann_msgs.msg import AckermannDriveStamped, AckermannDrive
 import time
+from scipy.spatial import KDTree
 
 # TODO: import as you need
 
@@ -35,6 +36,47 @@ class TreeNode:
         self.parent = parent
         self.cost = 0 if parent is None else float('inf') # only used in RRT*
         # self.is_root = False
+    
+    def __sub__(self, other):
+        """ subtracts the difference between a node and other item"""
+        # need to make sure that other has len 2
+        self.check_validity(other)
+        if isinstance(other, TreeNode):
+            # get the attributes
+            return np.array([self.x - other.x, self.y-other.y])
+
+        else:
+            # probably a numpy array
+            return np.array([self.x - other[0], self.y - other[1]])
+        
+    def __mul__(self, other):
+        """ runs multiplication """
+        self.check_validity(other)
+
+        if isinstance(other, TreeNode):
+            # maybe works somewhat like dot product?
+            return np.array([self.x * other.x, self.y*other.y])
+        else:
+            # integer or float multiplication
+            return np.array([self.x * other, self.y * other])
+        
+    def __add__(self, other):
+        """ adds two together, +1 func call compare to sub"""
+        return self - (-1*other)
+    
+    def __div__(self, other):
+        raise NotImplementedError
+    
+    def check_validity(self, param):
+        if len(param) != 2:
+            raise TypeError("Not the right size!")
+    
+
+    
+    # def calc_distance(self, other):
+    #     """ grabs the distance between two points """
+    #     return LA.norm(self - other)
+
 
 class Occupancy:
     """ 
@@ -121,8 +163,14 @@ class Occupancy:
         """
         min_x = self.origin[0]
         min_y = self.origin[1]
-        x = (node.x * self.scale)+min_x
-        y = (node.y* self.scale)+min_y
+        if hasattr(node, 'x'):
+            x = (node.x * self.scale)+min_x
+            y = (node.y* self.scale)+min_y
+        else:
+            # assume can separate by index
+            x = (node[0] * self.scale)+min_x
+            y = (node[1]* self.scale)+min_y
+
         return (x,y)
 
 class DualSearch(Node):
@@ -185,6 +233,7 @@ class DualSearch(Node):
         self.local_path = (True)
         self.last_global_update = time.time()
         self.global_update_interval = 5.0
+        self.global_path_length = None
 
         # TODO - want to create the grids here so they 
         # TODO -- can both access the occupancy grid
@@ -198,6 +247,8 @@ class DualSearch(Node):
         self.yaw = None
         self.coord_x,self.coord_y = None, None
         # self.goal represents the "global" goal
+        self.dist_tree = None
+        self.dist_tolerance = 0.50 # 50 centimeters for critical point selection
 
     def scan_callback(self, scan_msg):
         """
@@ -257,13 +308,68 @@ class DualSearch(Node):
 
     
     def update_global_path(self):
+        """ retrieves global path - 
+        - ensured path first run
+
+        attains path in form of a list of tuples:
+        
+        [(coord node, {set of bar}, heading in radians 
+        -- perhaps not correct heading)]
+        """
         if self.global_path is None:
             while self.global_path is None:
-                self.global_path = self.global_path.plan()
+                # want to keep searching until we have at least a basic path
+                self.global_path = self.global_planner.plan()
+        else:
+            self.global_path = self.global_planner.plan()
+        self.global_path_length = len(self.global_path)
+        
+        self.dist_tree = KDTree(self.global_path, metric=self.dist_finder)
 
     def update_local_path(self):
         local_goal = self.extract_local_goal()
+        # local path comes in the form of coords (in an array?)
         self.local_path = self.local_planner.plan(local_goal)
+
+    def extract_local_goal(self):
+        """
+        uses the consecutive nature of the path to find next position
+        """
+        # TODO - !L - later change the lookahead distance to be based
+        #       on the speed of the vehicle :)
+        lookahead_dist = 1.0 # meters
+        lookahead_shift = int(lookahead_dist / self.dist_tolerance)
+        current_pose = TreeNode(self.coord_x, self.coord_y)
+        distance, index = self.dist_tree(current_pose)
+        lookahead_index = (index + lookahead_shift) % self.global_path_length
+
+        # returns the local goal
+        return self.global_path[lookahead_index]
+
+        # TODO - VERY IMPORTANT 
+        # easiest way to do this would be to have a constant distance between points
+        # so indexing finds the distance I want from the position I have...
+        # although this could introduce jittering for straighter sections
+        # meaning I could also implement like "straight" and "curve" flags, 
+        # ^^ where instead of looking ahead a certain distance for straight,
+        #        I just aim for the furthest point ! :)
+        # blah = KDTree(some_data, metric=self.dist_finder)
+
+
+
+        # TODO - WILL USE CUSTOM FUNCTION FOR NOW, BUT SHOULD TEST SPEED
+        # LATER AND THEN PROBABLY CHANGE IT - LIKELY NEED A BIG RESTRUCTURE 
+        # IN GENERAL FOR OPTIMIZATION?? NOT ALL CALCULATIONS FEEL EFFICIENT ATM
+
+    def dist_finder(self, node1_, node2_):
+        """ just a little, probably inefficient function"""
+        # TODO - !H TOP PRIORITY
+        # node1 = node1_[0]
+        node2 = node2_[0]  # need to grab the node part of it
+        return LA.norm(node2-node1_)
+        # the best search path for this depends on how close the points 
+        # are to eachoter!
+
 
     def publish_local_path(self):
         """ sends the path to waypoint follower """
@@ -304,6 +410,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         self.yaw = 0  # initialize yaw for not_allowed_circle
         self.am_local = am_i_local
         
+        
         # ------------------------------
 
         # MAP TESTING -----_@__!_!_!_#)@#@(_@#(_#@()#))
@@ -325,7 +432,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         # TODO - incorporate this later - may also depend on speed of vehicle
         return 100
 
-    def plan(self):
+    def plan(self, point=None):
         """
         The pose callback when subscribed to particle filter's inferred pose
         Here is where the main RRT loop happens
@@ -338,19 +445,29 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         # pretty sure pose_msg.pose.pose.position.x is required (remove verify later?)
         # print("GETTING POSITION")
         if self.Grid is not None:
+            if self.am_local and point is not None:
+                priority = point[0]
+                # ^^ don't do anything with priority pick for now 
+                candidates = point[1]
+                entry_angle = point[2]
+                return self.candidate_selection(candidates, entry_angle)
 
-            if not self.tree:
-                # print("MADE A TREE")
-                start = TreeNode(self.coord_x, self.coord_y)
-                self.tree.append(start)
+                # TODO - should do parallel processing with local and global so no interference
+                # TODO - try out once having tested this current alg
+
             else:
-                # print("GETTING CAUGHT HERE")
-                if self.no_longer_valid(self.coord_x, self.coord_y) or self.new_goal:
-                    self.new_goal=False
-                    self.replan(self.coord_x, self.coord_y)
+                if not self.tree:
+                    # print("MADE A TREE")
+                    start = TreeNode(self.coord_x, self.coord_y)
+                    self.tree.append(start)
                 else:
-                    # print("CHOOSING TO GROW TREE")
-                    self.grow_tree()
+                    # print("GETTING CAUGHT HERE")
+                    if self.no_longer_valid(self.coord_x, self.coord_y) or self.new_goal:
+                        self.new_goal=False
+                        self.replan(self.coord_x, self.coord_y)
+                    else:
+                        # print("CHOOSING TO GROW TREE")
+                        self.grow_tree()
 
     def no_longer_valid(self, x, y):
         """ checks if current tree no longer valid, possible reasons:
@@ -375,8 +492,6 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         self.grow_tree()
     
     def grow_tree(self): 
-        # TODO - problem does not have to do with the origin
-        # TODO - problem also does not have to do with random sampling
         """ expands the current tree"""
         # print(f"{self.goal=}")
         if self.goal is not None:
@@ -421,11 +536,16 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
                     if self.is_goal(new_node, *self.goal):
                         print("found goal?")
                         path = self.find_path(self.tree, new_node)
-                        if self.am_local:
-                            # first want to get the bars
-                            return self.identify_critical_points(ang_tolerance=2, dist_tolerance=1, coords=path)
-                        else:
-                            return path
+                        # TODO - !L : make sure the sample rate not too high, 
+                        #       meaning angle is less than 2 degrees for turns
+                        return self.identify_critical_points(ang_tolerance=2, dist_tolerance=self.dist_tolerance, coords=path)
+
+                        # if self.am_local:
+                        #     # first want to get the bars
+
+                        #     return self.identify_critical_points(ang_tolerance=2, dist_tolerance=self.dist_tolerance, coords=path)
+                        # else:
+                        #     return path
                         # should correctly send the path back
                         # self.publish_path(path)
                         # break
@@ -478,10 +598,13 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         return self.sample()
     
     def in_no_sample_zone(self, x, y):
+        """ circles around car that represent turn radius, won't search here"""
+        # TODO - CAN INSTEAD GIVE PSEUDO-POSITION OF CAR... MEANING EACH FIRST POINT HAS "POSITION" OF CAR
         # print(f"{self.coord_x=} {self.coord_y=}")
         turning_radius = 0.7 / self.Grid.scale  # meters to pixels
         # yaw is zero when in tune with the x-axis, not y axis 
         # print(f"{self.yaw=}")
+        
         yaw = self.yaw +np.pi/2
         left_circle_center = (
             self.coord_x - turning_radius * np.cos(yaw),
@@ -511,7 +634,8 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         nearest_index = 0
         min_dist = float('inf')
         for i,node in enumerate(tree):
-            dist = LA.norm([sampled_point[0] - node.x, sampled_point[1] - node.y])
+            dist = LA.norm(node - sampled_point)
+            # ([sampled_point[0] - node.x, sampled_point[1] - node.y])
             if dist < min_dist:
                 min_dist = dist
                 nearest_index = i
@@ -528,7 +652,8 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         Returns:
             new_node (Node): new node created from steering
         """
-        direction = np.array([sampled_point[0] - nearest_node.x, sampled_point[1]-nearest_node.y])
+        direction = (-1 * nearest_node) + sampled_point
+        # np.array([sampled_point[0] - nearest_node.x, sampled_point[1]-nearest_node.y])
         # print(f"{direction=}")
         length = LA.norm(direction)
         # print(f"{length=}")
@@ -536,7 +661,8 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
             direction=np.array([0,0])
         else: direction = direction/length
         step_size = int(0.1 / self.Grid.scale)
-        new_point = (int(nearest_node.x + (direction[0] * step_size)), int(nearest_node.y + (direction[1] * step_size)))
+        new_point = (nearest_node + (direction*step_size)).astype(int)
+        # (int(nearest_node.x + (direction[0] * step_size)), int(nearest_node.y + (direction[1] * step_size)))
         # print(f"current point = {nearest_node.x, nearest_node.y}")
         # print(f"{new_point=}")
         # print(f"new point should be {nearest_node.x + direction[0]*step_size}")
@@ -544,24 +670,30 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         return TreeNode(new_point[0], new_point[1], parent=nearest_node)
     
 
-    def candidate_selection(self, angle, candidates, control_point_dist = 1, num_angles=5):
-        """ uses possible points and entry_angle buffer to decide best paths """
+    def candidate_selection(self, candidates, angle, control_point_dist = 1, num_angles=5):
+        """ uses possible points and entry_angle buffer to decide best paths 
+        
+        candidates: must be iterable
+        angle: must be radians
+
+        """
         # TODO - NEED TO INTEGRATE THIS WITH OTHER LOCAL BEHAVIOR!! AND TEST THIS HAHAHA
         # TODO - MAKE SURE TO ALSO TEST THE BAND CREATION, DON'T KNOW IF THAT WORKS YET
         p0 = self.coord_x, self.coord_y
-        entry_angle = angle
         best_path = None
         best_cost = float('inf')
         best_p1 = best_p2 = None
         angle_buffer = np.radians(5) # current degree buffer in radians
-        angle_range = np.linspace(entry_angle-angle_buffer, entry_angle+angle_buffer, num_angles)
+        angle_range = np.linspace(angle-angle_buffer, angle+angle_buffer, num_angles)
 
         for candidate in candidates:
             for angle in angle_range:
                 # create the control points 
+                # TODO - P0 and candidate are both Node objects, so need to do a __sub__ method
                 direction_vector = np.array([np.cos(angle), np.sin(angle)])
-                p1 = p0 + control_point_dist * direction_vector
-                p2 = candidate - control_point_dist * direction_vector
+                shift = control_point_dist * direction_vector
+                p1 = p0 + shift
+                p2 = candidate - shift
 
                 path = self.bezier_cubic(p0, p1, p2, candidate)
 
@@ -570,17 +702,32 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
                     best_cost = cost
                     best_path = path
                     best_p1, best_p2 = p1, p2
-        return best_path, best_cost, best_p1, best_p2
+
+        print(best_cost)
+        # best_cost, best_p1, best_p2
+        return best_path
 
                 # now
 
     def bezier_cubic(self, p0, p1, p2, p3, num_points=50):
         """ creates bezier cubic points based on 4 contact points"""
+        # TODO - !H -- this probably needs some testing to see how to position X and Y
+        #       -- also need to figure out how to convert to real coords
+        # TODO !H -- different ways to see if a point is invalid...
+        #        could make a square and see if any of those points in the OccupancyGrid...
+        #        could find closest point and see if it is further than the car's width
+        #        implement the square method rn and benchmark later 
         t_values = np.linspace(0, 1, num_points)
         curve = []
+        checked = set()
         for t in t_values:
-            point = (1-t)**3 * np.array(p0) + 3*(1-t)**2 * t * np.array(p1) + 3*(1-t)*t**2 * np.array(p2) + t**3*np.array(p3)
-            curve.append(point)
+            point = (1-t)**3 * np.array(p0) + 3*(1-t)**2 * t * np.array(p1) + 3*(1-t)*t**2 * np.array(p2) + t**3*np.array(p3).astype(int)
+            point_node = TreeNode(point[0], point[1])
+            if point not in checked:
+                checked.add(point)
+                if self.check_collision(point_node, point_node):
+                    return # don't want to get anything from it.. just give up
+                curve.append(point)
         return np.array(curve)
 
     def compute_cost(self, path):
@@ -589,7 +736,6 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         curvature = np.sum(np.abs(np.diff(np.arctan2(np.diff(path[:, 1]), np.diff(path[:, 0])))))
         return length + 10*curvature
     
-    
 
     def angle_within_band(self, desired_angle, band_min, band_max):
         return band_min <= desired_angle <= band_max
@@ -597,38 +743,59 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
     def identify_critical_points(self, ang_tolerance, dist_tolerance, coords):
         """ 
         simplifies the path found from RRT to what is needed 
+
+        ang_tolerance: accepted in degrees and converted into radians
+        dist_tolerance: accepted in meters used in meters
         
         returns the critical points :)
         """
         # TODO - CAN PROBABLY ALSO EXTRACT HEADING OUT OF THIS (COULD BE USEFUL FOR PATH FINDING)
         # critical_points = [coords[0]]
+        # TODO - CHECK THIS LOGIC
+        # TODO - IF I WANT TO CLASSIFY BY STRAIGHT OR CURVES... THEN NEED TO PREPARE LATER THINGS
+        # TODO - TO ACCEPT THINGS OF THAT LENGTH :)))
+        # TODO - !H
         critical_points = []
+
+
         length = len(coords)
-        count=0
+        dist=0
         for i in range(1, length-1):
-            count+=1
-            v1 = np.array([coords[i].x, coords[i].y]) - np.array(coords[i-1].x, coords[i-1].y)
-            v2 = np.array(coords[i+1].x, coords[i+1].y) - np.array(coords[i].x, coords[i].y)
+            v1 = coords[i] - coords[i-1]
+            v2 = coords[i+1] - coords[i]
+            dist += LA.norm(coords[i]-coords[i-1])
             
             angle = self.calculate_angle(v1, v2)
-            if angle > np.radians(ang_tolerance) or count==2:
-                count=0
+            if angle > np.radians(ang_tolerance) or (dist/self.Grid.scale >= dist_tolerance):
+                dist=0
                 v21 = v2 - v1
-                perp = np.linalg.norm(v21)/v21
+                perp = LA.norm(v21)/v21
                 bar = set()
                 new_pos = TreeNode(coords[i].x, coords[i].y)
+
+                # need to check this heading logic
+                heading = np.arctan(v21[0]/v21[1]) # x/y 
+                # TODO - !H MAKE SURE HEADING CALCULATION IS GOOD 
                 while not self.check_collision(coords[i], new_pos):
                     mult +=1
                     bar.add((new_pos.x, new_pos.y))
-                    new_pos.x = int(new_pos.x +perp[0]*mult)
-                    new_pos.y = int(new_pos.y +perp[1]*mult)
+                    new_value = (new_pos + (perp*mult)).astype(int)
+                    new_pos.x = new_value[0]
+                    # int(new_pos.x +perp[0]*mult)
+                    new_pos.y = new_value[1]
+                    # int(new_pos.y +perp[1]*mult)
 
                 while not self.check_collision(coords[i], new_pos):
                     mult -=1
                     bar.add((new_pos.x, new_pos.y))
-                    new_pos.x = int(new_pos.x -perp[0]*mult)
-                    new_pos.y = int(new_pos.y -perp[1]*mult)
-                critical_points.append((coords[i], bar))
+                    new_value = (new_pos - (perp*mult)).astype(int)
+                    new_pos.x = new_value[0]
+                    # int(new_pos.x -perp[0]*mult)
+                    new_pos.y = new_value[1]
+                    # int(new_pos.y -perp[1]*mult)
+                critical_points.append((coords[i], bar, heading))
+
+        return critical_points
 
             # else:
             #     dist = np.linalg.norm(np.array[coords[i].x, coords[i].y] - np.array(critical_points[-1].x, critical_points[-1].y))
@@ -638,8 +805,8 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
 
     def calculate_angle(self, v1, v2):
             """ calculates the angle between consecutive points """
-            unit_v1 = v1 / np.linalg.norm(v1)
-            unit_v2 = v2 / np.linalg.norm(v2)
+            unit_v1 = v1 / LA.norm(v1)
+            unit_v2 = v2 / LA.norm(v2)
             dot_product = np.dot(unit_v1, unit_v2)
             return np.arccos(dot_product)
 
@@ -655,30 +822,19 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
             collision (bool): whether the path between the two nodes are in collision
                               with the occupancy grid
         """
-        # take the line into account, but also the size of the car
-        # will depend on the resolution of the map
-        new_pos = np.array([new_node.x, new_node.y])
-        near_pos = np.array([nearest_node.x, nearest_node.y])
-        # print(f"{new_pos=}, {near_pos=}")
-        stop, start = new_pos, near_pos
         width = self.car_width / self.Grid.scale  # gives us the car width in terms of coordinate squares 
         # assuming new_node is the target (stop) and near_pos is start
-        direct_vector = stop-start
+        direct_vector = new_node - nearest_node
         length = int(np.linalg.norm(direct_vector))
         direct_vector = direct_vector / length
         offset = int(width/2)
-        square = [np.array([x,y]) for x in range(start[0]-offset, start[0]+(offset+1)) for y in range(start[1]-offset, start[1]+(offset+1))]
+        square = [np.array([x,y]) for x in range(nearest_node.x-offset, nearest_node.x+(offset+1)) 
+                  for y in range(nearest_node.y-offset, nearest_node.y+(offset+1))]
+        # TODO - PROBABLY A QUICKER WAY TO DO THE SQUARE
         path = set(tuple((array+(mult*direct_vector)).astype(int)) for mult in range(1, length+1) for array in square)
-        truthy = any(location in self.Grid for location in path) 
-        # if truthy:
-        #     print(f"{direct_vector=}")
-        return truthy
+        # TODO - could potentially be quicker to check while creating the path, depending on how large the path is
+        return any(location in self.Grid for location in path) 
         
-        # TODO - for the more optimized search, (circle mode), can just check IITC, or sensor 
-        #   data for soon collision
-        # TODO - I also dont think this current method is good for complex maneouvers 
-        #   collision checking does feel quite linear... 
-
     def is_goal(self, latest_added_node, goal_x, goal_y):
         """
         This method should return whether the latest added node is close enough
@@ -737,7 +893,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
             cost (float): the cost value of the line
         """
         # TODO - remember that distances are in terms of pixels
-        cost = LA.norm([n1.x - n2.x, n1.y-n2.y])  
+        cost = LA.norm(n1-n2)  
         return cost
         # for now cost is just determined by distance
 
@@ -755,7 +911,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         radius = int(1 / self.Grid.scale)
         neighbors = []
         for n in tree:
-            if LA.norm([node.x - n.x, node.y-n.y]) <= radius:
+            if LA.norm(node-n) <= radius:
                 # means that the node is "near"
                 neighbors.append(n)
         return neighbors
@@ -773,9 +929,6 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         # TODO- MAY NEED TO INTERPOLATE POINTS BEFORE SENDING 
         self.get_logger().info(f"Sent waypoints containing {length} points")
         
-
-
-
 def main(args=None):
     rclpy.init(args=args)
     print("RRT Initialized")
