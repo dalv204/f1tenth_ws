@@ -25,6 +25,11 @@ class PurePursuit(Node):
     
     def __init__(self):
         super().__init__('pure_pursuit_node')
+        pose_topic = "/ego_racecar/odom"
+        map_topic = "/map"
+        scan_topic = "/scan"
+        clicked_topic = "/clicked_point"
+        waypoints = "/custom_waypoints"
         
         # self.pose_sub = self.create_subscription(PoseStamped, '/current_pose',
         #                                          self.pose_callback,
@@ -34,20 +39,20 @@ class PurePursuit(Node):
         self.sim_pose_sub = self.create_subscription(
 
             Odometry,
-            "/ego_racecar/odom",
+            pose_topic,
             self.pose_callback,
             10,
         )
         self.map_sub = self.create_subscription(
             OccupancyGrid,
-            '/map',
+            map_topic,
             self.map_callback,
             10
         )
 
         self.waypoint_sub = self.create_subscription(
             String,
-            "/custom_waypoints",
+            waypoints,
             self.waypoint_callback,
             10
         )
