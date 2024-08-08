@@ -2,6 +2,7 @@
 File for holding custom data structures and common functions 
 
 """
+import numpy as np
 
 class Occupancy:
     """ 
@@ -99,5 +100,46 @@ class Occupancy:
         return (x,y)
 
 
+class TreeNode:
+    # TODO - ADD FUNCTIONS TO EASILY SUBTRACT TREE NODES 
+    # TODO - ALSO SEE IF YOU CAN ADD SOME SORT OF LEN() 
+    # TO FIND THE DISTANCE BETWEEN THEM
+    def __init__(self, x, y, parent=None):
+        self.x = x
+        self.y = y
+        self.parent = parent
+        self.cost = 0 if parent is None else float('inf') # only used in RRT*
+        # self.is_root = False
+    
+    def __sub__(self, other):
+        """ subtracts the difference between a node and other item"""
+        # need to make sure that other has len 2
+        if hasattr(other, 'x'):
+            # get the attributes
+            return np.array([self.x - other.x, self.y-other.y])
 
+        else:
+            # probably a numpy array
+            return np.array([self.x - other[0], self.y - other[1]])
+        
+    def __mul__(self, other):
+        """ runs multiplication """
+
+        if hasattr(other, 'x'):
+            # maybe works somewhat like dot product?
+            return np.array([self.x * other.x, self.y*other.y])
+        else:
+            # integer or float multiplication
+            return np.array([self.x * other, self.y * other])
+        
+    def __add__(self, other):
+        """ adds two together, +1 func call compare to sub"""
+        return self - (-1*other)
+    
+    def __div__(self, other):
+        raise NotImplementedError
+    
+    def get_coord(self):
+        """ returns the current coords in tuple form """
+        return np.array([self.x, self.y])
 
