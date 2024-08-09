@@ -121,7 +121,8 @@ class Occupancy:
         square = [np.array([x,y]) for x in range(nearest_node.x-offset, nearest_node.x+(offset+1)) 
                   for y in range(nearest_node.y-offset, nearest_node.y+(offset+1))]
         # TODO - PROBABLY A QUICKER WAY TO DO THE SQUARE
-        path = set(tuple((array+(mult*direct_vector)).astype(int)) for mult in range(1, length+1) for array in square)
+        path = set(tuple((array+(mult*direct_vector)).astype(int)) for mult in range(0, length+1) for array in square)
+        # start with zero ^^ to work for squares
         # TODO - could potentially be quicker to check while creating the path, depending on how large the path is
         return any(location in self for location in path)
 

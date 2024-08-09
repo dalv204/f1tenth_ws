@@ -8,7 +8,8 @@ TODO - SHARED PARAMETERS SHOULD BE IN A YAML FILE
 TODO - !H - JUST MAKE A __repr__ func for the TreeNode class to show tuple of coords
         -- gonna want to make the KDTree on this side I believe... 
 """
-from rclpy import Node
+import rclpy
+from rclpy.node import Node
 import numpy as np 
 from scipy.spatial import KDTree
 from ackermann_msgs.msg import AckermannDriveStamped, AckermannDrive
@@ -17,6 +18,8 @@ from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan
 from util import TreeNode, Occupancy
 import ast
+from visualization_msgs.msg import Marker
+from geometry_msgs.msg import Point
 
 class LBC(Node):
     """ class to process local """
@@ -61,6 +64,7 @@ class LBC(Node):
             waypoints,
             10,
         )
+        self.marker_pub = self.create_publisher(Marker, 'waypoints_marker', 10)
 
         with open("data_file.json", 'r') as dt:
             info = dt.read()
@@ -77,6 +81,8 @@ class LBC(Node):
         self.Grid = Occupancy(.05, (141, 124), (-1.31, -4.25), map_info)
         # ------------------------------
         self.mapped = False
+        self.checked = set() # checked bezier points
+        self.known_failures = set() # checked bezier points that fail
 
     def pose_callback(self,pose_msg):
         """ updates position and runs localizer (if can) """
@@ -105,9 +111,52 @@ class LBC(Node):
 
     def global_path_callback(self, msg):
         """ use the path given and construct trees etc """
-        self.global_path = tuple(map(lambda x: (np.array(x[0]), x[1], x[2])), ast.literal_eval(msg))
+        self.global_path = tuple(map(lambda x: (np.array(x[0]), x[1], x[2]), ast.literal_eval(msg.data)))
         self.global_path_length = len(self.global_path)
-        self.kd_tree = KDTree(item[0] for item in self.global_path)
+        # print(self.global_path)
+        self.kd_tree = KDTree(tuple(item[0] for item in self.global_path))
+
+    def waypoint_publish(self, main_path=True, group=None):
+        if not main_path:
+            self.path = self.init_marker(g=1.0)
+            for value in group:
+                x,y = value
+                point=Point()
+                point.x=x
+                point.y=y
+                point.z=0.0
+                self.path.points.append(point)
+            self.marker_pub.publish(self.path)
+            
+        # print(f"{self.waypoints}")
+        # x,y = self.waypoints[-1]
+        # point = Point()
+        # point.x = x
+        # point.y = y
+        # point.z = 0.0
+        self.path.points.append(point)
+
+        self.marker_pub.publish(self.path)
+
+
+    def init_marker(self, r=0.0, g=0.0, b=0.0):
+        """ gets the standard settings"""
+        marker = Marker()
+        marker.header.frame_id = "map"
+        marker.header.stamp = self.get_clock().now().to_msg()
+        marker.ns = "waypoints"
+        marker.id = 0
+        marker.type = Marker.POINTS
+        marker.action = Marker.ADD
+        marker.pose.orientation.w = 1.0
+        marker.scale.x = 0.1
+        marker.scale.y = 0.1
+        marker.color.a = 1.0
+        marker.color.r = r
+        marker.color.g = g
+        marker.color.b = b
+        return marker
+
 
     def plan(self, point=None):
         """
@@ -123,15 +172,14 @@ class LBC(Node):
         print("CALLING PLAN")
 
         if self.Grid is not None:
-            if self.am_local and point is not None:
-                priority = point[0]
-                # ^^ don't do anything with priority pick for now 
-                candidates = point[1]
-                entry_angle = point[2]
-                return self.candidate_selection(candidates, entry_angle)
+            priority = point[0]
+            # ^^ don't do anything with priority pick for now 
+            candidates = point[1]
+            entry_angle = point[2]
+            return self.candidate_selection(candidates, entry_angle)
 
-                # TODO - should do parallel processing with local and global so no interference
-                # TODO - try out once having tested this current alg
+            # TODO - should do parallel processing with local and global so no interference
+            # TODO - try out once having tested this current alg
 
     def candidate_selection(self, candidates, angle, control_point_dist = 1, num_angles=5):
         """ uses possible points and entry_angle buffer to decide best paths 
@@ -159,7 +207,6 @@ class LBC(Node):
                 p2 = candidate - shift
 
                 path = self.bezier_cubic(p0, p1, p2, candidate)
-
                 cost = self.compute_cost(path)
                 if cost < best_cost:
                     best_cost = cost
@@ -170,7 +217,7 @@ class LBC(Node):
         # best_cost, best_p1, best_p2
         return best_path
 
-    def bezier_cubic(self, p0, p1, p2, p3, num_points=50): ## LOCAL ##
+    def bezier_cubic(self, p0, p1, p2, p3, num_points=10): ## LOCAL ##
         """ creates bezier cubic points based on 4 contact points"""
         # TODO - !H -- this probably needs some testing to see how to position X and Y
         #       -- also need to figure out how to convert to real coords
@@ -180,27 +227,33 @@ class LBC(Node):
         #        implement the square method rn and benchmark later 
         t_values = np.linspace(0, 1, num_points)
         curve = []
-        checked = set()
         for t in t_values:
+            # print("trying a value")
             point = ((1-t)**3 * np.array(p0) + 3*(1-t)**2 * t * np.array(p1) + 3*(1-t)*t**2 * np.array(p2) + t**3*np.array(p3)).astype(int)
-            # print("THE POINT HERE IS THAT IT IS ")
-            # print(f"{point=}")
-            # print("AND THAT IS ALL")
             point_node = TreeNode(point[0], point[1])
             check_point = tuple(point)
             # must be hashable ^^
-            if check_point not in checked:
-                checked.add(check_point)
+            if check_point in self.known_failures:
+                # print("CAUGHT A FAILURE")
+                return 
+            elif check_point not in self.checked:
+                self.checked.add(check_point)
                 if self.Grid.check_collision(point_node, point_node):
-                    return # don't want to get anything from it.. just give up
-                curve.append(point)
+                    # print("CAN FIND COLLISIONS")
+                    self.known_failures.add(check_point)
+                    return  # don't want to get anything from it.. just give up
+            curve.append(point)
+        # print(f"{curve=}")
         return np.array(curve)
 
     def compute_cost(self, path): ## LOCAL ##
         """ simple cost estimation based on length and curvature """
-        length = np.sum(np.sqrt(np.sum(np.diff(path, axis=0)**2, axis=1)))
-        curvature = np.sum(np.abs(np.diff(np.arctan2(np.diff(path[:, 1]), np.diff(path[:, 0])))))
-        return length + 10*curvature
+        if path is None:
+            return float("inf")
+        else:
+            length = np.sum(np.sqrt(np.sum(np.diff(path, axis=0)**2, axis=1)))
+            curvature = np.sum(np.abs(np.diff(np.arctan2(np.diff(path[:, 1]), np.diff(path[:, 0])))))
+            return length + 10*curvature
     
 
     def angle_within_band(self, desired_angle, band_min, band_max): ## LOCAL ##
@@ -238,9 +291,20 @@ class LBC(Node):
         #     print("AHAHAHAHA")
         msg = String()
         data = tuple(map(self.Grid.coord_to_pos, self.local_path))
+        self.waypoint_publish(False, data)
         msg.data = str(data)
         # print(msg.data)
         length = len(data)
         self.waypoint_pub.publish(msg)
         # TODO- MAY NEED TO INTERPOLATE POINTS BEFORE SENDING 
         self.get_logger().info(f"Sent waypoints containing {length} points")
+
+def main(args=None):
+    rclpy.init(args=args)
+    print("LOCALIZER INITIALIZED")
+    localizer = LBC()
+    rclpy.spin(localizer)
+    rclpy.shutdown()
+
+if __name__ == "__main__":
+    main()
