@@ -182,6 +182,7 @@ class DualSearch(Node):
         scan_topic = "/scan"
         clicked_topic = "/clicked_point"
         waypoints = "/custom_waypoints"
+        global_path_topic = "/global_path"
         map_topic = '/map'
         
         # you could add your own parameters to the rrt_params.yaml file,
@@ -233,6 +234,11 @@ class DualSearch(Node):
             waypoints,
             10
         )
+        self.global_path_pub = self.create_publisher(
+            String,
+            global_path_topic,
+            10
+        )
 
         self.marker_pub = self.create_publisher(Marker, 'waypoints_marker', 10)
 
@@ -267,7 +273,7 @@ class DualSearch(Node):
         self.dist_tolerance = 0.50 # 50 centimeters for critical point selection
         # TODO - IN REAL CASE, WAIT FOR GRID TO INITIALIZE PLANNERS
         self.global_planner = RRT(False, parent=self)
-        self.local_planner = RRT(True, parent=self)
+        # self.local_planner = RRT(True, parent=self)
 
 
     def scan_callback(self, scan_msg):
@@ -330,7 +336,7 @@ class DualSearch(Node):
             self.update_global_path()
 
     
-    def update_publish_local(self):
+    def update_publish_local(self): ## LOCAL ##
         if self.kd_tree is not None:
             self.update_local_path()
             self.publish_local_path()
@@ -364,17 +370,30 @@ class DualSearch(Node):
             print("MOVED ON")
             temp_global = self.global_planner.plan()
             self.global_path = temp_global if temp_global is not None else self.global_path
-        self.global_path_length = len(self.global_path)
+        
+        self.publish_global_path()
+
+    def publish_global_path(self):
+        """ 
+        published the global path as a string
+        __repr__ function of Nodes automatically converts
+        them to a tuple (self.x, self.y) form
+        """
+        msg = String()
+        msg.data = str(self.global_path)
+        self.global_path_pub.publish(msg)
+        self.get_logger().info("Sent the Global Path for Local Path Tracing")
+        # self.global_path_length = len(self.global_path)
 
         
-        self.kd_tree = KDTree(np.array([item[0].get_coord() for item in self.global_path]))
+        # self.kd_tree = KDTree(np.array([item[0].get_coord() for item in self.global_path]))
 
     def update_local_path(self):
         local_goal = self.extract_local_goal()
         # local path comes in the form of coords (in an array?)
         self.local_path = self.local_planner.plan(local_goal)
 
-    def extract_local_goal(self):
+    def extract_local_goal(self): ## LOCAL ##
         """
         uses the consecutive nature of the path to find next position
         """
@@ -410,17 +429,8 @@ class DualSearch(Node):
         # LATER AND THEN PROBABLY CHANGE IT - LIKELY NEED A BIG RESTRUCTURE 
         # IN GENERAL FOR OPTIMIZATION?? NOT ALL CALCULATIONS FEEL EFFICIENT ATM
 
-    def dist_finder(self, node1_, node2_):
-        """ just a little, probably inefficient function"""
-        # TODO - !H TOP PRIORITY
-        # node1 = node1_[0]
-        node2 = node2_[0]  # need to grab the node part of it
-        return LA.norm(node2-node1_)
-        # the best search path for this depends on how close the points 
-        # are to eachoter!
 
-
-    def publish_local_path(self):
+    def publish_local_path(self): ## LOCAL ##
         """ sends the path to waypoint follower """
          # while True:
         #     print("AHAHAHAHA")
@@ -478,7 +488,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         return getattr(self.parent, name)
 
 
-    def get_iteration_count(self):
+    def get_iteration_count(self): ## GLOBAL ##
         """
         calculates reasonable number of iterations for system 
         based on speed and computational resources
@@ -500,32 +510,29 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         print("CALLING PLAN")
 
         if self.Grid is not None:
-            if self.am_local and point is not None:
-                priority = point[0]
-                # ^^ don't do anything with priority pick for now 
-                candidates = point[1]
-                entry_angle = point[2]
-                return self.candidate_selection(candidates, entry_angle)
+            # if self.am_local and point is not None:
+            #     priority = point[0]
+            #     # ^^ don't do anything with priority pick for now 
+            #     candidates = point[1]
+            #     entry_angle = point[2]
+            #     return self.candidate_selection(candidates, entry_angle)
 
-                # TODO - should do parallel processing with local and global so no interference
-                # TODO - try out once having tested this current alg
-
+            # else:
+            print("KNOWS WE'RE NOT LOCAL")
+            # print("should be here")
+            if not self.tree:
+                start = TreeNode(self.coord_x, self.coord_y)
+                self.tree.append(start)
             else:
-                print("KNOWS WE'RE NOT LOCAL")
-                # print("should be here")
-                if not self.tree:
-                    start = TreeNode(self.coord_x, self.coord_y)
-                    self.tree.append(start)
+                # print("GETTING CAUGHT HERE")
+                if self.no_longer_valid(self.coord_x, self.coord_y) or self.new_goal:
+                    self.new_goal=False
+                    self.replan(self.coord_x, self.coord_y)
                 else:
-                    # print("GETTING CAUGHT HERE")
-                    if self.no_longer_valid(self.coord_x, self.coord_y) or self.new_goal:
-                        self.new_goal=False
-                        self.replan(self.coord_x, self.coord_y)
-                    else:
-                        # print("CHOOSING TO GROW TREE")
-                        return self.grow_tree()
+                    # print("CHOOSING TO GROW TREE")
+                    return self.grow_tree()
 
-    def no_longer_valid(self, x, y):
+    def no_longer_valid(self, x, y): ## GLOBAL ##
         """ checks if current tree no longer valid, possible reasons:
         - not where I thought I would be 
         - unexpected obstacle found 
@@ -537,7 +544,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         return False
 
 
-    def replan(self, x, y):
+    def replan(self, x, y): ## GLOBAL ##
         """ 
         starts the tree over 
         because of unforseen condition
@@ -547,7 +554,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         self.tree.append(start)
         self.grow_tree()
     
-    def grow_tree(self): 
+    def grow_tree(self):  ## GLOBAL ##
         """ expands the current tree"""
         # print(f"{self.goal=}")
         print("TRYING TO GROW TREE")
@@ -649,7 +656,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         marker.color.b = b
         return marker
 
-    def sample(self):
+    def sample(self): ## GLOBAL ##
         """
         This method should randomly sample the free space, and returns a viable point
 
@@ -667,7 +674,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
             return point
         return self.sample()
     
-    def in_no_sample_zone(self, x, y):
+    def in_no_sample_zone(self, x, y): ## GLOBAL ##
         """ circles around car that represent turn radius, won't search here"""
         # TODO - CAN INSTEAD GIVE PSEUDO-POSITION OF CAR... MEANING EACH FIRST POINT HAS "POSITION" OF CAR
         # print(f"{self.coord_x=} {self.coord_y=}")
@@ -691,7 +698,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
 
         return dist_to_left <= turning_radius or dist_to_right<=turning_radius
 
-    def nearest(self, tree, sampled_point):
+    def nearest(self, tree, sampled_point): ## GLOBAL ##
         """
         This method should return the nearest node on the tree to the sampled point
 
@@ -711,7 +718,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
                 nearest_index = i
         return nearest_index
 
-    def steer(self, nearest_node, sampled_point):
+    def steer(self, nearest_node, sampled_point): ## GLOBAL ##
         """
         This method should return a point in the viable set such that it is closer 
         to the nearest_node than sampled_point is.
@@ -742,7 +749,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         return TreeNode(new_point[0], new_point[1], parent=nearest_node)
     
 
-    def candidate_selection(self, candidates, angle, control_point_dist = 1, num_angles=5):
+    def candidate_selection(self, candidates, angle, control_point_dist = 1, num_angles=5): ## LOCAL ##
         """ uses possible points and entry_angle buffer to decide best paths 
         
         candidates: must be iterable
@@ -781,7 +788,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
 
                 # now
 
-    def bezier_cubic(self, p0, p1, p2, p3, num_points=50):
+    def bezier_cubic(self, p0, p1, p2, p3, num_points=50): ## LOCAL ##
         """ creates bezier cubic points based on 4 contact points"""
         # TODO - !H -- this probably needs some testing to see how to position X and Y
         #       -- also need to figure out how to convert to real coords
@@ -807,17 +814,17 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
                 curve.append(point)
         return np.array(curve)
 
-    def compute_cost(self, path):
+    def compute_cost(self, path): ## LOCAL ##
         """ simple cost estimation based on length and curvature """
         length = np.sum(np.sqrt(np.sum(np.diff(path, axis=0)**2, axis=1)))
         curvature = np.sum(np.abs(np.diff(np.arctan2(np.diff(path[:, 1]), np.diff(path[:, 0])))))
         return length + 10*curvature
     
 
-    def angle_within_band(self, desired_angle, band_min, band_max):
+    def angle_within_band(self, desired_angle, band_min, band_max): ## LOCAL ##
         return band_min <= desired_angle <= band_max
 
-    def identify_critical_points(self, ang_tolerance, dist_tolerance, coords):
+    def identify_critical_points(self, ang_tolerance, dist_tolerance, coords): ## GLOBAL ##
         """ 
         simplifies the path found from RRT to what is needed 
 
@@ -907,14 +914,14 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
             #         critical_points.append(coords[i])
             # critical_points.append(coords[-1])
 
-    def calculate_angle(self, v1, v2):
+    def calculate_angle(self, v1, v2): ## GLOBAL ##
             """ calculates the angle between consecutive points """
             unit_v1 = v1 / LA.norm(v1)
             unit_v2 = v2 / LA.norm(v2)
             dot_product = np.dot(unit_v1, unit_v2)
             return np.arccos(dot_product)
 
-    def check_collision(self, nearest_node, new_node):
+    def check_collision(self, nearest_node, new_node): ###########
         """
         This method should return whether the path between nearest and new_node is
         collision free.
@@ -939,7 +946,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         # TODO - could potentially be quicker to check while creating the path, depending on how large the path is
         return any(location in self.Grid for location in path) 
         
-    def is_goal(self, latest_added_node, goal_x, goal_y):
+    def is_goal(self, latest_added_node, goal_x, goal_y): ## GLOBAL ##
         """
         This method should return whether the latest added node is close enough
         to the goal.
@@ -953,7 +960,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         """
         return LA.norm([goal_x - latest_added_node.x, goal_y - latest_added_node.y]) <= self.goal_tolerance
 
-    def find_path(self, tree, latest_added_node):
+    def find_path(self, tree, latest_added_node): ## GLOBAL ##
         """
         This method returns a path as a list of Nodes connecting the starting point to
         the goal once the latest added node is close enough to the goal
@@ -974,7 +981,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
 
 
     # The following methods are needed for RRT* and not RRT
-    def cost(self, tree, node):
+    def cost(self, tree, node): ## GLOBAL ##
         """
         This method should return the cost of a node
 
@@ -986,7 +993,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         return node.cost
         assert NotImplementedError
 
-    def line_cost(self, n1, n2):
+    def line_cost(self, n1, n2): ## GLOBAL ##
         """
         This method should return the cost of the straight line between n1 and n2
 
@@ -1001,7 +1008,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         return cost
         # for now cost is just determined by distance
 
-    def near(self, tree, node):
+    def near(self, tree, node): ## GLOBAL ##
         """
         This method should return the neighborhood of nodes around the given node
 

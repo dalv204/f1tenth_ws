@@ -22,6 +22,7 @@ class Occupancy:
         # dt.close()
         
         self.dynamic_grid = set()
+        self.car_width = 0.4 # 40 centimeter
         self.scale = scale
         self.width = dimensions[0]
         self.height = dimensions[1]
@@ -98,6 +99,31 @@ class Occupancy:
             y = (node[1]* self.scale)+min_y
 
         return (x,y)
+    
+    def check_collision(self, nearest_node, new_node):
+        """
+        This method should return whether the path between nearest and new_node is
+        collision free.
+
+        Args:
+            nearest (Node): nearest node on the tree
+            new_node (Node): new node from steering
+        Returns:
+            collision (bool): whether the path between the two nodes are in collision
+                              with the occupancy grid
+        """
+        width = self.car_width / self.scale  # gives us the car width in terms of coordinate squares 
+        # assuming new_node is the target (stop) and near_pos is start
+        direct_vector = new_node - nearest_node
+        length = int(np.linalg.norm(direct_vector))
+        direct_vector = (direct_vector / length) if length>0 else np.array([0,0])
+        offset = int(width/2)
+        square = [np.array([x,y]) for x in range(nearest_node.x-offset, nearest_node.x+(offset+1)) 
+                  for y in range(nearest_node.y-offset, nearest_node.y+(offset+1))]
+        # TODO - PROBABLY A QUICKER WAY TO DO THE SQUARE
+        path = set(tuple((array+(mult*direct_vector)).astype(int)) for mult in range(1, length+1) for array in square)
+        # TODO - could potentially be quicker to check while creating the path, depending on how large the path is
+        return any(location in self for location in path)
 
 
 class TreeNode:
@@ -142,4 +168,7 @@ class TreeNode:
     def get_coord(self):
         """ returns the current coords in tuple form """
         return np.array([self.x, self.y])
+    
+    def __repr__(self):
+        return f"({self.x}, {self.y})"
 
