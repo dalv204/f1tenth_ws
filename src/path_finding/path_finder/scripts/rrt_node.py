@@ -194,9 +194,7 @@ class DualSearch(Node):
                 # want to keep searching until we have at least a basic path
                 self.global_path = self.global_planner.plan()
                 # print(self.global_path)
-            print("FOUND GLOBAL PATH")
         else:
-            print("MOVED ON")
             temp_global = self.global_planner.plan()
             self.global_path = temp_global if temp_global is not None else self.global_path
         
@@ -283,11 +281,8 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
 
         """
         # pretty sure pose_msg.pose.pose.position.x is required (remove verify later?)
-        print("CALLING PLAN")
 
         if self.Grid is not None:
-            print("KNOWS WE'RE NOT LOCAL")
-            # print("should be here")
             if not self.tree:
                 start = TreeNode(self.coord_x, self.coord_y)
                 self.tree.append(start)
@@ -325,13 +320,11 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
     def grow_tree(self):  ## GLOBAL ##
         """ expands the current tree"""
         # print(f"{self.goal=}")
-        print("TRYING TO GROW TREE")
         if self.goal is not None:
 
             # print("doing something?")
             for _ in range(self.get_iteration_count()): # number of iterations
                 sampled_point = self.sample()
-                print("SAMPLING POINTTTTTTTTTTTTTTTTTTTTTTT")
 
                 # print(f"{sampled_point=}")
                 # print(f"{self.tree=}")
@@ -549,11 +542,23 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
                 new_pos = TreeNode(coords[i].x, coords[i].y)
 
                 # need to check this heading logic
-                heading = np.arctan2(v21[0],v21[1]) # x/y 
+                heading = np.arctan2(v21[1],v21[0]) # y/x 
+                print(f"{self.yaw=}")
+                dist = LA.norm(v21)
+                yaw_interpet = np.array([np.cos(self.yaw), np.sin(self.yaw)]) * dist
+                print(f"{self.coord_x=}, {self.coord_y=}")
+                print(f"yaw interpretation is {yaw_interpet+np.array([self.coord_x, self.coord_y])}")
+
+                test_point = np.array([100,100])
+                print(f"should be at {test_point+v21}")
+                
+                new_heading = heading 
+                angle_interpret = np.array([np.cos(new_heading), np.sin(new_heading)]) * dist
+                print(f"we actually got {test_point+angle_interpret}")
+                print(f"{v21[0]} / {v21[1]} gives us heading {heading=}")
                 # TODO - !H MAKE SURE HEADING CALCULATION IS GOOD 
                 mult=0
                 while not self.Grid.check_collision(coords[i], new_pos):
-                    print("FIRST BAR")
                     mult +=1
                     bar.add((new_pos.x, new_pos.y))
                     new_value = (new_pos + (perp*mult)).astype(int)
@@ -565,7 +570,6 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
                 new_pos = TreeNode(coords[i].x, coords[i].y)
 
                 while not self.Grid.check_collision(coords[i], new_pos):
-                    print("SECOND BAR")
                     mult -=1
                     bar.add((new_pos.x, new_pos.y))
                     new_value = (new_pos + (perp*mult)).astype(int)
@@ -574,9 +578,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
                 critical_points.append((coords[i], bar, heading))
         bar_collection = []
         for coord, bar, heading in critical_points:
-            print("APPENDING")
             value = self.Grid.coord_to_pos(coord)
-            print(f"{value=}")
             self.waypoints.append(value)
             self.waypoint_publish()
             

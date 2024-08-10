@@ -77,6 +77,7 @@ class LBC(Node):
         self.local_path = None
         self.coord_x, self.coord_y = None, None
         self.dist_tolerance = 0.30 # meters ## depends on the search distance (for nearby in rrty)
+        self.yaw = None
         # FOR TESTING ------------------
         self.Grid = Occupancy(.05, (141, 124), (-1.31, -4.25), map_info)
         # ------------------------------
@@ -87,10 +88,17 @@ class LBC(Node):
     def pose_callback(self,pose_msg):
         """ updates position and runs localizer (if can) """
         x,y = pose_msg.pose.pose.position.x, pose_msg.pose.pose.position.y
+        self.yaw = self.quaternion_to_yaw(pose_msg.pose.pose.orientation) 
         self.coord_x, self.coord_y = self.Grid.pos_to_coord(x,y)
         if self.kd_tree is not None:
             self.update_local_path()
             self.publish_local_path()
+
+    def quaternion_to_yaw(self, orientation):
+        """ convert quaternion to yaw angle. (converts to vehicle frame)"""
+        siny_cosp = 2 * (orientation.w * orientation.z + orientation.x * orientation.y)
+        cosy_cosp = 1 - 2 * (orientation.y * orientation.y + orientation.z*orientation.z)
+        return np.arctan2(siny_cosp, cosy_cosp)
 
     def scan_callback(self, msg):
         pass
@@ -203,7 +211,9 @@ class LBC(Node):
                 # TODO - P0 and candidate are both Node objects, so need to do a __sub__ method
                 direction_vector = np.array([np.cos(angle), np.sin(angle)])
                 shift = control_point_dist * direction_vector
-                p1 = p0 + shift
+                entrance_vector = np.array([np.cos(self.yaw), np.sin(self.yaw)])
+                ent_shift = 5 * entrance_vector
+                p1 = p0 + ent_shift
                 p2 = candidate - shift
 
                 path = self.bezier_cubic(p0, p1, p2, candidate)
