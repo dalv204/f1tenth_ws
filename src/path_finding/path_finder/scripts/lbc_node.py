@@ -119,6 +119,7 @@ class LBC(Node):
 
     def global_path_callback(self, msg):
         """ use the path given and construct trees etc """
+        # TODO - !L -- will be better in the future to create custom ROS2 message type -> lower overhead
         self.global_path = tuple(map(lambda x: (np.array(x[0]), x[1], x[2]), ast.literal_eval(msg.data)))
         self.global_path_length = len(self.global_path)
         # print(self.global_path)
@@ -184,7 +185,8 @@ class LBC(Node):
             # ^^ don't do anything with priority pick for now 
             candidates = point[1]
             entry_angle = point[2]
-            return self.candidate_selection(candidates, entry_angle)
+            control_point_dist = 0.30 / self.Grid.scale # 1 meter 
+            return self.candidate_selection(candidates, entry_angle, control_point_dist)
 
             # TODO - should do parallel processing with local and global so no interference
             # TODO - try out once having tested this current alg
@@ -210,13 +212,19 @@ class LBC(Node):
                 # create the control points 
                 # TODO - P0 and candidate are both Node objects, so need to do a __sub__ method
                 direction_vector = np.array([np.cos(angle), np.sin(angle)])
-                shift = control_point_dist * direction_vector
+                ex_shift = control_point_dist * direction_vector
                 entrance_vector = np.array([np.cos(self.yaw), np.sin(self.yaw)])
-                ent_shift = 5 * entrance_vector
+                ent_shift = control_point_dist * entrance_vector
+                # TODO - !M -  currently have simplified bezier quintic
+                #       may want to institute more complex way to define p2,p3
                 p1 = p0 + ent_shift
-                p2 = candidate - shift
+                p2 = p1 + ent_shift
+                p4 = candidate - ex_shift
+                p3 = p4 - ex_shift
 
-                path = self.bezier_cubic(p0, p1, p2, candidate)
+                path = self.bezier_quintic(p0,p1,p2,p3,p4,candidate)
+
+                # path = self.bezier_cubic(p0, p1, p2, candidate)
                 cost = self.compute_cost(path)
                 if cost < best_cost:
                     best_cost = cost
@@ -227,7 +235,41 @@ class LBC(Node):
         # best_cost, best_p1, best_p2
         return best_path
 
-    def bezier_cubic(self, p0, p1, p2, p3, num_points=10): ## LOCAL ##
+    def bezier_quintic(self, p0, p1, p2, p3, p4, p5, num_points = 50):
+        """ creates a quintic bezier curve for more flexibility in angle """
+        # TODO - H -- likely much much quicker to interpolate the other points,
+        #        and only generate about 10 - interpolate the rest because you 
+        #        don't really need to check them all again :(  
+        #        interpolation would require one of the values to constantly increase..
+        #           may not be possible unless simply go by gradient
+
+        t_values = np.linspace(0, 1, num_points)
+        curve = []
+        for t in t_values:
+            # print("trying a value")
+            point = ((1 - t) ** 5 * np.array(p0) +
+                        5 * ((1 - t) ** 4) * t * np.array(p1) +
+                        10 * ((1 - t) ** 3) * (t**2) * np.array(p2) +
+                        10 * ((1 - t) ** 2) * (t**3) * np.array(p3) +
+                        5 * (1 - t) * (t ** 4) * np.array(p4)
+                        + (t ** 5) * np.array(p5)).astype(int)
+            # int_point = point.astype(int)
+            check_point = tuple(point)
+            point_node = TreeNode(point[0], point[1])
+            if check_point in self.known_failures:
+                # print("CAUGHT A FAILURE")
+                return 
+            elif check_point not in self.checked:
+                self.checked.add(check_point)
+                if self.Grid.check_collision(point_node, point_node):
+                    # print("CAN FIND COLLISIONS")
+                    self.known_failures.add(check_point)
+                    return  # don't want to get anything from it.. just give up
+            curve.append(point)
+        return np.array(curve)
+            
+
+    def bezier_cubic(self, p0, p1, p2, p3, num_points=50): ## LOCAL ##
         """ creates bezier cubic points based on 4 contact points"""
         # TODO - !H -- this probably needs some testing to see how to position X and Y
         #       -- also need to figure out how to convert to real coords
@@ -297,17 +339,20 @@ class LBC(Node):
     
     def publish_local_path(self):
         """ sends the path to waypoint follower """
-         # while True:
-        #     print("AHAHAHAHA")
-        msg = String()
-        data = tuple(map(self.Grid.coord_to_pos, self.local_path))
-        self.waypoint_publish(False, data)
-        msg.data = str(data)
-        # print(msg.data)
-        length = len(data)
-        self.waypoint_pub.publish(msg)
-        # TODO- MAY NEED TO INTERPOLATE POINTS BEFORE SENDING 
-        self.get_logger().info(f"Sent waypoints containing {length} points")
+        # TODO - !M - For now, just ignore if it doesn't return a path
+        # TODO - !HHH - will need to send more information to the path follower
+        #       so that it knows better how to follow the points and make sure 
+        #       it doesn't turn too early
+        if self.local_path is not None:
+            msg = String()
+            data = tuple(map(self.Grid.coord_to_pos, self.local_path))
+            self.waypoint_publish(False, data)
+            msg.data = str(data)
+            # print(msg.data)
+            length = len(data)
+            self.waypoint_pub.publish(msg)
+            # TODO- MAY NEED TO INTERPOLATE POINTS BEFORE SENDING 
+            self.get_logger().info(f"Sent waypoints containing {length} points")
 
 def main(args=None):
     rclpy.init(args=args)

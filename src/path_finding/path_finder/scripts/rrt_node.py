@@ -543,19 +543,6 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
 
                 # need to check this heading logic
                 heading = np.arctan2(v21[1],v21[0]) # y/x 
-                print(f"{self.yaw=}")
-                dist = LA.norm(v21)
-                yaw_interpet = np.array([np.cos(self.yaw), np.sin(self.yaw)]) * dist
-                print(f"{self.coord_x=}, {self.coord_y=}")
-                print(f"yaw interpretation is {yaw_interpet+np.array([self.coord_x, self.coord_y])}")
-
-                test_point = np.array([100,100])
-                print(f"should be at {test_point+v21}")
-                
-                new_heading = heading 
-                angle_interpret = np.array([np.cos(new_heading), np.sin(new_heading)]) * dist
-                print(f"we actually got {test_point+angle_interpret}")
-                print(f"{v21[0]} / {v21[1]} gives us heading {heading=}")
                 # TODO - !H MAKE SURE HEADING CALCULATION IS GOOD 
                 mult=0
                 while not self.Grid.check_collision(coords[i], new_pos):
