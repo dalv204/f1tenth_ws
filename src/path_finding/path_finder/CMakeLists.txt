@@ -54,6 +54,7 @@ ament_python_install_package(${PROJECT_NAME})
 install(PROGRAMS
   scripts/rrt_node.py
   scripts/pp_logic.py
+  scripts/lbc_node.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

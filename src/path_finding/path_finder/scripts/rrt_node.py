@@ -94,7 +94,7 @@ class DualSearch(Node):
         self.marker_pub = self.create_publisher(Marker, 'waypoints_marker', 10)
 
         # TODO - include the other listeners I have here
-        with open("data_file.json", 'r') as dt:
+        with open("data_file_circular.json", 'r') as dt:
             info = dt.read()
             map_info = ast.literal_eval(info)
         dt.close()
@@ -108,11 +108,14 @@ class DualSearch(Node):
 
         # TODO - want to create the grids here so they 
         # TODO -- can both access the occupancy grid
+        # self.Grid=None
 
-        self.Grid = Occupancy(.05, (141, 124), (-1.31, -4.25), map_info)
+        # for ROOM
+        # self.Grid = Occupancy(.05, (141, 124), (-1.31, -4.25), map_info)
 
-
-
+        # for TRACK
+        self.Grid = Occupancy(.057959, (2000,2000), (-84.85359914210505, -36.30299725862132), map_info)
+        self.global_planner = RRT(False, parent=self)
         # self.Grid = Occupancy()
         self.current_position = None, None
         self.goal = None
@@ -123,7 +126,12 @@ class DualSearch(Node):
         self.kd_tree = None
         self.dist_tolerance = 0.50 # 50 centimeters for critical point selection
         # TODO - IN REAL CASE, WAIT FOR GRID TO INITIALIZE PLANNERS
-        self.global_planner = RRT(False, parent=self)
+        # self.global_planner = None
+        self.mapped = False
+        self.created_bfs = False
+        self.checked_space = set()
+        self.available_space = set()
+        self.path = None
         # self.local_planner = RRT(True, parent=self)
 
 
@@ -137,34 +145,76 @@ class DualSearch(Node):
     def map_callback(self, msg):
         """ only want to create one instance"""
         if not self.mapped: # only want to create 1 class instance
+            
             # I believe width corresponds to x and height to y
             # TODO - assumes "static" map doesn't update
             self.Grid = Occupancy(msg.info.resolution, 
                             (msg.info.width, msg.info.height), 
                             (msg.info.origin.position.x,
                             msg.info.origin.position.y),
-                            msg.data )
+                            msg.data)
+            
+            # print((msg.info.resolution, 
+            #                 (msg.info.width, msg.info.height), 
+            #                 (msg.info.origin.position.x,
+            #                 msg.info.origin.position.y)))
             print(self.Grid)
             self.goal_tolerance = int(0.5/self.Grid.scale)
+            self.global_planner = RRT(False, parent=self)
             self.mapped=True
+
+
+    # def develop_area(self, posx, posy):
+    #     search_area = [(posx, posy)]
+    #     self.checked_space.add((posx,posy))
+    #     waypoints = []
+    #     print("STARTING SEARCH")
+    #     while search_area:
+    #         print(len(search_area))
+    #         current_pos = search_area.pop(0)
+    #         for neighbor in self.find_neighbors(current_pos[0], current_pos[1]):
+    #             if neighbor not in self.Grid:
+    #                 if neighbor not in self.checked_space:
+    #                     self.checked_space.add(neighbor)
+    #                     search_area.append(neighbor)
+    #                     if neighbor not in self.Grid:
+    #                         for neighbor in 
+    #                         self.available_space.add(neighbor)
+    #                         waypoints.append(self.Grid.coord_to_pos(neighbor))
+    #                         # print(waypoints)
+    #                         self.waypoint_publish(False, group=waypoints)
+                        
+    #     print("SEARCH IS OVER")
+
+    
+    # def find_neighbors(self, posx, posy):
+    #     return [(posx+1, posy), (posx-1, posy),
+    #             (posx, posy-1),(posx, posy+1)]
     
     def pose_callback(self, pose_msg):
-        self.yaw = self.quaternion_to_yaw(pose_msg.pose.pose.orientation)
-        # self.update_current_position(pose_msg)
-        x = pose_msg.pose.pose.position.x
-        y = pose_msg.pose.pose.position.y
-        self.coord_x, self.coord_y = self.Grid.pos_to_coord(x,y)
-        # updates pos for both trees ^^
+        if self.Grid is not None:
+            self.yaw = self.quaternion_to_yaw(pose_msg.pose.pose.orientation)
+            # self.update_current_position(pose_msg)
+            x = pose_msg.pose.pose.position.x
+            y = pose_msg.pose.pose.position.y
+            self.coord_x, self.coord_y = self.Grid.pos_to_coord(x,y)
+            # updates pos for both trees ^^
+            if not self.created_bfs:
+                self.Grid.develop_area()
+                # self.waypoint_publish(False, self.available_space)
+                print("created!")
+                self.created_bfs=True
 
-        current_time = time.time()
-        if self.goal is not None and self.global_path is None:
-            self.update_global_path()
-            # if (current_time - self.last_global_update > self.global_update_interval) \
-            #         or self.global_path is None:
-            #     print("am here")
-            #     self.last_global_update = current_time
-            #     self.update_global_path()
-            #     print("updated global path")
+
+            current_time = time.time()
+            if self.goal is not None and self.global_path is None:
+                self.update_global_path()
+                # if (current_time - self.last_global_update > self.global_update_interval) \
+                #         or self.global_path is None:
+                #     print("am here")
+                #     self.last_global_update = current_time
+                #     self.update_global_path()
+                #     print("updated global path")
 
     def update_publish_global(self):
         if self.global_path is not None:
@@ -216,7 +266,48 @@ class DualSearch(Node):
         # self.kd_tree = KDTree(np.array([item[0].get_coord() for item in self.global_path]))
  
 
+    # def waypoint_publish(self, main_path=True, group=None):
+    #     if self.path is None:
+    #         self.path = self.init_marker(r=1.0)
+        
+    #     if not main_path:
+    #         self.path = self.init_marker(b=1.0)
+    #         for value in group:
+    #             x,y = value
+    #             point=Point()
+    #             point.x=x
+    #             point.y=y
+    #             point.z=0.0
+    #             self.path.points.append(point)
+    #         self.marker_pub.publish(self.path)
+            
+    #     # print(f"{self.waypoints}")
+    #     # x,y = self.waypoints[-1]
+    #     # point = Point()
+    #     # point.x = x
+    #     # point.y = y
+    #     # point.z = 0.0
+    #     # self.path.points.append(point)
 
+    #     self.marker_pub.publish(self.path)
+
+    # def init_marker(self, r=0.0, g=0.0, b=0.0):
+    #     """ gets the standard settings"""
+    #     marker = Marker()
+    #     marker.header.frame_id = "map"
+    #     marker.header.stamp = self.get_clock().now().to_msg()
+    #     marker.ns = "waypoints"
+    #     marker.id = 0
+    #     marker.type = Marker.POINTS
+    #     marker.action = Marker.ADD
+    #     marker.pose.orientation.w = 1.0
+    #     marker.scale.x = 0.1
+    #     marker.scale.y = 0.1
+    #     marker.color.a = 1.0
+    #     marker.color.r = r
+    #     marker.color.g = g
+    #     marker.color.b = b
+    #     return marker
 
 # class def for RRT
 class RRT(DualSearch):  # TODO - could make it a child class of dual search node
@@ -254,7 +345,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         #     map_info = ast.literal_eval(info)
         # dt.close()
         # self.Grid = Occupancy(.05, (141, 124), (-1.31, -4.25), map_info)
-        self.goal_tolerance = int(0.5/self.Grid.scale)
+        self.goal_tolerance = int(1.5/self.Grid.scale)
 
         # -------------------------------
 
@@ -345,7 +436,8 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
                     new_node.parent = min_cost_node
                     new_node.cost = min_cost
                     self.tree.append(new_node)
-                    # self.waypoints.append(self.Grid.coord_to_pos(new_node))
+                    self.waypoints.append(self.Grid.coord_to_pos(new_node))
+                    self.waypoint_publish(group=self.waypoints)
                     # self.waypoints.append(self.Grid.coord_to_pos((sampled_point[0], sampled_point[1])))
                     
                     for neighbor in neighbors:
@@ -416,11 +508,15 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         Returns:
             (x, y) (float float): a tuple representing the sampled point
         """
-        x = self.Grid.random_point(self.Grid.width) 
-        y = self.Grid.random_point(self.Grid.height)
+        # x = self.Grid.random_point(self.Grid.width) 
+        # y = self.Grid.random_point(self.Grid.height)
+        
+
+        # trying system where it returns a tuple of smaller area
+        x,y = self.Grid.random_point(None)
         point = (x,y)
 
-        # return (x,y)
+        # TODO - !H - 
         if not self.in_no_sample_zone(x,y) and point not in self.already_sampled:
             self.already_sampled.add(point)
             return point
@@ -491,7 +587,9 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         else: direction = direction/length
         # TODO - !H 
         # CHOOSING CANDIDATE VERY DEPENDENT ON THIS STEP SIZE
-        step_size = int(0.3 / self.Grid.scale)
+        # TODO - !HH - step size should be large at first, then get smaller when improving path
+
+        step_size = int(1.3 / self.Grid.scale)
         new_point = (nearest_node + (direction*step_size)).astype(int)
         # (int(nearest_node.x + (direction[0] * step_size)), int(nearest_node.y + (direction[1] * step_size)))
         # print(f"current point = {nearest_node.x, nearest_node.y}")
@@ -545,8 +643,10 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
                 heading = np.arctan2(v21[1],v21[0]) # y/x 
                 # TODO - !H MAKE SURE HEADING CALCULATION IS GOOD 
                 mult=0
-                while not self.Grid.check_collision(coords[i], new_pos):
+                while not self.Grid.check_collision(new_pos, new_pos, kd_mode=True):
                     mult +=1
+                    print(f"stuck on part one with {mult=}")
+
                     bar.add((new_pos.x, new_pos.y))
                     new_value = (new_pos + (perp*mult)).astype(int)
                     new_pos.x = new_value[0]
@@ -556,8 +656,10 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
                 mult=0
                 new_pos = TreeNode(coords[i].x, coords[i].y)
 
-                while not self.Grid.check_collision(coords[i], new_pos):
+                while not self.Grid.check_collision(new_pos, new_pos, kd_mode=True):
                     mult -=1
+                    print(f"stuck on part two with {mult=}")
+
                     bar.add((new_pos.x, new_pos.y))
                     new_value = (new_pos + (perp*mult)).astype(int)
                     new_pos.x = new_value[0]

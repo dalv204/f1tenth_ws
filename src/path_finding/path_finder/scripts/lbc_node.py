@@ -20,6 +20,7 @@ from util import TreeNode, Occupancy
 import ast
 from visualization_msgs.msg import Marker
 from geometry_msgs.msg import Point
+import time
 
 class LBC(Node):
     """ class to process local """
@@ -66,7 +67,7 @@ class LBC(Node):
         )
         self.marker_pub = self.create_publisher(Marker, 'waypoints_marker', 10)
 
-        with open("data_file.json", 'r') as dt:
+        with open("data_file_circular.json", 'r') as dt:
             info = dt.read()
             map_info = ast.literal_eval(info)
         dt.close()
@@ -79,18 +80,27 @@ class LBC(Node):
         self.dist_tolerance = 0.30 # meters ## depends on the search distance (for nearby in rrty)
         self.yaw = None
         # FOR TESTING ------------------
-        self.Grid = Occupancy(.05, (141, 124), (-1.31, -4.25), map_info)
+        # ROOM
+        # self.Grid = Occupancy(.05, (141, 124), (-1.31, -4.25), map_info)
+
+        # TRACK
+        self.Grid = Occupancy(.057959, (2000,2000), (-84.85359914210505, -36.30299725862132), map_info)
+
         # ------------------------------
         self.mapped = False
         self.checked = set() # checked bezier points
         self.known_failures = set() # checked bezier points that fail
+        self.start_time = time.time()
+        self.counter=0
 
     def pose_callback(self,pose_msg):
         """ updates position and runs localizer (if can) """
+        print('calling Pose callback')
         x,y = pose_msg.pose.pose.position.x, pose_msg.pose.pose.position.y
         self.yaw = self.quaternion_to_yaw(pose_msg.pose.pose.orientation) 
         self.coord_x, self.coord_y = self.Grid.pos_to_coord(x,y)
         if self.kd_tree is not None:
+            print('should be updating local path')
             self.update_local_path()
             self.publish_local_path()
 
@@ -104,6 +114,7 @@ class LBC(Node):
         pass
 
     def map_callback(self, msg):
+        print("Calling map callback")
         """ only want to create one instance"""
         if not self.mapped: # only want to create 1 class instance
             # I believe width corresponds to x and height to y
@@ -119,6 +130,7 @@ class LBC(Node):
 
     def global_path_callback(self, msg):
         """ use the path given and construct trees etc """
+        print("calling global map callback")
         # TODO - !L -- will be better in the future to create custom ROS2 message type -> lower overhead
         self.global_path = tuple(map(lambda x: (np.array(x[0]), x[1], x[2]), ast.literal_eval(msg.data)))
         self.global_path_length = len(self.global_path)
@@ -235,7 +247,7 @@ class LBC(Node):
         # best_cost, best_p1, best_p2
         return best_path
 
-    def bezier_quintic(self, p0, p1, p2, p3, p4, p5, num_points = 50):
+    def bezier_quintic(self, p0, p1, p2, p3, p4, p5, num_points = 10):
         """ creates a quintic bezier curve for more flexibility in angle """
         # TODO - H -- likely much much quicker to interpolate the other points,
         #        and only generate about 10 - interpolate the rest because you 
@@ -261,7 +273,7 @@ class LBC(Node):
                 return 
             elif check_point not in self.checked:
                 self.checked.add(check_point)
-                if self.Grid.check_collision(point_node, point_node):
+                if self.Grid.check_collision(point_node, point_node, kd_mode=True):
                     # print("CAN FIND COLLISIONS")
                     self.known_failures.add(check_point)
                     return  # don't want to get anything from it.. just give up
@@ -339,6 +351,11 @@ class LBC(Node):
     
     def publish_local_path(self):
         """ sends the path to waypoint follower """
+        self.counter+=1
+        if time.time() - self.start_time > 1:
+            self.start_time = time.time()
+            print(f"{self.counter} publishes in a second! -----------------------------------")
+            self.counter=0
         # TODO - !M - For now, just ignore if it doesn't return a path
         # TODO - !HHH - will need to send more information to the path follower
         #       so that it knows better how to follow the points and make sure 
@@ -352,7 +369,7 @@ class LBC(Node):
             length = len(data)
             self.waypoint_pub.publish(msg)
             # TODO- MAY NEED TO INTERPOLATE POINTS BEFORE SENDING 
-            self.get_logger().info(f"Sent waypoints containing {length} points")
+            # self.get_logger().info(f"Sent waypoints containing {length} points")
 
 def main(args=None):
     rclpy.init(args=args)

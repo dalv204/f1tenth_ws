@@ -3,6 +3,9 @@ File for holding custom data structures and common functions
 
 """
 import numpy as np
+from scipy.spatial import KDTree
+import random
+import time
 
 class Occupancy:
     """ 
@@ -16,7 +19,7 @@ class Occupancy:
             static_grid - tuple of all map locations
         """
         
-        # with open("data_file.json", 'w') as dt:
+        # with open("data_file_circular.json", 'w') as dt:
         #     dt.write(str(list(static_grid)))
         #     print("wrote the file")
         # dt.close()
@@ -29,6 +32,9 @@ class Occupancy:
         self.origin = origin
         self.static_grid = self.initialize_static(static_grid)
         print(self.scale, self.width,self.height, self.origin)
+        self.KD_tree = KDTree(tuple(item for item in self.static_grid))
+        self.available_space = set()
+        self.checked_space = set()
 
     # possible functions I will need
 
@@ -77,11 +83,13 @@ class Occupancy:
         finds a random point in the 'open space' 
         """
 
-        value = np.random.uniform(0, limiter)
-        if value in self:
+        # value = random.sample(self.available_space,1)[0] # returns an item in list form  #np.random.uniform(0, limiter)
+        value = self.available_space.pop()
+        if value in self: # or value not in self.available_space
             # not free - search again 
             value = self.random_point(limiter)
-        return int(value) 
+        # return int(value) 
+        return value
 
     
     def coord_to_pos(self, node):
@@ -100,7 +108,21 @@ class Occupancy:
 
         return (x,y)
     
-    def check_collision(self, nearest_node, new_node):
+    def develop_area(self):
+        offset = int(2 / self.scale)
+        this_space = set()
+        for x_,y_ in self.static_grid:
+            if (x_, y_) not in self.available_space:
+                for value in [(x,y) for x in range(x_-offset, x_+(offset+1)) 
+                        for y in range(y_-offset, y_+(offset+1))]:
+                    this_space.add(value)
+                    self.available_space.add(value)
+
+    
+    
+    def check_collision(self, nearest_node, new_node, kd_mode=False):
+        # TODO - check collision mechanism NOT GOOD ENOUGH! 
+        # too slow, and for large maps just not even possible really
         """
         This method should return whether the path between nearest and new_node is
         collision free.
@@ -112,19 +134,34 @@ class Occupancy:
             collision (bool): whether the path between the two nodes are in collision
                               with the occupancy grid
         """
-        width = self.car_width / self.scale  # gives us the car width in terms of coordinate squares 
-        # assuming new_node is the target (stop) and near_pos is start
-        direct_vector = new_node - nearest_node
-        length = int(np.linalg.norm(direct_vector))
-        direct_vector = (direct_vector / length) if length>0 else np.array([0,0])
-        offset = int(width/2)
-        square = [np.array([x,y]) for x in range(nearest_node.x-offset, nearest_node.x+(offset+1)) 
-                  for y in range(nearest_node.y-offset, nearest_node.y+(offset+1))]
-        # TODO - PROBABLY A QUICKER WAY TO DO THE SQUARE
-        path = set(tuple((array+(mult*direct_vector)).astype(int)) for mult in range(0, length+1) for array in square)
-        # start with zero ^^ to work for squares
-        # TODO - could potentially be quicker to check while creating the path, depending on how large the path is
-        return any(location in self for location in path)
+        if kd_mode is True:
+            # see if the kd_search is quicker
+            current_pose = np.array([nearest_node.x, nearest_node.y])
+            distance, index = self.KD_tree.query(current_pose)
+            return distance * self.scale  <= (self.car_width*.75) 
+            # .75 adds a little buffer since really we only need half width
+                 
+        else:
+            width = self.car_width / self.scale  # gives us the car width in terms of coordinate squares 
+            # assuming new_node is the target (stop) and near_pos is start
+            direct_vector = new_node - nearest_node
+            length = int(np.linalg.norm(direct_vector))
+            direct_vector = (direct_vector / length) if length>0 else np.array([0,0])
+            offset = int(width/2)
+            # square = [np.array([x,y]) for x in range(nearest_node.x-offset, nearest_node.x+(offset+1)) 
+            #         for y in range(nearest_node.y-offset, nearest_node.y+(offset+1))]
+            # TODO - PROBABLY A QUICKER WAY TO DO THE SQUARE
+
+            square = [np.array([nearest_node.x, nearest_node.y])]
+            path = set(tuple((array+(mult*direct_vector)).astype(int)) for mult in range(0, length+1) for array in square)
+            for position in path:
+                distance, index = self.KD_tree.query(position)
+                if distance*self.scale <= (self.car_width*.75):
+                    return True
+            return False
+            # start with zero ^^ to work for squares
+            # TODO - could potentially be quicker to check while creating the path, depending on how large the path is
+            # return any(location in self for location in path)
 
 
 class TreeNode:
