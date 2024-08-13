@@ -164,33 +164,6 @@ class DualSearch(Node):
             self.mapped=True
 
 
-    # def develop_area(self, posx, posy):
-    #     search_area = [(posx, posy)]
-    #     self.checked_space.add((posx,posy))
-    #     waypoints = []
-    #     print("STARTING SEARCH")
-    #     while search_area:
-    #         print(len(search_area))
-    #         current_pos = search_area.pop(0)
-    #         for neighbor in self.find_neighbors(current_pos[0], current_pos[1]):
-    #             if neighbor not in self.Grid:
-    #                 if neighbor not in self.checked_space:
-    #                     self.checked_space.add(neighbor)
-    #                     search_area.append(neighbor)
-    #                     if neighbor not in self.Grid:
-    #                         for neighbor in 
-    #                         self.available_space.add(neighbor)
-    #                         waypoints.append(self.Grid.coord_to_pos(neighbor))
-    #                         # print(waypoints)
-    #                         self.waypoint_publish(False, group=waypoints)
-                        
-    #     print("SEARCH IS OVER")
-
-    
-    # def find_neighbors(self, posx, posy):
-    #     return [(posx+1, posy), (posx-1, posy),
-    #             (posx, posy-1),(posx, posy+1)]
-    
     def pose_callback(self, pose_msg):
         if self.Grid is not None:
             self.yaw = self.quaternion_to_yaw(pose_msg.pose.pose.orientation)
@@ -335,6 +308,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         self.am_local = am_i_local
         self.parent = parent
         self.record = set()
+        # self.prev_heading = self.yaw
         
         
         # ------------------------------
@@ -421,7 +395,9 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
                 # print(f"{self.tree=}")
                 nearest_index = self.nearest(self.tree, sampled_point)
                 nearest_node = self.tree[nearest_index]
-                new_node = self.steer(nearest_node, sampled_point)
+                new_node = self.steer(nearest_index, nearest_node, sampled_point)
+                if new_node is None:
+                    continue
 
                 if not self.Grid.check_collision(nearest_node, new_node):
                     neighbors = self.near(self.tree, new_node)
@@ -448,6 +424,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
                             neighbor.cost = cost
                     
                     if self.is_goal(new_node, *self.goal):
+                        # -----
                         print("found goal?")
                         path = self.find_path(self.tree, new_node)
                         # TODO - !L : make sure the sample rate not too high, 
@@ -566,7 +543,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
                 nearest_index = i
         return nearest_index
 
-    def steer(self, nearest_node, sampled_point): ## GLOBAL ##
+    def steer(self, nearest_index, nearest_node, sampled_point): ## GLOBAL ##
         """
         This method should return a point in the viable set such that it is closer 
         to the nearest_node than sampled_point is.
@@ -577,7 +554,10 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         Returns:
             new_node (Node): new node created from steering
         """
-        direction = (nearest_node*(-1)) + sampled_point
+        # TODO - !H - need to adjust to create a closed loop - either by picking points
+        #        relatively in front of the node (may limit shortest path opportunities )
+        #       or by adjusting the goal and path conditions
+        direction = (nearest_node*(-1)) + sampled_point # equivalent to 
         # np.array([sampled_point[0] - nearest_node.x, sampled_point[1]-nearest_node.y])
         # print(f"{direction=}")
         length = LA.norm(direction)
@@ -585,6 +565,13 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         if length==0.0:
             direction=np.array([0,0])
         else: direction = direction/length
+        if nearest_index < 6:
+            node_heading = self.yaw # just give it yaw haha - close enough
+            pseudo_heading = np.arctan2(direction[1], direction[0])
+            heading_tolerance = np.radians(90)
+            if abs(pseudo_heading-node_heading) > heading_tolerance:
+                return None
+        # -----
         # TODO - !H 
         # CHOOSING CANDIDATE VERY DEPENDENT ON THIS STEP SIZE
         # TODO - !HH - step size should be large at first, then get smaller when improving path
@@ -641,25 +628,18 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
 
                 # need to check this heading logic
                 heading = np.arctan2(v21[1],v21[0]) # y/x 
-                # TODO - !H MAKE SURE HEADING CALCULATION IS GOOD 
                 mult=0
                 while not self.Grid.check_collision(new_pos, new_pos, kd_mode=True):
                     mult +=1
-                    print(f"stuck on part one with {mult=}")
-
                     bar.add((new_pos.x, new_pos.y))
                     new_value = (new_pos + (perp*mult)).astype(int)
                     new_pos.x = new_value[0]
-                    # int(new_pos.x +perp[0]*mult)
                     new_pos.y = new_value[1]
-                    # int(new_pos.y +perp[1]*mult)
                 mult=0
                 new_pos = TreeNode(coords[i].x, coords[i].y)
 
                 while not self.Grid.check_collision(new_pos, new_pos, kd_mode=True):
                     mult -=1
-                    print(f"stuck on part two with {mult=}")
-
                     bar.add((new_pos.x, new_pos.y))
                     new_value = (new_pos + (perp*mult)).astype(int)
                     new_pos.x = new_value[0]
@@ -711,7 +691,26 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         Returns:
             close_enough (bool): true if node is close enoughg to the goal
         """
-        return LA.norm([goal_x - latest_added_node.x, goal_y - latest_added_node.y]) <= self.goal_tolerance
+        # TODO - !M - for it to be classified as a goal, heading of final point
+        #       needs to approximately match the original heading of the car 
+        # TODO - !H - not here, but also consider it a goal condition 
+        #       when one half of tree meets other half, perhaps this is done by giving 
+        #       an ID to the first points depending on their heading related to the car
+
+        # haha, seems all I had to do was not permit certain angles next to the start :0
+        # TODO - !H - kind of slow... since it only searches from one direction, in the future
+        #       can make it two search trees that join - harder to mitigate that from one tree (in fast manner)
+        # -----
+        counter=0
+        node = latest_added_node
+        if LA.norm([goal_x - latest_added_node.x, goal_y - latest_added_node.y]) <= self.goal_tolerance:
+            while node is not None:
+                counter+=1
+                node = node.parent
+            return counter > 10 
+
+        return False
+        # return (LA.norm([goal_x - latest_added_node.x, goal_y - latest_added_node.y]) <= self.goal_tolerance) and counter>10
 
     def find_path(self, tree, latest_added_node): ## GLOBAL ##
         """
@@ -782,8 +781,6 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
     
 
     def publish_path(self, path):
-        # while True:
-        #     print("AHAHAHAHA")
         msg = String()
         data = tuple(map(self.Grid.coord_to_pos, path))
         msg.data = str(data)

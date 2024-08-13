@@ -142,16 +142,10 @@ class Occupancy:
             # .75 adds a little buffer since really we only need half width
                  
         else:
-            width = self.car_width / self.scale  # gives us the car width in terms of coordinate squares 
             # assuming new_node is the target (stop) and near_pos is start
             direct_vector = new_node - nearest_node
             length = int(np.linalg.norm(direct_vector))
             direct_vector = (direct_vector / length) if length>0 else np.array([0,0])
-            offset = int(width/2)
-            # square = [np.array([x,y]) for x in range(nearest_node.x-offset, nearest_node.x+(offset+1)) 
-            #         for y in range(nearest_node.y-offset, nearest_node.y+(offset+1))]
-            # TODO - PROBABLY A QUICKER WAY TO DO THE SQUARE
-
             square = [np.array([nearest_node.x, nearest_node.y])]
             path = set(tuple((array+(mult*direct_vector)).astype(int)) for mult in range(0, length+1) for array in square)
             for position in path:
@@ -159,10 +153,6 @@ class Occupancy:
                 if distance*self.scale <= (self.car_width*.75):
                     return True
             return False
-            # start with zero ^^ to work for squares
-            # TODO - could potentially be quicker to check while creating the path, depending on how large the path is
-            # return any(location in self for location in path)
-
 
 class TreeNode:
     # TODO - ADD FUNCTIONS TO EASILY SUBTRACT TREE NODES 
@@ -173,7 +163,6 @@ class TreeNode:
         self.y = y
         self.parent = parent
         self.cost = 0 if parent is None else float('inf') # only used in RRT*
-        # self.is_root = False
     
     def __sub__(self, other):
         """ subtracts the difference between a node and other item"""
