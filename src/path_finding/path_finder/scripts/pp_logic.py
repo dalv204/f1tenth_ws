@@ -99,7 +99,7 @@ class PurePursuit(Node):
         # change the csv file if doing in real life :)
         self.logging_timer = self.create_timer(.5, self.log_info)
         # self.publish_waypoints()
-        self.set_speed = 1.0
+        self.set_speed = 5.0
 
     def waypoint_callback(self, msg):
         """ should get it back as a group of tuples"""

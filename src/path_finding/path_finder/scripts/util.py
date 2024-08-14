@@ -158,11 +158,13 @@ class TreeNode:
     # TODO - ADD FUNCTIONS TO EASILY SUBTRACT TREE NODES 
     # TODO - ALSO SEE IF YOU CAN ADD SOME SORT OF LEN() 
     # TO FIND THE DISTANCE BETWEEN THEM
-    def __init__(self, x, y, parent=None):
+    def __init__(self, x, y, parent=None, is_stem=False):
         self.x = x
         self.y = y
         self.parent = parent
         self.cost = 0 if parent is None else float('inf') # only used in RRT*
+        self.is_stem = is_stem # for the beginning nodes, to prevent backward movement :)
+
     
     def __sub__(self, other):
         """ subtracts the difference between a node and other item"""

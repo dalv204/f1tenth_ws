@@ -308,7 +308,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         self.am_local = am_i_local
         self.parent = parent
         self.record = set()
-        # self.prev_heading = self.yaw
+        self.start_yaw = None
         
         
         # ------------------------------
@@ -349,6 +349,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
 
         if self.Grid is not None:
             if not self.tree:
+                self.start_yaw = self.yaw
                 start = TreeNode(self.coord_x, self.coord_y)
                 self.tree.append(start)
             else:
@@ -412,6 +413,13 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
                     new_node.parent = min_cost_node
                     new_node.cost = min_cost
                     self.tree.append(new_node)
+
+                    # only want to change it based on points we selected
+                    if nearest_node.is_stem:
+                        new_node.is_stem=True
+                    elif nearest_index <=3:
+                        nearest_node.is_stem=True
+                    
                     self.waypoints.append(self.Grid.coord_to_pos(new_node))
                     self.waypoint_publish(group=self.waypoints)
                     # self.waypoints.append(self.Grid.coord_to_pos((sampled_point[0], sampled_point[1])))
@@ -557,6 +565,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         # TODO - !H - need to adjust to create a closed loop - either by picking points
         #        relatively in front of the node (may limit shortest path opportunities )
         #       or by adjusting the goal and path conditions
+        changed = False # use for stem checking
         direction = (nearest_node*(-1)) + sampled_point # equivalent to 
         # np.array([sampled_point[0] - nearest_node.x, sampled_point[1]-nearest_node.y])
         # print(f"{direction=}")
@@ -565,12 +574,26 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         if length==0.0:
             direction=np.array([0,0])
         else: direction = direction/length
-        if nearest_index < 6:
-            node_heading = self.yaw # just give it yaw haha - close enough
+        if nearest_index <= 3 or nearest_node.is_stem:
+            # first_nodes_v = self.tree[1] - self.tree[0]
+            # node_heading = np.arctan2(first_nodes_v[1], first_nodes_v[0])
+            node_heading = self.yaw
+            # self.yaw # just give it yaw haha - close enough
             pseudo_heading = np.arctan2(direction[1], direction[0])
-            heading_tolerance = np.radians(90)
+            heading_tolerance = np.radians(60)
+            
             if abs(pseudo_heading-node_heading) > heading_tolerance:
                 return None
+            # if not nearest_node.is_stem:
+            #     nearest_node.is_stem=True
+            #     print(f"index {nearest_index} is new stem :) welcome!")
+            #     changed=True
+            
+            # time.sleep(.5)
+            # print(f"{node_heading=}")
+            # print(f"{pseudo_heading=}")
+
+            # print('passed')
         # -----
         # TODO - !H 
         # CHOOSING CANDIDATE VERY DEPENDENT ON THIS STEP SIZE
@@ -583,6 +606,8 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         # print(f"{new_point=}")
         # print(f"new point should be {nearest_node.x + direction[0]*step_size}")
         # print(f"goal point = {sampled_point[0], sampled_point[1]}")
+        # if nearest_node.is_stem and not changed:
+        #         return TreeNode(new_point[0], new_point[1], parent=nearest_node, is_stem=True)
         return TreeNode(new_point[0], new_point[1], parent=nearest_node)
     
     
@@ -655,7 +680,6 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
             for value in bar:
                 bar_collection.append(self.Grid.coord_to_pos(value))
 
-        time.sleep(5)
         self.waypoint_publish(False, bar_collection)
 
         self.waypoint_publish()
@@ -707,6 +731,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
             while node is not None:
                 counter+=1
                 node = node.parent
+            print(counter)
             return counter > 10 
 
         return False
