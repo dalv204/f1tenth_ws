@@ -78,7 +78,10 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pure_pursuit" TYPE PROGRAM FILES "/home/dalv204/sandbox/f1tenth_ws/src/pure_pursuit/pure_pursuit/scripts/pure_pursuit_node.py")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pure_pursuit" TYPE PROGRAM FILES
+    "/home/dalv204/sandbox/f1tenth_ws/src/pure_pursuit/pure_pursuit/scripts/pure_pursuit_node.py"
+    "/home/dalv204/sandbox/f1tenth_ws/src/pure_pursuit/pure_pursuit/scripts/waypoint_logger_node.py"
+    )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)

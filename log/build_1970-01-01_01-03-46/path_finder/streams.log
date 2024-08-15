@@ -1,0 +1,38 @@
+[0.019s] Invoking command in '/home/dalv204/sandbox/f1tenth_ws/build/path_finder': /usr/bin/cmake --build /home/dalv204/sandbox/f1tenth_ws/build/path_finder -- -j6 -l6
+[0.049s] make: Warning: File 'Makefile' has modification time 1723726240 s in the future
+[0.141s] make[1]: Warning: File 'CMakeFiles/Makefile2' has modification time 1723726240 s in the future
+[0.148s] make[2]: Warning: File 'CMakeFiles/rrt_node.dir/flags.make' has modification time 1723726240 s in the future
+[0.173s] make[2]: warning:  Clock skew detected.  Your build may be incomplete.
+[0.179s] make[2]: Warning: File 'CMakeFiles/rrt_node.dir/flags.make' has modification time 1723726240 s in the future
+[0.200s] make[2]: warning:  Clock skew detected.  Your build may be incomplete.
+[0.224s] [100%] Built target rrt_node
+[0.226s] make[1]: warning:  Clock skew detected.  Your build may be incomplete.
+[0.244s] make: warning:  Clock skew detected.  Your build may be incomplete.
+[0.253s] Invoked command in '/home/dalv204/sandbox/f1tenth_ws/build/path_finder' returned '0': /usr/bin/cmake --build /home/dalv204/sandbox/f1tenth_ws/build/path_finder -- -j6 -l6
+[0.340s] Invoking command in '/home/dalv204/sandbox/f1tenth_ws/build/path_finder': /usr/bin/cmake --install /home/dalv204/sandbox/f1tenth_ws/build/path_finder
+[0.358s] -- Install configuration: ""
+[0.360s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/lib/path_finder/rrt_node
+[0.360s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/environment/pythonpath.sh
+[0.361s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/environment/pythonpath.dsv
+[0.361s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/lib/python3.8/site-packages/path_finder
+[0.361s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/lib/python3.8/site-packages/path_finder/__init__.py
+[0.426s] Listing '/home/dalv204/sandbox/f1tenth_ws/install/path_finder/lib/python3.8/site-packages/path_finder'...
+[0.441s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/lib/path_finder/rrt_node.py
+[0.441s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/lib/path_finder/pp_logic.py
+[0.441s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/lib/path_finder/lbc_node.py
+[0.446s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/ament_index/resource_index/package_run_dependencies/path_finder
+[0.446s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/ament_index/resource_index/parent_prefix_path/path_finder
+[0.446s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/environment/ament_prefix_path.sh
+[0.446s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/environment/ament_prefix_path.dsv
+[0.447s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/environment/path.sh
+[0.447s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/environment/path.dsv
+[0.447s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/local_setup.bash
+[0.448s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/local_setup.sh
+[0.448s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/local_setup.zsh
+[0.448s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/local_setup.dsv
+[0.449s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/package.dsv
+[0.449s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/ament_index/resource_index/packages/path_finder
+[0.449s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/cmake/path_finderConfig.cmake
+[0.449s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/cmake/path_finderConfig-version.cmake
+[0.449s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/package.xml
+[0.492s] Invoked command in '/home/dalv204/sandbox/f1tenth_ws/build/path_finder' returned '0': /usr/bin/cmake --install /home/dalv204/sandbox/f1tenth_ws/build/path_finder

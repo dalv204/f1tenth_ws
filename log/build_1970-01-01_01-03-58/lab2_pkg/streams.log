@@ -1,0 +1,30 @@
+[0.577s] Invoking command in '/home/dalv204/sandbox/f1tenth_ws/build/lab2_pkg': /usr/bin/cmake --build /home/dalv204/sandbox/f1tenth_ws/build/lab2_pkg -- -j6 -l6
+[0.640s] make: Warning: File 'Makefile' has modification time 1723726222 s in the future
+[0.654s] make[1]: Warning: File 'CMakeFiles/Makefile2' has modification time 1723726222 s in the future
+[0.655s] make[1]: warning:  Clock skew detected.  Your build may be incomplete.
+[0.663s] make: warning:  Clock skew detected.  Your build may be incomplete.
+[0.672s] Invoked command in '/home/dalv204/sandbox/f1tenth_ws/build/lab2_pkg' returned '0': /usr/bin/cmake --build /home/dalv204/sandbox/f1tenth_ws/build/lab2_pkg -- -j6 -l6
+[0.767s] Invoking command in '/home/dalv204/sandbox/f1tenth_ws/build/lab2_pkg': /usr/bin/cmake --install /home/dalv204/sandbox/f1tenth_ws/build/lab2_pkg
+[0.789s] -- Install configuration: ""
+[0.789s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/lib/lab2_pkg/safety_node.py
+[0.790s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/launch/launch
+[0.790s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/launch/launch/safety_launch.py
+[0.790s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/launch/launch/.vscode
+[0.791s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/launch/launch/.vscode/c_cpp_properties.json
+[0.791s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/launch/launch/.vscode/settings.json
+[0.791s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/ament_index/resource_index/package_run_dependencies/lab2_pkg
+[0.791s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/ament_index/resource_index/parent_prefix_path/lab2_pkg
+[0.791s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/environment/ament_prefix_path.sh
+[0.792s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/environment/ament_prefix_path.dsv
+[0.792s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/environment/path.sh
+[0.792s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/environment/path.dsv
+[0.792s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/local_setup.bash
+[0.795s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/local_setup.sh
+[0.795s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/local_setup.zsh
+[0.795s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/local_setup.dsv
+[0.795s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/package.dsv
+[0.796s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/ament_index/resource_index/packages/lab2_pkg
+[0.796s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/cmake/lab2_pkgConfig.cmake
+[0.797s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/cmake/lab2_pkgConfig-version.cmake
+[0.797s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/package.xml
+[0.830s] Invoked command in '/home/dalv204/sandbox/f1tenth_ws/build/lab2_pkg' returned '0': /usr/bin/cmake --install /home/dalv204/sandbox/f1tenth_ws/build/lab2_pkg

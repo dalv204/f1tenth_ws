@@ -1,0 +1,16 @@
+[0.114s] Invoking command in '/home/dalv204/sandbox/f1tenth_ws/build/vesc_msgs': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/dalv204/sandbox/f1tenth_ws/install/f1tenth_stack:/home/dalv204/sandbox/f1tenth_ws/install/joy_teleop:/home/dalv204/sandbox/f1tenth_ws/install/particle_filter:/home/dalv204/sandbox/f1tenth_ws/install/mouse_teleop:/home/dalv204/sandbox/f1tenth_ws/install/key_teleop /usr/bin/cmake --build /home/dalv204/sandbox/f1tenth_ws/build/vesc_msgs -- -j6 -l6
+[0.825s] [  1%] Built target vesc_msgs__cpp
+[0.825s] [ 12%] Built target vesc_msgs__rosidl_generator_c
+[0.825s] [ 25%] Built target vesc_msgs__rosidl_typesupport_c
+[0.825s] [ 34%] Built target vesc_msgs__rosidl_typesupport_fastrtps_cpp
+[0.825s] [ 45%] Built target vesc_msgs__rosidl_typesupport_cpp
+[0.826s] [ 56%] Built target vesc_msgs__rosidl_typesupport_introspection_c
+[0.826s] [ 67%] Built target vesc_msgs__rosidl_typesupport_introspection_cpp
+[0.826s] [ 78%] Built target vesc_msgs__rosidl_typesupport_fastrtps_c
+[0.826s] [ 78%] Built target vesc_msgs
+[0.826s] [ 80%] Built target vesc_msgs__py
+[0.826s] [ 89%] Built target vesc_msgs__python
+[0.826s] [ 92%] Built target vesc_msgs__rosidl_typesupport_introspection_c__pyext
+[0.827s] [ 96%] Built target vesc_msgs__rosidl_typesupport_c__pyext
+[0.827s] [100%] Built target vesc_msgs__rosidl_typesupport_fastrtps_c__pyext
+[0.866s] Invoked command in '/home/dalv204/sandbox/f1tenth_ws/build/vesc_msgs' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/dalv204/sandbox/f1tenth_ws/install/f1tenth_stack:/home/dalv204/sandbox/f1tenth_ws/install/joy_teleop:/home/dalv204/sandbox/f1tenth_ws/install/particle_filter:/home/dalv204/sandbox/f1tenth_ws/install/mouse_teleop:/home/dalv204/sandbox/f1tenth_ws/install/key_teleop /usr/bin/cmake --build /home/dalv204/sandbox/f1tenth_ws/build/vesc_msgs -- -j6 -l6

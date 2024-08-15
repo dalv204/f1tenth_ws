@@ -1,5 +1,7 @@
 /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/lib/lab2_pkg/safety_node.py
 /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/launch/launch/safety_launch.py
+/home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/launch/launch/.vscode/c_cpp_properties.json
+/home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/launch/launch/.vscode/settings.json
 /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/ament_index/resource_index/package_run_dependencies/lab2_pkg
 /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/ament_index/resource_index/parent_prefix_path/lab2_pkg
 /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/environment/ament_prefix_path.sh

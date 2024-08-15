@@ -1,0 +1,55 @@
+[0.543s] Invoking command in '/home/dalv204/sandbox/f1tenth_ws/build/vesc_ackermann': AMENT_PREFIX_PATH=/home/dalv204/sandbox/f1tenth_ws/install/vesc_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/dalv204/sandbox/f1tenth_ws/install/vesc_msgs${CMAKE_PREFIX_PATH} LD_LIBRARY_PATH=/home/dalv204/sandbox/f1tenth_ws/install/vesc_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/dalv204/sandbox/f1tenth_ws/install/vesc_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/cmake --build /home/dalv204/sandbox/f1tenth_ws/build/vesc_ackermann -- -j6 -l6
+[0.570s] make: Warning: File 'Makefile' has modification time 1718621428 s in the future
+[0.619s] make[1]: Warning: File 'CMakeFiles/Makefile2' has modification time 1718621428 s in the future
+[0.626s] make[2]: Warning: File 'CMakeFiles/ackermann_to_vesc_node.dir/flags.make' has modification time 1718621428 s in the future
+[0.640s] make[2]: Warning: File 'CMakeFiles/vesc_to_odom_node.dir/flags.make' has modification time 1718621428 s in the future
+[0.640s] make[2]: Warning: File 'CMakeFiles/vesc_ackermann.dir/flags.make' has modification time 1718621428 s in the future
+[0.666s] make[2]: warning:  Clock skew detected.  Your build may be incomplete.
+[0.680s] make[2]: warning:  Clock skew detected.  Your build may be incomplete.
+[0.683s] make[2]: Warning: File 'CMakeFiles/vesc_to_odom_node.dir/flags.make' has modification time 1718621428 s in the future
+[0.685s] make[2]: Warning: File 'CMakeFiles/vesc_ackermann.dir/flags.make' has modification time 1718621428 s in the future
+[0.690s] make[2]: warning:  Clock skew detected.  Your build may be incomplete.
+[0.699s] make[2]: warning:  Clock skew detected.  Your build may be incomplete.
+[0.712s] make[2]: Warning: File 'CMakeFiles/ackermann_to_vesc_node.dir/flags.make' has modification time 1718621428 s in the future
+[0.722s] make[2]: warning:  Clock skew detected.  Your build may be incomplete.
+[0.733s] [ 28%] Built target vesc_to_odom_node
+[0.750s] make[2]: warning:  Clock skew detected.  Your build may be incomplete.
+[0.756s] [ 71%] Built target vesc_ackermann
+[0.775s] [100%] Built target ackermann_to_vesc_node
+[0.777s] make[1]: warning:  Clock skew detected.  Your build may be incomplete.
+[0.795s] make: warning:  Clock skew detected.  Your build may be incomplete.
+[0.805s] Invoked command in '/home/dalv204/sandbox/f1tenth_ws/build/vesc_ackermann' returned '0': AMENT_PREFIX_PATH=/home/dalv204/sandbox/f1tenth_ws/install/vesc_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/dalv204/sandbox/f1tenth_ws/install/vesc_msgs${CMAKE_PREFIX_PATH} LD_LIBRARY_PATH=/home/dalv204/sandbox/f1tenth_ws/install/vesc_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/dalv204/sandbox/f1tenth_ws/install/vesc_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/cmake --build /home/dalv204/sandbox/f1tenth_ws/build/vesc_ackermann -- -j6 -l6
+[0.880s] Invoking command in '/home/dalv204/sandbox/f1tenth_ws/build/vesc_ackermann': AMENT_PREFIX_PATH=/home/dalv204/sandbox/f1tenth_ws/install/vesc_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/dalv204/sandbox/f1tenth_ws/install/vesc_msgs${CMAKE_PREFIX_PATH} LD_LIBRARY_PATH=/home/dalv204/sandbox/f1tenth_ws/install/vesc_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/dalv204/sandbox/f1tenth_ws/install/vesc_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/cmake --install /home/dalv204/sandbox/f1tenth_ws/build/vesc_ackermann
+[0.897s] -- Install configuration: ""
+[0.901s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann/lib/vesc_ackermann/ackermann_to_vesc_node
+[0.907s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann/lib/vesc_ackermann/vesc_to_odom_node
+[0.907s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann/include
+[0.909s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann/include/vesc_ackermann
+[0.910s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann/include/vesc_ackermann/ackermann_to_vesc.hpp
+[0.911s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann/include/vesc_ackermann/vesc_to_odom.hpp
+[0.911s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann/share/vesc_ackermann/environment/library_path.sh
+[0.911s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann/share/vesc_ackermann/environment/library_path.dsv
+[0.911s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann/lib/libvesc_ackermann.so
+[0.911s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann/share/vesc_ackermann/launch
+[0.911s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann/share/vesc_ackermann/launch/ackermann_to_vesc_node.launch.xml
+[0.912s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann/share/vesc_ackermann/launch/vesc_to_odom_node.launch.xml
+[0.912s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann/share/ament_index/resource_index/package_run_dependencies/vesc_ackermann
+[0.912s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann/share/ament_index/resource_index/parent_prefix_path/vesc_ackermann
+[0.912s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann/share/vesc_ackermann/environment/ament_prefix_path.sh
+[0.912s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann/share/vesc_ackermann/environment/ament_prefix_path.dsv
+[0.912s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann/share/vesc_ackermann/environment/path.sh
+[0.912s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann/share/vesc_ackermann/environment/path.dsv
+[0.912s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann/share/vesc_ackermann/local_setup.bash
+[0.913s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann/share/vesc_ackermann/local_setup.sh
+[0.913s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann/share/vesc_ackermann/local_setup.zsh
+[0.913s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann/share/vesc_ackermann/local_setup.dsv
+[0.913s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann/share/vesc_ackermann/package.dsv
+[0.914s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann/share/ament_index/resource_index/packages/vesc_ackermann
+[0.914s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann/share/ament_index/resource_index/rclcpp_components/vesc_ackermann
+[0.920s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann/share/vesc_ackermann/cmake/ament_cmake_export_dependencies-extras.cmake
+[0.920s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann/share/vesc_ackermann/cmake/ament_cmake_export_include_directories-extras.cmake
+[0.920s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann/share/vesc_ackermann/cmake/ament_cmake_export_libraries-extras.cmake
+[0.920s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann/share/vesc_ackermann/cmake/vesc_ackermannConfig.cmake
+[0.920s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann/share/vesc_ackermann/cmake/vesc_ackermannConfig-version.cmake
+[0.920s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann/share/vesc_ackermann/package.xml
+[0.928s] Invoked command in '/home/dalv204/sandbox/f1tenth_ws/build/vesc_ackermann' returned '0': AMENT_PREFIX_PATH=/home/dalv204/sandbox/f1tenth_ws/install/vesc_msgs:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/dalv204/sandbox/f1tenth_ws/install/vesc_msgs${CMAKE_PREFIX_PATH} LD_LIBRARY_PATH=/home/dalv204/sandbox/f1tenth_ws/install/vesc_msgs/lib:${LD_LIBRARY_PATH} PYTHONPATH=/home/dalv204/sandbox/f1tenth_ws/install/vesc_msgs/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/cmake --install /home/dalv204/sandbox/f1tenth_ws/build/vesc_ackermann

@@ -2,16 +2,13 @@
 
 import rclpy 
 from rclpy.node import Node
-from sensor_msgs.msg import LaserScan, Joy
+from sensor_msgs.msg import LaserScan
 from nav_msgs.msg import Odometry
 from ackermann_msgs.msg import AckermannDriveStamped
 import numpy as np
 from collections import deque
-from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy
 
-
-
-safety_time = 1
+safety_time = .5
 # TODO - LOOKS GOOD, JUST NEED TO TUNE DOWN THE SAFETY TIME FOR ANY REAL-LIFE TESTING
 # TODO - ALSO CHANGE THE FILTER ANGLES DEPENDING ON WHAT i WANT TO SHOW
 
@@ -20,12 +17,6 @@ class SafetyNode(Node):
 
     def __init__(self):
         super().__init__('safety_node')
-
-        qos_profile = QoSProfile(
-            reliability = QoSReliabilityPolicy.RELIABLE,
-            history = QoSHistoryPolicy.KEEP_LAST,
-            depth=10
-        )
 
         # want to subscribe to some odometry data and some laser scan
         self.subscription_laser = self.create_subscription(
@@ -36,16 +27,12 @@ class SafetyNode(Node):
         
         self.subscription_odom = self.create_subscription(
             Odometry,
-            '/odom',
+            '/ego_racecar/odom',
             self.odom_callback,
             10)
         
         # create a publisher to change how we drive 
-        self.publisher_ = self.create_publisher(AckermannDriveStamped, '/drive', qos_profile)
-
-        self.subscription_joy = self.create_subscription(
-            Joy, "/joy", self.joy_callback, qos_profile
-        )
+        self.publisher_ = self.create_publisher(AckermannDriveStamped, '/drive', 10)
 
         # make some parameters
         # changing to unrealistic parameters (as in very quick reaction 
@@ -56,17 +43,8 @@ class SafetyNode(Node):
         self.velocity = 0.0
 
         self.ittc_history = deque(maxlen=5)
-        self.safe=False
     
-    def joy_callback(self, msg):
-        """ checks controller readings to see if usr wants action """
-        deadman = 0  # current index of desired deadmann button
-        # could actually program different dead man buttons to 
-        # then could easily switch between demonstrations of wall following, etc
-        if msg.buttons[deadman] == 1:  # is pressed
-            self.safe = True
-        else:
-            self.safe = False
+    
 
     def laser_callback(self,msg):
         # process the laserscan data
@@ -98,18 +76,11 @@ class SafetyNode(Node):
         # self.get_parameter('reaction_time').value + \
         #                     self.get_parameter('safety_distance').value
         # TODO: find the min_ittc
-        if ((min_ittc < (braking_time)) and self.is_rapidly_decreasing()) or (min_ittc<.1 and self.velocity >.1) or not self.safe: 
+        if ((min_ittc < (braking_time)) and self.is_rapidly_decreasing()) or (min_ittc<.1 and self.velocity >.1): 
             # possible collision check
             self.get_logger().warn("COLLISION DETECTED! braking...")
             self.publish_stop_command()
-            
-        else:
-            self.publish_speed()
-
-    def publish_speed(self):
-        msg = AckermannDriveStamped()
-        msg.drive.speed = 2.0
-        self.publisher_.publish(msg)
+    
     
     def is_rapidly_decreasing(self):
         recent_values = np.array(self.ittc_history)

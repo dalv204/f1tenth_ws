@@ -55,7 +55,13 @@ install(PROGRAMS
   scripts/rrt_node.py
   scripts/pp_logic.py
   scripts/lbc_node.py
+  scripts/util.py
   DESTINATION lib/${PROJECT_NAME}
+)
+
+install(DIRECTORY 
+  config
+  DESTINATION share/${PROJECT_NAME}
 )
 
 if(BUILD_TESTING)

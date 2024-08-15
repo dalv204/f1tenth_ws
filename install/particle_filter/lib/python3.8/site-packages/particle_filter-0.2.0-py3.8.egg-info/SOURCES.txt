@@ -15,6 +15,10 @@ maps/basement_fixed.map.yaml
 maps/basement_fixed.png
 maps/levine.pgm
 maps/levine.yaml
+maps/new_circuit_ok.pgm
+maps/new_circuit_ok.yaml
+maps/new_circuit_ok_long.pgm
+maps/new_circuit_ok_long.yaml
 particle_filter/__init__.py
 particle_filter/particle_filter.py
 particle_filter/utils.py

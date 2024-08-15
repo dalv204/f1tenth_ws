@@ -6,8 +6,12 @@
 /home/dalv204/sandbox/f1tenth_ws/install/particle_filter/lib/python3.8/site-packages/particle_filter/__pycache__/__init__.cpython-38.pyc
 /home/dalv204/sandbox/f1tenth_ws/install/particle_filter/share/ament_index/resource_index/packages/particle_filter
 /home/dalv204/sandbox/f1tenth_ws/install/particle_filter/share/particle_filter/package.xml
+/home/dalv204/sandbox/f1tenth_ws/install/particle_filter/share/particle_filter/maps/new_circuit_ok_long.pgm
 /home/dalv204/sandbox/f1tenth_ws/install/particle_filter/share/particle_filter/maps/levine.yaml
 /home/dalv204/sandbox/f1tenth_ws/install/particle_filter/share/particle_filter/maps/basement_fixed.map.yaml
+/home/dalv204/sandbox/f1tenth_ws/install/particle_filter/share/particle_filter/maps/new_circuit_ok_long.yaml
+/home/dalv204/sandbox/f1tenth_ws/install/particle_filter/share/particle_filter/maps/new_circuit_ok.yaml
+/home/dalv204/sandbox/f1tenth_ws/install/particle_filter/share/particle_filter/maps/new_circuit_ok.pgm
 /home/dalv204/sandbox/f1tenth_ws/install/particle_filter/share/particle_filter/maps/levine.pgm
 /home/dalv204/sandbox/f1tenth_ws/install/particle_filter/share/particle_filter/maps/basement_fixed.png
 /home/dalv204/sandbox/f1tenth_ws/install/particle_filter/share/particle_filter/launch/localize_launch.py

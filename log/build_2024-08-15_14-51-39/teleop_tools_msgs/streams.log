@@ -1,0 +1,16 @@
+[0.111s] Invoking command in '/home/dalv204/sandbox/f1tenth_ws/build/teleop_tools_msgs': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/dalv204/sandbox/f1tenth_ws/install/f1tenth_stack:/home/dalv204/sandbox/f1tenth_ws/install/joy_teleop:/home/dalv204/sandbox/f1tenth_ws/install/particle_filter:/home/dalv204/sandbox/f1tenth_ws/install/mouse_teleop:/home/dalv204/sandbox/f1tenth_ws/install/key_teleop /usr/bin/cmake --build /home/dalv204/sandbox/f1tenth_ws/build/teleop_tools_msgs -- -j6 -l6
+[0.806s] [  3%] Built target teleop_tools_msgs__cpp
+[0.806s] [ 12%] Built target teleop_tools_msgs__rosidl_generator_c
+[0.806s] [ 22%] Built target teleop_tools_msgs__rosidl_typesupport_introspection_cpp
+[0.806s] [ 32%] Built target teleop_tools_msgs__rosidl_typesupport_c
+[0.807s] [ 41%] Built target teleop_tools_msgs__rosidl_typesupport_cpp
+[0.807s] [ 51%] Built target teleop_tools_msgs__rosidl_typesupport_introspection_c
+[0.807s] [ 61%] Built target teleop_tools_msgs__rosidl_typesupport_fastrtps_cpp
+[0.809s] [ 70%] Built target teleop_tools_msgs__rosidl_typesupport_fastrtps_c
+[0.809s] [ 70%] Built target teleop_tools_msgs
+[0.810s] [ 74%] Built target teleop_tools_msgs__py
+[0.810s] [ 80%] Built target teleop_tools_msgs__python
+[0.810s] [ 87%] Built target teleop_tools_msgs__rosidl_typesupport_introspection_c__pyext
+[0.810s] [ 93%] Built target teleop_tools_msgs__rosidl_typesupport_fastrtps_c__pyext
+[0.810s] [100%] Built target teleop_tools_msgs__rosidl_typesupport_c__pyext
+[0.831s] Invoked command in '/home/dalv204/sandbox/f1tenth_ws/build/teleop_tools_msgs' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/dalv204/sandbox/f1tenth_ws/install/f1tenth_stack:/home/dalv204/sandbox/f1tenth_ws/install/joy_teleop:/home/dalv204/sandbox/f1tenth_ws/install/particle_filter:/home/dalv204/sandbox/f1tenth_ws/install/mouse_teleop:/home/dalv204/sandbox/f1tenth_ws/install/key_teleop /usr/bin/cmake --build /home/dalv204/sandbox/f1tenth_ws/build/teleop_tools_msgs -- -j6 -l6

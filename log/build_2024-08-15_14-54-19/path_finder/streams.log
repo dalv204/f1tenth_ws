@@ -1,0 +1,162 @@
+[0.063s] Invoking command in '/home/dalv204/sandbox/f1tenth_ws/build/path_finder': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/dalv204/sandbox/f1tenth_ws/install/f1tenth_stack:/home/dalv204/sandbox/f1tenth_ws/install/joy_teleop:/home/dalv204/sandbox/f1tenth_ws/install/particle_filter:/home/dalv204/sandbox/f1tenth_ws/install/mouse_teleop:/home/dalv204/sandbox/f1tenth_ws/install/key_teleop /usr/bin/cmake /home/dalv204/sandbox/f1tenth_ws/src/path_finding/path_finder -DCMAKE_INSTALL_PREFIX=/home/dalv204/sandbox/f1tenth_ws/install/path_finder
+[0.316s] -- The C compiler identification is GNU 9.4.0
+[0.664s] -- The CXX compiler identification is GNU 9.4.0
+[0.688s] -- Check for working C compiler: /usr/bin/cc
+[0.947s] -- Check for working C compiler: /usr/bin/cc -- works
+[1.010s] -- Detecting C compiler ABI info
+[1.554s] -- Detecting C compiler ABI info - done
+[1.598s] -- Detecting C compile features
+[1.610s] -- Detecting C compile features - done
+[1.628s] -- Check for working CXX compiler: /usr/bin/c++
+[1.995s] -- Check for working CXX compiler: /usr/bin/c++ -- works
+[1.996s] -- Detecting CXX compiler ABI info
+[2.197s] -- Detecting CXX compiler ABI info - done
+[2.216s] -- Detecting CXX compile features
+[2.216s] -- Detecting CXX compile features - done
+[2.222s] -- Found ament_cmake: 0.9.12 (/opt/ros/foxy/share/ament_cmake/cmake)
+[2.283s] -- Found PythonInterp: /usr/bin/python3 (found suitable version "3.8.10", minimum required is "3") 
+[2.283s] -- Using PYTHON_EXECUTABLE: /usr/bin/python3
+[2.809s] -- Found rclcpp: 2.4.3 (/opt/ros/foxy/share/rclcpp/cmake)
+[2.912s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[2.931s] -- Found rosidl_adapter: 1.3.1 (/opt/ros/foxy/share/rosidl_adapter/cmake)
+[3.134s] -- Found OpenSSL: /usr/lib/aarch64-linux-gnu/libcrypto.so (found version "1.1.1f")  
+[3.205s] -- Found FastRTPS: /opt/ros/foxy/include  
+[3.392s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[3.518s] -- Found rmw_implementation_cmake: 1.0.4 (/opt/ros/foxy/share/rmw_implementation_cmake/cmake)
+[3.522s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[3.527s] -- Looking for pthread.h
+[3.717s] -- Looking for pthread.h - found
+[3.718s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+[3.979s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+[3.983s] -- Looking for pthread_create in pthreads
+[4.153s] -- Looking for pthread_create in pthreads - not found
+[4.153s] -- Looking for pthread_create in pthread
+[4.345s] -- Looking for pthread_create in pthread - found
+[4.347s] -- Found Threads: TRUE  
+[4.664s] -- Found rclpy: 1.0.13 (/opt/ros/foxy/share/rclpy/cmake)
+[4.668s] -- Found geometry_msgs: 2.0.5 (/opt/ros/foxy/share/geometry_msgs/cmake)
+[4.733s] -- Found nav_msgs: 2.0.5 (/opt/ros/foxy/share/nav_msgs/cmake)
+[4.865s] -- Found ackermann_msgs: 2.0.2 (/opt/ros/foxy/share/ackermann_msgs/cmake)
+[4.930s] -- Found sensor_msgs: 2.0.5 (/opt/ros/foxy/share/sensor_msgs/cmake)
+[5.062s] -- Found visualization_msgs: 2.0.5 (/opt/ros/foxy/share/visualization_msgs/cmake)
+[5.210s] -- Found tf2_ros: 0.13.14 (/opt/ros/foxy/share/tf2_ros/cmake)
+[5.936s] -- Found ament_lint_auto: 0.9.8 (/opt/ros/foxy/share/ament_lint_auto/cmake)
+[6.127s] -- Added test 'copyright' to check source files copyright and LICENSE
+[6.148s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[6.148s] -- Configured cppcheck include dirs: /home/dalv204/sandbox/f1tenth_ws/src/path_finding/path_finder/include
+[6.149s] -- Configured cppcheck exclude dirs and/or files: 
+[6.169s] -- Added test 'cpplint' to check C / C++ code against the Google style
+[6.169s] -- Configured cpplint exclude dirs and/or files: 
+[6.173s] -- Added test 'flake8' to check Python code syntax and style conventions
+[6.179s] -- Added test 'lint_cmake' to check CMake code style
+[6.183s] -- Added test 'pep257' to check Python code against some of the style conventions in PEP 257
+[6.204s] -- Added test 'uncrustify' to check C / C++ code style
+[6.205s] -- Configured uncrustify additional arguments: 
+[6.208s] -- Added test 'xmllint' to check XML markup files
+[6.218s] -- Configuring done
+[6.247s] -- Generating done
+[6.250s] -- Build files have been written to: /home/dalv204/sandbox/f1tenth_ws/build/path_finder
+[6.279s] Invoked command in '/home/dalv204/sandbox/f1tenth_ws/build/path_finder' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/dalv204/sandbox/f1tenth_ws/install/f1tenth_stack:/home/dalv204/sandbox/f1tenth_ws/install/joy_teleop:/home/dalv204/sandbox/f1tenth_ws/install/particle_filter:/home/dalv204/sandbox/f1tenth_ws/install/mouse_teleop:/home/dalv204/sandbox/f1tenth_ws/install/key_teleop /usr/bin/cmake /home/dalv204/sandbox/f1tenth_ws/src/path_finding/path_finder -DCMAKE_INSTALL_PREFIX=/home/dalv204/sandbox/f1tenth_ws/install/path_finder
+[6.286s] Invoking command in '/home/dalv204/sandbox/f1tenth_ws/build/path_finder': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/dalv204/sandbox/f1tenth_ws/install/f1tenth_stack:/home/dalv204/sandbox/f1tenth_ws/install/joy_teleop:/home/dalv204/sandbox/f1tenth_ws/install/particle_filter:/home/dalv204/sandbox/f1tenth_ws/install/mouse_teleop:/home/dalv204/sandbox/f1tenth_ws/install/key_teleop /usr/bin/cmake --build /home/dalv204/sandbox/f1tenth_ws/build/path_finder -- -j6 -l6
+[6.379s] [35m[1mScanning dependencies of target rrt_node[0m
+[6.529s] [ 33%] [32mBuilding CXX object CMakeFiles/rrt_node.dir/src/rrt.cpp.o[0m
+[6.529s] [ 66%] [32mBuilding CXX object CMakeFiles/rrt_node.dir/src/rrt_node.cpp.o[0m
+[10.113s] [01m[K/home/dalv204/sandbox/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:[m[K In member function ‘[01m[Kvoid RRT::scan_callback(sensor_msgs::msg::LaserScan_<std::allocator<void> >::ConstSharedPtr)[m[K’:
+[10.113s] [01m[K/home/dalv204/sandbox/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:33:75:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kscan_msg[m[K’ [[01;35m[K-Wunused-parameter[m[K]
+[10.113s]    33 | void RRT::scan_callback([01;35m[Kconst sensor_msgs::msg::LaserScan::ConstSharedPtr scan_msg[m[K) {
+[10.114s]       |                         [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~[m[K
+[10.126s] [01m[K/home/dalv204/sandbox/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:[m[K In member function ‘[01m[Kvoid RRT::pose_callback(nav_msgs::msg::Odometry_<std::allocator<void> >::ConstSharedPtr)[m[K’:
+[10.126s] [01m[K/home/dalv204/sandbox/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:43:71:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kpose_msg[m[K’ [[01;35m[K-Wunused-parameter[m[K]
+[10.126s]    43 | void RRT::pose_callback([01;35m[Kconst nav_msgs::msg::Odometry::ConstSharedPtr pose_msg[m[K) {
+[10.126s]       |                         [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~[m[K
+[10.128s] [01m[K/home/dalv204/sandbox/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:[m[K In member function ‘[01m[Kint RRT::nearest(std::vector<RRT_Node>&, std::vector<double>&)[m[K’:
+[10.128s] [01m[K/home/dalv204/sandbox/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:79:41:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Ktree[m[K’ [[01;35m[K-Wunused-parameter[m[K]
+[10.128s]    79 | int RRT::nearest([01;35m[Kstd::vector<RRT_Node> &tree[m[K, std::vector<double> &sampled_point) {
+[10.129s]       |                  [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~^~~~[m[K
+[10.129s] [01m[K/home/dalv204/sandbox/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:79:68:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Ksampled_point[m[K’ [[01;35m[K-Wunused-parameter[m[K]
+[10.129s]    79 | int RRT::nearest(std::vector<RRT_Node> &tree, [01;35m[Kstd::vector<double> &sampled_point[m[K) {
+[10.129s]       |                                               [01;35m[K~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~[m[K
+[10.129s] [01m[K/home/dalv204/sandbox/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:[m[K In member function ‘[01m[KRRT_Node RRT::steer(RRT_Node&, std::vector<double>&)[m[K’:
+[10.129s] [01m[K/home/dalv204/sandbox/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:93:31:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Knearest_node[m[K’ [[01;35m[K-Wunused-parameter[m[K]
+[10.129s]    93 | RRT_Node RRT::steer([01;35m[KRRT_Node &nearest_node[m[K, std::vector<double> &sampled_point) {
+[10.130s]       |                     [01;35m[K~~~~~~~~~~^~~~~~~~~~~~[m[K
+[10.130s] [01m[K/home/dalv204/sandbox/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:93:66:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Ksampled_point[m[K’ [[01;35m[K-Wunused-parameter[m[K]
+[10.130s]    93 | RRT_Node RRT::steer(RRT_Node &nearest_node, [01;35m[Kstd::vector<double> &sampled_point[m[K) {
+[10.130s]       |                                             [01;35m[K~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~[m[K
+[10.130s] [01m[K/home/dalv204/sandbox/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:[m[K In member function ‘[01m[Kbool RRT::check_collision(RRT_Node&, RRT_Node&)[m[K’:
+[10.130s] [01m[K/home/dalv204/sandbox/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:113:37:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Knearest_node[m[K’ [[01;35m[K-Wunused-parameter[m[K]
+[10.130s]   113 | bool RRT::check_collision([01;35m[KRRT_Node &nearest_node[m[K, RRT_Node &new_node) {
+[10.131s]       |                           [01;35m[K~~~~~~~~~~^~~~~~~~~~~~[m[K
+[10.131s] [01m[K/home/dalv204/sandbox/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:113:61:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Knew_node[m[K’ [[01;35m[K-Wunused-parameter[m[K]
+[10.131s]   113 | bool RRT::check_collision(RRT_Node &nearest_node, [01;35m[KRRT_Node &new_node[m[K) {
+[10.131s]       |                                                   [01;35m[K~~~~~~~~~~^~~~~~~~[m[K
+[10.131s] [01m[K/home/dalv204/sandbox/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:[m[K In member function ‘[01m[Kbool RRT::is_goal(RRT_Node&, double, double)[m[K’:
+[10.131s] [01m[K/home/dalv204/sandbox/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:128:29:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Klatest_added_node[m[K’ [[01;35m[K-Wunused-parameter[m[K]
+[10.131s]   128 | bool RRT::is_goal([01;35m[KRRT_Node &latest_added_node[m[K, double goal_x, double goal_y) {
+[10.131s]       |                   [01;35m[K~~~~~~~~~~^~~~~~~~~~~~~~~~~[m[K
+[10.132s] [01m[K/home/dalv204/sandbox/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:128:55:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kgoal_x[m[K’ [[01;35m[K-Wunused-parameter[m[K]
+[10.132s]   128 | bool RRT::is_goal(RRT_Node &latest_added_node, [01;35m[Kdouble goal_x[m[K, double goal_y) {
+[10.132s]       |                                                [01;35m[K~~~~~~~^~~~~~[m[K
+[10.132s] [01m[K/home/dalv204/sandbox/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:128:70:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kgoal_y[m[K’ [[01;35m[K-Wunused-parameter[m[K]
+[10.132s]   128 | bool RRT::is_goal(RRT_Node &latest_added_node, double goal_x, [01;35m[Kdouble goal_y[m[K) {
+[10.132s]       |                                                               [01;35m[K~~~~~~~^~~~~~[m[K
+[10.133s] [01m[K/home/dalv204/sandbox/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:[m[K In member function ‘[01m[Kstd::vector<RRT_Node> RRT::find_path(std::vector<RRT_Node>&, RRT_Node&)[m[K’:
+[10.133s] [01m[K/home/dalv204/sandbox/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:145:61:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Ktree[m[K’ [[01;35m[K-Wunused-parameter[m[K]
+[10.133s]   145 | std::vector<RRT_Node> RRT::find_path([01;35m[Kstd::vector<RRT_Node> &tree[m[K, RRT_Node &latest_added_node) {
+[10.133s]       |                                      [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~^~~~[m[K
+[10.133s] [01m[K/home/dalv204/sandbox/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:145:77:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Klatest_added_node[m[K’ [[01;35m[K-Wunused-parameter[m[K]
+[10.134s]   145 | std::vector<RRT_Node> RRT::find_path(std::vector<RRT_Node> &tree, [01;35m[KRRT_Node &latest_added_node[m[K) {
+[10.134s]       |                                                                   [01;35m[K~~~~~~~~~~^~~~~~~~~~~~~~~~~[m[K
+[10.134s] [01m[K/home/dalv204/sandbox/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:[m[K In member function ‘[01m[Kdouble RRT::cost(std::vector<RRT_Node>&, RRT_Node&)[m[K’:
+[10.134s] [01m[K/home/dalv204/sandbox/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:162:41:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Ktree[m[K’ [[01;35m[K-Wunused-parameter[m[K]
+[10.134s]   162 | double RRT::cost([01;35m[Kstd::vector<RRT_Node> &tree[m[K, RRT_Node &node) {
+[10.134s]       |                  [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~^~~~[m[K
+[10.134s] [01m[K/home/dalv204/sandbox/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:162:57:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Knode[m[K’ [[01;35m[K-Wunused-parameter[m[K]
+[10.134s]   162 | double RRT::cost(std::vector<RRT_Node> &tree, [01;35m[KRRT_Node &node[m[K) {
+[10.135s]       |                                               [01;35m[K~~~~~~~~~~^~~~[m[K
+[10.135s] [01m[K/home/dalv204/sandbox/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:[m[K In member function ‘[01m[Kdouble RRT::line_cost(RRT_Node&, RRT_Node&)[m[K’:
+[10.135s] [01m[K/home/dalv204/sandbox/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:176:33:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kn1[m[K’ [[01;35m[K-Wunused-parameter[m[K]
+[10.135s]   176 | double RRT::line_cost([01;35m[KRRT_Node &n1[m[K, RRT_Node &n2) {
+[10.135s]       |                       [01;35m[K~~~~~~~~~~^~[m[K
+[10.135s] [01m[K/home/dalv204/sandbox/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:176:47:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kn2[m[K’ [[01;35m[K-Wunused-parameter[m[K]
+[10.135s]   176 | double RRT::line_cost(RRT_Node &n1, [01;35m[KRRT_Node &n2[m[K) {
+[10.136s]       |                                     [01;35m[K~~~~~~~~~~^~[m[K
+[10.137s] [01m[K/home/dalv204/sandbox/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:[m[K In member function ‘[01m[Kstd::vector<int> RRT::near(std::vector<RRT_Node>&, RRT_Node&)[m[K’:
+[10.137s] [01m[K/home/dalv204/sandbox/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:190:51:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Ktree[m[K’ [[01;35m[K-Wunused-parameter[m[K]
+[10.137s]   190 | std::vector<int> RRT::near([01;35m[Kstd::vector<RRT_Node> &tree[m[K, RRT_Node &node) {
+[10.137s]       |                            [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~^~~~[m[K
+[10.138s] [01m[K/home/dalv204/sandbox/f1tenth_ws/src/path_finding/path_finder/src/rrt.cpp:190:67:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Knode[m[K’ [[01;35m[K-Wunused-parameter[m[K]
+[10.138s]   190 | std::vector<int> RRT::near(std::vector<RRT_Node> &tree, [01;35m[KRRT_Node &node[m[K) {
+[10.138s]       |                                                         [01;35m[K~~~~~~~~~~^~~~[m[K
+[20.900s] [100%] [32m[1mLinking CXX executable rrt_node[0m
+[21.573s] [100%] Built target rrt_node
+[21.598s] Invoked command in '/home/dalv204/sandbox/f1tenth_ws/build/path_finder' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/dalv204/sandbox/f1tenth_ws/install/f1tenth_stack:/home/dalv204/sandbox/f1tenth_ws/install/joy_teleop:/home/dalv204/sandbox/f1tenth_ws/install/particle_filter:/home/dalv204/sandbox/f1tenth_ws/install/mouse_teleop:/home/dalv204/sandbox/f1tenth_ws/install/key_teleop /usr/bin/cmake --build /home/dalv204/sandbox/f1tenth_ws/build/path_finder -- -j6 -l6
+[21.662s] Invoking command in '/home/dalv204/sandbox/f1tenth_ws/build/path_finder': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/dalv204/sandbox/f1tenth_ws/install/f1tenth_stack:/home/dalv204/sandbox/f1tenth_ws/install/joy_teleop:/home/dalv204/sandbox/f1tenth_ws/install/particle_filter:/home/dalv204/sandbox/f1tenth_ws/install/mouse_teleop:/home/dalv204/sandbox/f1tenth_ws/install/key_teleop /usr/bin/cmake --install /home/dalv204/sandbox/f1tenth_ws/build/path_finder
+[21.682s] -- Install configuration: ""
+[21.682s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/lib/path_finder/rrt_node
+[21.687s] -- Set runtime path of "/home/dalv204/sandbox/f1tenth_ws/install/path_finder/lib/path_finder/rrt_node" to ""
+[21.688s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/environment/pythonpath.sh
+[21.688s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/environment/pythonpath.dsv
+[21.689s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/lib/python3.8/site-packages/path_finder
+[21.689s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/lib/python3.8/site-packages/path_finder/__init__.py
+[21.767s] Listing '/home/dalv204/sandbox/f1tenth_ws/install/path_finder/lib/python3.8/site-packages/path_finder'...
+[21.767s] Compiling '/home/dalv204/sandbox/f1tenth_ws/install/path_finder/lib/python3.8/site-packages/path_finder/__init__.py'...
+[21.777s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/lib/path_finder/rrt_node.py
+[21.778s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/lib/path_finder/pp_logic.py
+[21.778s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/lib/path_finder/lbc_node.py
+[21.778s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/ament_index/resource_index/package_run_dependencies/path_finder
+[21.778s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/ament_index/resource_index/parent_prefix_path/path_finder
+[21.779s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/environment/ament_prefix_path.sh
+[21.779s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/environment/ament_prefix_path.dsv
+[21.779s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/environment/path.sh
+[21.780s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/environment/path.dsv
+[21.780s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/local_setup.bash
+[21.780s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/local_setup.sh
+[21.780s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/local_setup.zsh
+[21.781s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/local_setup.dsv
+[21.781s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/package.dsv
+[21.782s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/ament_index/resource_index/packages/path_finder
+[21.782s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/cmake/path_finderConfig.cmake
+[21.782s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/cmake/path_finderConfig-version.cmake
+[21.782s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/package.xml
+[21.790s] Invoked command in '/home/dalv204/sandbox/f1tenth_ws/build/path_finder' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/dalv204/sandbox/f1tenth_ws/install/f1tenth_stack:/home/dalv204/sandbox/f1tenth_ws/install/joy_teleop:/home/dalv204/sandbox/f1tenth_ws/install/particle_filter:/home/dalv204/sandbox/f1tenth_ws/install/mouse_teleop:/home/dalv204/sandbox/f1tenth_ws/install/key_teleop /usr/bin/cmake --install /home/dalv204/sandbox/f1tenth_ws/build/path_finder
