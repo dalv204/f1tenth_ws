@@ -180,6 +180,13 @@ class DualSearch(Node):
 
 
             current_time = time.time()
+            if self.goal is None:
+                # make the goal - is circular now so should be able 
+                # to use the yaw?? :( perhaps
+                goal_distance = .4 # 40 cm behind car?
+                yaw_vec = np.array([np.cos(self.yaw), np.sin(self.yaw)])
+                yaw_vec *= goal_distance/self.Grid.scale 
+                self.goal = tuple(np.array([self.coord_x, self.coord_y])-yaw_vec)
             if self.goal is not None and self.global_path is None:
                 self.update_global_path()
                 # if (current_time - self.last_global_update > self.global_update_interval) \
@@ -420,8 +427,8 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
                     elif nearest_index <=3:
                         nearest_node.is_stem=True
                     
-                    self.waypoints.append(self.Grid.coord_to_pos(new_node))
-                    self.waypoint_publish(group=self.waypoints)
+                    # self.waypoints.append(self.Grid.coord_to_pos(new_node))
+                    # self.waypoint_publish(group=self.waypoints)
                     # self.waypoints.append(self.Grid.coord_to_pos((sampled_point[0], sampled_point[1])))
                     
                     for neighbor in neighbors:
@@ -577,37 +584,19 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         if nearest_index <= 3 or nearest_node.is_stem:
             # first_nodes_v = self.tree[1] - self.tree[0]
             # node_heading = np.arctan2(first_nodes_v[1], first_nodes_v[0])
-            node_heading = self.yaw
+            node_heading = self.start_yaw
             # self.yaw # just give it yaw haha - close enough
             pseudo_heading = np.arctan2(direction[1], direction[0])
             heading_tolerance = np.radians(60)
             
             if abs(pseudo_heading-node_heading) > heading_tolerance:
                 return None
-            # if not nearest_node.is_stem:
-            #     nearest_node.is_stem=True
-            #     print(f"index {nearest_index} is new stem :) welcome!")
-            #     changed=True
-            
-            # time.sleep(.5)
-            # print(f"{node_heading=}")
-            # print(f"{pseudo_heading=}")
-
-            # print('passed')
-        # -----
         # TODO - !H 
         # CHOOSING CANDIDATE VERY DEPENDENT ON THIS STEP SIZE
         # TODO - !HH - step size should be large at first, then get smaller when improving path
 
         step_size = int(1.3 / self.Grid.scale)
         new_point = (nearest_node + (direction*step_size)).astype(int)
-        # (int(nearest_node.x + (direction[0] * step_size)), int(nearest_node.y + (direction[1] * step_size)))
-        # print(f"current point = {nearest_node.x, nearest_node.y}")
-        # print(f"{new_point=}")
-        # print(f"new point should be {nearest_node.x + direction[0]*step_size}")
-        # print(f"goal point = {sampled_point[0], sampled_point[1]}")
-        # if nearest_node.is_stem and not changed:
-        #         return TreeNode(new_point[0], new_point[1], parent=nearest_node, is_stem=True)
         return TreeNode(new_point[0], new_point[1], parent=nearest_node)
     
     
