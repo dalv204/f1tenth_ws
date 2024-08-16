@@ -11,8 +11,14 @@ from std_msgs.msg import String
 import csv
 import ast
 import yaml
+import os
+from ament_index_python.packages import get_package_share_directory
 
-
+config = os.path.join(
+    get_package_share_directory("path_finder"),
+    "config",
+    "params.yaml"
+)
 # TODO - FOR SIMULATION WORK, I WILL HAVE THIS FILE HERE
 # TODO - IN ACTUAL USAGE, I SHOULD COMMUNICATE WITH THE OTHER NODE
 # TODO - BY RECEIVING A PUBLISH OF THE COORDS 
@@ -26,7 +32,7 @@ class PurePursuit(Node):
     
     def __init__(self):
         super().__init__('pure_pursuit_node')
-        with open("params.yaml", "r") as f:
+        with open(config, "r") as f:
             self.param = yaml.safe_load(f)
         self.pose_topic = self.param["pose_topic"]
         pose_topic = "/ego_racecar/odom"

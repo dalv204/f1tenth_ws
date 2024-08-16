@@ -19,6 +19,10 @@ maps/new_circuit_ok.pgm
 maps/new_circuit_ok.yaml
 maps/new_circuit_ok_long.pgm
 maps/new_circuit_ok_long.yaml
+maps/new_new_map_ok_long.pgm
+maps/new_new_map_ok_long.yaml
+maps/new_new_map_really_mid.pgm
+maps/new_new_map_really_mid.yaml
 particle_filter/__init__.py
 particle_filter/particle_filter.py
 particle_filter/utils.py

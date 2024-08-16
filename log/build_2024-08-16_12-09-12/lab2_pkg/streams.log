@@ -1,0 +1,26 @@
+[1.133s] Invoking command in '/home/dalv204/sandbox/f1tenth_ws/build/lab2_pkg': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/dalv204/sandbox/f1tenth_ws/install/f1tenth_stack:/home/dalv204/sandbox/f1tenth_ws/install/joy_teleop:/home/dalv204/sandbox/f1tenth_ws/install/particle_filter:/home/dalv204/sandbox/f1tenth_ws/install/mouse_teleop:/home/dalv204/sandbox/f1tenth_ws/install/key_teleop /usr/bin/cmake --build /home/dalv204/sandbox/f1tenth_ws/build/lab2_pkg -- -j6 -l6
+[1.366s] Invoked command in '/home/dalv204/sandbox/f1tenth_ws/build/lab2_pkg' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/dalv204/sandbox/f1tenth_ws/install/f1tenth_stack:/home/dalv204/sandbox/f1tenth_ws/install/joy_teleop:/home/dalv204/sandbox/f1tenth_ws/install/particle_filter:/home/dalv204/sandbox/f1tenth_ws/install/mouse_teleop:/home/dalv204/sandbox/f1tenth_ws/install/key_teleop /usr/bin/cmake --build /home/dalv204/sandbox/f1tenth_ws/build/lab2_pkg -- -j6 -l6
+[1.617s] Invoking command in '/home/dalv204/sandbox/f1tenth_ws/build/lab2_pkg': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/dalv204/sandbox/f1tenth_ws/install/f1tenth_stack:/home/dalv204/sandbox/f1tenth_ws/install/joy_teleop:/home/dalv204/sandbox/f1tenth_ws/install/particle_filter:/home/dalv204/sandbox/f1tenth_ws/install/mouse_teleop:/home/dalv204/sandbox/f1tenth_ws/install/key_teleop /usr/bin/cmake --install /home/dalv204/sandbox/f1tenth_ws/build/lab2_pkg
+[1.674s] -- Install configuration: ""
+[1.676s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/lib/lab2_pkg/safety_node.py
+[1.677s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/launch/launch
+[1.679s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/launch/launch/safety_launch.py
+[1.680s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/launch/launch/.vscode
+[1.681s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/launch/launch/.vscode/c_cpp_properties.json
+[1.682s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/launch/launch/.vscode/settings.json
+[1.682s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/ament_index/resource_index/package_run_dependencies/lab2_pkg
+[1.683s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/ament_index/resource_index/parent_prefix_path/lab2_pkg
+[1.684s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/environment/ament_prefix_path.sh
+[1.685s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/environment/ament_prefix_path.dsv
+[1.686s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/environment/path.sh
+[1.687s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/environment/path.dsv
+[1.687s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/local_setup.bash
+[1.688s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/local_setup.sh
+[1.690s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/local_setup.zsh
+[1.690s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/local_setup.dsv
+[1.690s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/package.dsv
+[1.692s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/ament_index/resource_index/packages/lab2_pkg
+[1.692s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/cmake/lab2_pkgConfig.cmake
+[1.692s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/cmake/lab2_pkgConfig-version.cmake
+[1.693s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/lab2_pkg/share/lab2_pkg/package.xml
+[1.712s] Invoked command in '/home/dalv204/sandbox/f1tenth_ws/build/lab2_pkg' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/dalv204/sandbox/f1tenth_ws/install/f1tenth_stack:/home/dalv204/sandbox/f1tenth_ws/install/joy_teleop:/home/dalv204/sandbox/f1tenth_ws/install/particle_filter:/home/dalv204/sandbox/f1tenth_ws/install/mouse_teleop:/home/dalv204/sandbox/f1tenth_ws/install/key_teleop /usr/bin/cmake --install /home/dalv204/sandbox/f1tenth_ws/build/lab2_pkg

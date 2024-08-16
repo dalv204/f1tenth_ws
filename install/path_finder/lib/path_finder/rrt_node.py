@@ -2,6 +2,8 @@
 
 import numpy as np
 from numpy import linalg as LA
+import os
+from ament_index_python.packages import get_package_share_directory
 import math
 import concurrent.futures
 from rclpy.executors import MultiThreadedExecutor, SingleThreadedExecutor
@@ -30,12 +32,20 @@ import yaml
 # TODO - so, I think with the global node, I should be able to pick a point, and draw a line between 
 # TODO - that "checkpoint" and the borders of the track; 
 
+config = os.path.join(
+    get_package_share_directory("path_finder"),
+    "config",
+    "params.yaml"
+)
+# TODO - !HHH - SUPER IMPORTANT, make sure that rrt_node, and 
+#       lbc_node start before the particle filter does
+
 
 class DualSearch(Node):
     """ class to handle global and local search """
     def __init__(self):
         super().__init__('rrt_node')
-        with open("params.yaml", "r") as f:
+        with open(config, "r") as f:
             self.param = yaml.safe_load(f)
         self.pose_topic = self.param["pose_topic"]
         scan_topic = "/scan"
@@ -94,10 +104,10 @@ class DualSearch(Node):
         self.marker_pub = self.create_publisher(Marker, 'waypoints_marker', 10)
 
         # TODO - include the other listeners I have here
-        with open("data_file_circular.json", 'r') as dt:
-            info = dt.read()
-            map_info = ast.literal_eval(info)
-        dt.close()
+        # with open("data_file_circular.json", 'r') as dt:
+        #     info = dt.read()
+        #     map_info = ast.literal_eval(info)
+        # dt.close()
 
         self.global_path = None
         self.local_path = None
@@ -114,8 +124,8 @@ class DualSearch(Node):
         # self.Grid = Occupancy(.05, (141, 124), (-1.31, -4.25), map_info)
 
         # for TRACK
-        self.Grid = Occupancy(.057959, (2000,2000), (-84.85359914210505, -36.30299725862132), map_info)
-        self.global_planner = RRT(False, parent=self)
+        # self.Grid = Occupancy(.057959, (2000,2000), (-84.85359914210505, -36.30299725862132), map_info)
+        # self.global_planner = RRT(False, parent=self)
         # self.Grid = Occupancy()
         self.current_position = None, None
         self.goal = None
@@ -132,6 +142,7 @@ class DualSearch(Node):
         self.checked_space = set()
         self.available_space = set()
         self.path = None
+        self.ready = False
         # self.local_planner = RRT(True, parent=self)
 
 
@@ -139,11 +150,13 @@ class DualSearch(Node):
 
     def goal_callback(self, msg):
         """ converts clicked point to goal """
-        self.goal = self.Grid.pos_to_coord(msg.point.x, msg.point.y)
-        print(self.goal)
+        # self.goal = self.Grid.pos_to_coord(msg.point.x, msg.point.y)
+        # print(self.goal)
+        self.ready = True # self.ready is really only needed for testing purposes
 
     def map_callback(self, msg):
         """ only want to create one instance"""
+        print("still receiving map!!")
         if not self.mapped: # only want to create 1 class instance
             
             # I believe width corresponds to x and height to y
@@ -192,7 +205,7 @@ class DualSearch(Node):
                 yaw_vec = np.array([np.cos(self.yaw), np.sin(self.yaw)])
                 yaw_vec *= goal_distance/self.Grid.scale 
                 self.goal = tuple(np.array([self.coord_x, self.coord_y])-yaw_vec)
-            if self.goal is not None and self.global_path is None:
+            if self.goal is not None and self.global_path is None and self.ready:
                 self.update_global_path()
                 # if (current_time - self.last_global_update > self.global_update_interval) \
                 #         or self.global_path is None:

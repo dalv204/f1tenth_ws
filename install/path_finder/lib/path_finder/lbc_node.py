@@ -16,6 +16,7 @@ from scipy.spatial import KDTree
 from ackermann_msgs.msg import AckermannDriveStamped, AckermannDrive
 from std_msgs.msg import String
 from nav_msgs.msg import Odometry
+from nav_msgs.srv import GetMap
 from sensor_msgs.msg import LaserScan
 from util import TreeNode, Occupancy
 import ast
@@ -24,6 +25,7 @@ from geometry_msgs.msg import Point
 import time
 import yaml
 from ament_index_python.packages import get_package_share_directory
+
 
 config = os.path.join(
     get_package_share_directory("path_finder"),
@@ -43,6 +45,8 @@ class LBC(Node):
         waypoints = "/custom_waypoints"
         global_path_topic = "/global_path"
         map_topic = '/map'
+        self.map_client = self.create_client(GetMap, "/map_server/map")
+        self.get_map()
 
         self.pose_sub_ = self.create_subscription(
             Odometry,
@@ -115,6 +119,16 @@ class LBC(Node):
             print('should be updating local path')
             self.update_local_path()
             self.publish_local_path()
+    
+    def get_map(self):
+        """ should fetch the map that the particle filter is using """
+        while not self.map_client.wait_for_service(timeout_sec=1.0):
+            self.get_logger().info("Get map service not available, waiting")
+        req = GetMap.Request()
+        future = self.map_client.call_async(req)
+        rclpy.spin_until_future_complete(self,future)
+        map_msg=future.result().map
+        print("got the map message!!!")
 
     def quaternion_to_yaw(self, orientation):
         """ convert quaternion to yaw angle. (converts to vehicle frame)"""
