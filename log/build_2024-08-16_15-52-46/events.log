@@ -1,0 +1,44 @@
+[0.000000] (-) TimerEvent: {}
+[0.005687] (ackermann_mux) JobQueued: {'identifier': 'ackermann_mux', 'dependencies': OrderedDict()}
+[0.005869] (gap_follow) JobQueued: {'identifier': 'gap_follow', 'dependencies': OrderedDict()}
+[0.005931] (key_teleop) JobQueued: {'identifier': 'key_teleop', 'dependencies': OrderedDict()}
+[0.005978] (lab2_pkg) JobQueued: {'identifier': 'lab2_pkg', 'dependencies': OrderedDict()}
+[0.006021] (mouse_teleop) JobQueued: {'identifier': 'mouse_teleop', 'dependencies': OrderedDict()}
+[0.006062] (particle_filter) JobQueued: {'identifier': 'particle_filter', 'dependencies': OrderedDict()}
+[0.006103] (path_finder) JobQueued: {'identifier': 'path_finder', 'dependencies': OrderedDict()}
+[0.006141] (pure_pursuit) JobQueued: {'identifier': 'pure_pursuit', 'dependencies': OrderedDict()}
+[0.006177] (teleop_tools_msgs) JobQueued: {'identifier': 'teleop_tools_msgs', 'dependencies': OrderedDict()}
+[0.006215] (vesc_msgs) JobQueued: {'identifier': 'vesc_msgs', 'dependencies': OrderedDict()}
+[0.006251] (wall_follow) JobQueued: {'identifier': 'wall_follow', 'dependencies': OrderedDict()}
+[0.006288] (joy_teleop) JobQueued: {'identifier': 'joy_teleop', 'dependencies': OrderedDict([('teleop_tools_msgs', '/home/dalv204/sandbox/f1tenth_ws/install/teleop_tools_msgs')])}
+[0.006337] (vesc_ackermann) JobQueued: {'identifier': 'vesc_ackermann', 'dependencies': OrderedDict([('vesc_msgs', '/home/dalv204/sandbox/f1tenth_ws/install/vesc_msgs')])}
+[0.006380] (vesc_driver) JobQueued: {'identifier': 'vesc_driver', 'dependencies': OrderedDict([('vesc_msgs', '/home/dalv204/sandbox/f1tenth_ws/install/vesc_msgs')])}
+[0.006422] (teleop_tools) JobQueued: {'identifier': 'teleop_tools', 'dependencies': OrderedDict([('key_teleop', '/home/dalv204/sandbox/f1tenth_ws/install/key_teleop'), ('teleop_tools_msgs', '/home/dalv204/sandbox/f1tenth_ws/install/teleop_tools_msgs'), ('joy_teleop', '/home/dalv204/sandbox/f1tenth_ws/install/joy_teleop')])}
+[0.006548] (vesc) JobQueued: {'identifier': 'vesc', 'dependencies': OrderedDict([('vesc_msgs', '/home/dalv204/sandbox/f1tenth_ws/install/vesc_msgs'), ('vesc_ackermann', '/home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann'), ('vesc_driver', '/home/dalv204/sandbox/f1tenth_ws/install/vesc_driver')])}
+[0.006630] (f1tenth_stack) JobQueued: {'identifier': 'f1tenth_stack', 'dependencies': OrderedDict([('ackermann_mux', '/home/dalv204/sandbox/f1tenth_ws/install/ackermann_mux'), ('teleop_tools_msgs', '/home/dalv204/sandbox/f1tenth_ws/install/teleop_tools_msgs'), ('vesc_msgs', '/home/dalv204/sandbox/f1tenth_ws/install/vesc_msgs'), ('joy_teleop', '/home/dalv204/sandbox/f1tenth_ws/install/joy_teleop'), ('vesc_ackermann', '/home/dalv204/sandbox/f1tenth_ws/install/vesc_ackermann'), ('vesc_driver', '/home/dalv204/sandbox/f1tenth_ws/install/vesc_driver'), ('vesc', '/home/dalv204/sandbox/f1tenth_ws/install/vesc')])}
+[0.006711] (vesc_msgs) JobStarted: {'identifier': 'vesc_msgs'}
+[0.044890] (teleop_tools_msgs) JobStarted: {'identifier': 'teleop_tools_msgs'}
+[0.073880] (ackermann_mux) JobStarted: {'identifier': 'ackermann_mux'}
+[0.099123] (-) TimerEvent: {}
+[0.100497] (key_teleop) JobStarted: {'identifier': 'key_teleop'}
+[0.145697] (gap_follow) JobStarted: {'identifier': 'gap_follow'}
+[0.174053] (gap_follow) JobEnded: {'identifier': 'gap_follow', 'rc': 0}
+[0.177591] (lab2_pkg) JobStarted: {'identifier': 'lab2_pkg'}
+[0.199857] (-) TimerEvent: {}
+[0.211425] (vesc_msgs) JobEnded: {'identifier': 'vesc_msgs', 'rc': 'SIGINT'}
+[0.213373] (teleop_tools_msgs) JobEnded: {'identifier': 'teleop_tools_msgs', 'rc': 'SIGINT'}
+[0.214132] (ackermann_mux) JobEnded: {'identifier': 'ackermann_mux', 'rc': 'SIGINT'}
+[0.214723] (key_teleop) JobEnded: {'identifier': 'key_teleop', 'rc': 'SIGINT'}
+[0.217331] (lab2_pkg) JobEnded: {'identifier': 'lab2_pkg', 'rc': 'SIGINT'}
+[0.220007] (mouse_teleop) JobSkipped: {'identifier': 'mouse_teleop'}
+[0.220137] (particle_filter) JobSkipped: {'identifier': 'particle_filter'}
+[0.220193] (path_finder) JobSkipped: {'identifier': 'path_finder'}
+[0.220237] (pure_pursuit) JobSkipped: {'identifier': 'pure_pursuit'}
+[0.220318] (wall_follow) JobSkipped: {'identifier': 'wall_follow'}
+[0.220361] (joy_teleop) JobSkipped: {'identifier': 'joy_teleop'}
+[0.220399] (vesc_ackermann) JobSkipped: {'identifier': 'vesc_ackermann'}
+[0.220436] (vesc_driver) JobSkipped: {'identifier': 'vesc_driver'}
+[0.220472] (teleop_tools) JobSkipped: {'identifier': 'teleop_tools'}
+[0.220508] (vesc) JobSkipped: {'identifier': 'vesc'}
+[0.220631] (f1tenth_stack) JobSkipped: {'identifier': 'f1tenth_stack'}
+[0.220686] (-) EventReactorShutdown: {}

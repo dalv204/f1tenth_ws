@@ -25,7 +25,7 @@ class Occupancy:
         # dt.close()
         
         self.dynamic_grid = set()
-        self.car_width = 0.4 # 40 centimeter
+        self.car_width = 0.3 # 40 centimeter
         self.scale = scale
         self.width = dimensions[0]
         self.height = dimensions[1]
@@ -82,9 +82,9 @@ class Occupancy:
         """ 
         finds a random point in the 'open space' 
         """
-
+        value = np.random.uniform(0, limiter)
         # value = random.sample(self.available_space,1)[0] # returns an item in list form  #np.random.uniform(0, limiter)
-        value = self.available_space.pop()
+        # value = self.available_space.pop()
         if value in self: # or value not in self.available_space
             # not free - search again 
             value = self.random_point(limiter)
@@ -111,12 +111,14 @@ class Occupancy:
     def develop_area(self):
         offset = int(2 / self.scale)
         this_space = set()
+        # print(f"{self.static_grid=}")
         for x_,y_ in self.static_grid:
             if (x_, y_) not in self.available_space:
                 for value in [(x,y) for x in range(x_-offset, x_+(offset+1)) 
                         for y in range(y_-offset, y_+(offset+1))]:
                     this_space.add(value)
                     self.available_space.add(value)
+        print(f"{self.available_space=}")
 
     
     
@@ -138,7 +140,7 @@ class Occupancy:
             # see if the kd_search is quicker
             current_pose = np.array([nearest_node.x, nearest_node.y])
             distance, index = self.KD_tree.query(current_pose)
-            return distance * self.scale  <= (self.car_width*.75) 
+            return distance * self.scale  <= (self.car_width*.60) 
             # .75 adds a little buffer since really we only need half width
                  
         else:
@@ -147,11 +149,12 @@ class Occupancy:
             length = int(np.linalg.norm(direct_vector))
             direct_vector = (direct_vector / length) if length>0 else np.array([0,0])
             square = [np.array([nearest_node.x, nearest_node.y])]
-            path = set(tuple((array+(mult*direct_vector)).astype(int)) for mult in range(0, length+1) for array in square)
+            path = set(tuple((array+(mult*direct_vector)).astype(int)) for mult in range(1, length+1) for array in square)
             for position in path:
                 distance, index = self.KD_tree.query(position)
-                if distance*self.scale <= (self.car_width*.75):
+                if distance*self.scale <= (self.car_width*.60):
                     return True
+            
             return False
 
 class TreeNode:

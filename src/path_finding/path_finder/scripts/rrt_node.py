@@ -4,6 +4,7 @@ import numpy as np
 from numpy import linalg as LA
 import os
 from ament_index_python.packages import get_package_share_directory
+from nav_msgs.srv import GetMap
 import math
 import concurrent.futures
 from rclpy.executors import MultiThreadedExecutor, SingleThreadedExecutor
@@ -11,7 +12,7 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
 from sensor_msgs.msg import LaserScan
-from geometry_msgs.msg import PoseStamped, PointStamped, Pose, Point
+from geometry_msgs.msg import PoseStamped, PointStamped, Pose, Point, PoseWithCovarianceStamped
 from nav_msgs.msg import Odometry, OccupancyGrid
 from visualization_msgs.msg import Marker
 import csv  # may need this?
@@ -47,6 +48,7 @@ class DualSearch(Node):
         super().__init__('rrt_node')
         with open(config, "r") as f:
             self.param = yaml.safe_load(f)
+        
         self.pose_topic = self.param["pose_topic"]
         scan_topic = "/scan"
         clicked_topic = "/clicked_point"
@@ -54,15 +56,18 @@ class DualSearch(Node):
         global_path_topic = "/global_path"
         map_topic = '/map'
         
+        self.map_client = self.create_client(GetMap, "/map_server/map")
+        self.get_map()
+        # print("goes past")
         # you could add your own parameters to the rrt_params.yaml file,
         # and get them here as class attributes as shown above.
 
-        self.map_sub_ = self.create_subscription(
-            OccupancyGrid,
-            self.param["map_topic"],
-            self.map_callback,
-            10,
-        )
+        # self.map_sub_ = self.create_subscription(
+        #     OccupancyGrid,
+        #     self.param["map_topic"],
+        #     self.map_callback,
+        #     10,
+        # )
 
         # TODO- PAUSE MAP SUB FOR TESTING
 
@@ -71,14 +76,14 @@ class DualSearch(Node):
 
 
         self.pose_sub_ = self.create_subscription(
-            Odometry,
+            PoseStamped,
             self.pose_topic,
             self.pose_callback,
             1)
 
         self.point_sub = self.create_subscription(
-            PointStamped,
-            clicked_topic,
+            PoseWithCovarianceStamped,
+            self.param["initial_pose_topic"],
             self.goal_callback,
             10
         )
@@ -153,31 +158,50 @@ class DualSearch(Node):
         # self.goal = self.Grid.pos_to_coord(msg.point.x, msg.point.y)
         # print(self.goal)
         self.ready = True # self.ready is really only needed for testing purposes
+        self.global_planner = RRT(False, parent=self)
 
-    def map_callback(self, msg):
-        """ only want to create one instance"""
-        print("still receiving map!!")
-        if not self.mapped: # only want to create 1 class instance
+    def get_map(self):
+        """ collect the map from the particle filter """
+        while not self.map_client.wait_for_service(timeout_sec=1.0):
+            self.get_logger().info("Get map service not available, waiting :(")
+        req = GetMap.Request()
+        future = self.map_client.call_async(req)
+        rclpy.spin_until_future_complete(self,future)
+        map_msg=future.result().map
+        self.Grid = Occupancy(map_msg.info.resolution,
+                              (map_msg.info.width, map_msg.info.height),
+                              (map_msg.info.origin.position.x,
+                               map_msg.info.origin.position.y),
+                               map_msg.data)
+        self.goal_tolerance = int(0.5/self.Grid.scale)
+        
+
+
+    # def map_callback(self, msg):
+    #     """ only want to create one instance"""
+    #     print("still receiving map!!")
+    #     if not self.mapped: # only want to create 1 class instance
             
-            # I believe width corresponds to x and height to y
-            # TODO - assumes "static" map doesn't update
-            self.Grid = Occupancy(msg.info.resolution, 
-                            (msg.info.width, msg.info.height), 
-                            (msg.info.origin.position.x,
-                            msg.info.origin.position.y),
-                            msg.data)
+    #         # I believe width corresponds to x and height to y
+    #         # TODO - assumes "static" map doesn't update
+    #         self.Grid = Occupancy(msg.info.resolution, 
+    #                         (msg.info.width, msg.info.height), 
+    #                         (msg.info.origin.position.x,
+    #                         msg.info.origin.position.y),
+    #                         msg.data)
             
-            # print((msg.info.resolution, 
-            #                 (msg.info.width, msg.info.height), 
-            #                 (msg.info.origin.position.x,
-            #                 msg.info.origin.position.y)))
-            print(self.Grid)
-            self.goal_tolerance = int(0.5/self.Grid.scale)
-            self.global_planner = RRT(False, parent=self)
-            self.mapped=True
+    #         # print((msg.info.resolution, 
+    #         #                 (msg.info.width, msg.info.height), 
+    #         #                 (msg.info.origin.position.x,
+    #         #                 msg.info.origin.position.y)))
+    #         print(self.Grid)
+    #         self.goal_tolerance = int(0.5/self.Grid.scale)
+    #         self.global_planner = RRT(False, parent=self)
+    #         self.mapped=True
 
 
     def pose_callback(self, pose_msg):
+        # print("pos called")
         if self.Grid is not None:
             if self.pose_topic == self.param["pose_topic"]:
                 # == is real :)
@@ -235,7 +259,7 @@ class DualSearch(Node):
         [(coord node, {set of bar}, heading in radians 
         -- perhaps not correct heading)]
         """
-        print("UPDATING GLOBAL PATH")
+        # print("UPDATING GLOBAL PATH")
         if self.global_path is None:
             while self.global_path is None:
                 # print('working')
@@ -344,7 +368,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         #     map_info = ast.literal_eval(info)
         # dt.close()
         # self.Grid = Occupancy(.05, (141, 124), (-1.31, -4.25), map_info)
-        self.goal_tolerance = int(1.5/self.Grid.scale)
+        self.goal_tolerance = int(0.8/self.Grid.scale)
 
         # -------------------------------
 
@@ -416,6 +440,9 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
             # print("doing something?")
             for _ in range(self.get_iteration_count()): # number of iterations
                 sampled_point = self.sample()
+                # check_node = TreeNode(sampled_point[0], sampled_point[1])
+                # self.waypoints.append(self.Grid.coord_to_pos(check_node))
+                # self.waypoint_publish(group=self.waypoints)
 
                 # print(f"{sampled_point=}")
                 # print(f"{self.tree=}")
@@ -438,6 +465,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
                     new_node.parent = min_cost_node
                     new_node.cost = min_cost
                     self.tree.append(new_node)
+                    self.already_sampled.add((new_node.x, new_node.y))
 
                     # only want to change it based on points we selected
                     if nearest_node.is_stem:
@@ -447,6 +475,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
                     
                     # self.waypoints.append(self.Grid.coord_to_pos(new_node))
                     # self.waypoint_publish(group=self.waypoints)
+                    
                     # self.waypoints.append(self.Grid.coord_to_pos((sampled_point[0], sampled_point[1])))
                     
                     for neighbor in neighbors:
@@ -518,17 +547,17 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         Returns:
             (x, y) (float float): a tuple representing the sampled point
         """
-        # x = self.Grid.random_point(self.Grid.width) 
-        # y = self.Grid.random_point(self.Grid.height)
+        x = self.Grid.random_point(self.Grid.width) 
+        y = self.Grid.random_point(self.Grid.height)
         
 
         # trying system where it returns a tuple of smaller area
-        x,y = self.Grid.random_point(None)
+        # x,y = self.Grid.random_point(None)
         point = (x,y)
 
         # TODO - !H - 
         if not self.in_no_sample_zone(x,y) and point not in self.already_sampled:
-            self.already_sampled.add(point)
+            # self.already_sampled.add(point)
             return point
         return self.sample()
     
@@ -536,7 +565,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         """ circles around car that represent turn radius, won't search here"""
         # TODO - CAN INSTEAD GIVE PSEUDO-POSITION OF CAR... MEANING EACH FIRST POINT HAS "POSITION" OF CAR
         # print(f"{self.coord_x=} {self.coord_y=}")
-        turning_radius = 0.7 / self.Grid.scale  # meters to pixels
+        turning_radius = 0.1 / self.Grid.scale  # meters to pixels
         # yaw is zero when in tune with the x-axis, not y axis 
         # print(f"{self.yaw=}")
         
@@ -613,7 +642,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         # CHOOSING CANDIDATE VERY DEPENDENT ON THIS STEP SIZE
         # TODO - !HH - step size should be large at first, then get smaller when improving path
 
-        step_size = int(1.3 / self.Grid.scale)
+        step_size = int(0.20 / self.Grid.scale)
         new_point = (nearest_node + (direction*step_size)).astype(int)
         return TreeNode(new_point[0], new_point[1], parent=nearest_node)
     
@@ -678,6 +707,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
                     new_pos.y = new_value[1]
                 critical_points.append((coords[i], bar, heading))
         bar_collection = []
+        print(f"should be {len(critical_points)} points ----------------------------")
         for coord, bar, heading in critical_points:
             value = self.Grid.coord_to_pos(coord)
             self.waypoints.append(value)
@@ -738,7 +768,6 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
             while node is not None:
                 counter+=1
                 node = node.parent
-            print(counter)
             return counter > 10 
 
         return False

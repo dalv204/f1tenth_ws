@@ -1,7 +1,7 @@
 ##### yaml file for data sources depending on whether is run on car or in simulation
 
 ---
-pose_topic: "/pf/viz/inferred_pos"
+pose_topic: "/pf/viz/inferred_pose"
 pose_topic_sim: "/ego_racecar/odom"
 clicked_topic: "/clicked_point"  # if a point is clicked on map 
 scan_topic: "/scan"
@@ -10,3 +10,4 @@ map_topic: "/map"
 global_path_topic: "/global_path"
 pure_pursuit_topic: "/custom_waypoints"
 drive_topic: "/drive"
+initial_pose_topic: "/initialpose"

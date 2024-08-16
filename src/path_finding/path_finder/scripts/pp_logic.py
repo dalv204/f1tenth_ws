@@ -48,7 +48,7 @@ class PurePursuit(Node):
         # TODO - real code to use is above
         self.pose_sub = self.create_subscription(
 
-            Odometry,
+            PoseStamped,
             self.pose_topic,
             self.pose_callback,
             10,
@@ -96,7 +96,7 @@ class PurePursuit(Node):
         # also could do a bit more integration between systems 
         # safety system can be done by properly putting this as "autonomous" code - look at documentation
 
-        self.lookahead_distance = 1.0  # lookahead distance for pure pursuit
+        self.lookahead_distance = 0.30  # lookahead distance for pure pursuit
         self.current_pose = None
         self.last_position = None
         self.current_position = None
@@ -111,7 +111,7 @@ class PurePursuit(Node):
         # change the csv file if doing in real life :)
         self.logging_timer = self.create_timer(.5, self.log_info)
         # self.publish_waypoints()
-        self.set_speed = 5.0
+        self.set_speed = 1.0
 
     def waypoint_callback(self, msg):
         """ should get it back as a group of tuples"""
@@ -155,14 +155,14 @@ class PurePursuit(Node):
         return point
     
     def publish_waypoints(self):
-        print("MADE IT HERE")
+        
         start_marker = self.init_marker(g=1.0)
         start_marker.points.append(self.make_point(self.waypoints[0]))
-        print("MADE IT FURTHER")
+        
 
         end_marker = self.init_marker(r=1.0)
         end_marker.points.append(self.make_point(self.waypoints[-1]))
-        print("ALMOST THERE")
+        
 
         path_markers = self.init_marker(r=1.0, b=1.0)
 
@@ -172,12 +172,12 @@ class PurePursuit(Node):
             # point.y = y
             # point.z = 0.0
             path_markers.points.append(self.make_point(point))
-        print("MADE IT EVEN FURTHER")
+        # print("MADE IT EVEN FURTHER")
 
         self.marker_pub.publish(start_marker)
-        print("PASSED FIRST PUBLISH")
+        # print("PASSED FIRST PUBLISH")
         self.marker_pub.publish(end_marker)
-        print("PASSED SECOND PUBLISH")
+        # print("PASSED SECOND PUBLISH")
         self.marker_pub.publish(path_markers)
         self.get_logger().info('Published waypoints marker.')
 
@@ -238,7 +238,7 @@ class PurePursuit(Node):
                     break 
                     
         if goal_waypoint is None: 
-            # self.get_logger().info("No valid waypoint found within lookahead distance")
+            self.get_logger().info("No valid waypoint found within lookahead distance")
             return
         # transform goal point to the car's reference point
         goal_x, goal_y = self.transform_goal_point(goal_waypoint, current_position, yaw)
@@ -258,6 +258,7 @@ class PurePursuit(Node):
         drive_msg.drive.speed = self.set_speed  # set constant speed
         self.last_position = np.array(goal_x, goal_y)
         self.drive_pub.publish(drive_msg)
+        y
 
     def log_info(self):
         """ 

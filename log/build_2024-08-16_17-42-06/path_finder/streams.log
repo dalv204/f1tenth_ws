@@ -1,0 +1,33 @@
+[1.409s] Invoking command in '/home/dalv204/sandbox/f1tenth_ws/build/path_finder': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/dalv204/sandbox/f1tenth_ws/install/f1tenth_stack:/home/dalv204/sandbox/f1tenth_ws/install/joy_teleop:/home/dalv204/sandbox/f1tenth_ws/install/particle_filter:/home/dalv204/sandbox/f1tenth_ws/install/mouse_teleop:/home/dalv204/sandbox/f1tenth_ws/install/key_teleop /usr/bin/cmake --build /home/dalv204/sandbox/f1tenth_ws/build/path_finder -- -j6 -l6
+[1.918s] [100%] Built target rrt_node
+[2.000s] Invoked command in '/home/dalv204/sandbox/f1tenth_ws/build/path_finder' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/dalv204/sandbox/f1tenth_ws/install/f1tenth_stack:/home/dalv204/sandbox/f1tenth_ws/install/joy_teleop:/home/dalv204/sandbox/f1tenth_ws/install/particle_filter:/home/dalv204/sandbox/f1tenth_ws/install/mouse_teleop:/home/dalv204/sandbox/f1tenth_ws/install/key_teleop /usr/bin/cmake --build /home/dalv204/sandbox/f1tenth_ws/build/path_finder -- -j6 -l6
+[2.460s] Invoking command in '/home/dalv204/sandbox/f1tenth_ws/build/path_finder': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/dalv204/sandbox/f1tenth_ws/install/f1tenth_stack:/home/dalv204/sandbox/f1tenth_ws/install/joy_teleop:/home/dalv204/sandbox/f1tenth_ws/install/particle_filter:/home/dalv204/sandbox/f1tenth_ws/install/mouse_teleop:/home/dalv204/sandbox/f1tenth_ws/install/key_teleop /usr/bin/cmake --install /home/dalv204/sandbox/f1tenth_ws/build/path_finder
+[2.508s] -- Install configuration: ""
+[2.509s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/lib/path_finder/rrt_node
+[2.509s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/environment/pythonpath.sh
+[2.510s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/environment/pythonpath.dsv
+[2.513s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/lib/python3.8/site-packages/path_finder
+[2.513s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/lib/python3.8/site-packages/path_finder/__init__.py
+[2.653s] Listing '/home/dalv204/sandbox/f1tenth_ws/install/path_finder/lib/python3.8/site-packages/path_finder'...
+[2.669s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/lib/path_finder/rrt_node.py
+[2.669s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/lib/path_finder/pp_logic.py
+[2.670s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/lib/path_finder/lbc_node.py
+[2.670s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/lib/path_finder/util.py
+[2.670s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/config
+[2.670s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/config/params.yaml
+[2.670s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/ament_index/resource_index/package_run_dependencies/path_finder
+[2.677s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/ament_index/resource_index/parent_prefix_path/path_finder
+[2.677s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/environment/ament_prefix_path.sh
+[2.678s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/environment/ament_prefix_path.dsv
+[2.678s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/environment/path.sh
+[2.678s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/environment/path.dsv
+[2.678s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/local_setup.bash
+[2.678s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/local_setup.sh
+[2.678s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/local_setup.zsh
+[2.678s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/local_setup.dsv
+[2.679s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/package.dsv
+[2.679s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/ament_index/resource_index/packages/path_finder
+[2.680s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/cmake/path_finderConfig.cmake
+[2.680s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/cmake/path_finderConfig-version.cmake
+[2.680s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/package.xml
+[3.706s] Invoked command in '/home/dalv204/sandbox/f1tenth_ws/build/path_finder' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/dalv204/sandbox/f1tenth_ws/install/f1tenth_stack:/home/dalv204/sandbox/f1tenth_ws/install/joy_teleop:/home/dalv204/sandbox/f1tenth_ws/install/particle_filter:/home/dalv204/sandbox/f1tenth_ws/install/mouse_teleop:/home/dalv204/sandbox/f1tenth_ws/install/key_teleop /usr/bin/cmake --install /home/dalv204/sandbox/f1tenth_ws/build/path_finder

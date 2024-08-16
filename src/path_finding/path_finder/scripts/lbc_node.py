@@ -21,7 +21,7 @@ from sensor_msgs.msg import LaserScan
 from util import TreeNode, Occupancy
 import ast
 from visualization_msgs.msg import Marker
-from geometry_msgs.msg import Point
+from geometry_msgs.msg import Point, PoseStamped
 import time
 import yaml
 from ament_index_python.packages import get_package_share_directory
@@ -49,7 +49,7 @@ class LBC(Node):
         self.get_map()
 
         self.pose_sub_ = self.create_subscription(
-            Odometry,
+            PoseStamped,
             self.pose_topic,
             self.pose_callback,
             1
@@ -77,24 +77,24 @@ class LBC(Node):
         )
         self.marker_pub = self.create_publisher(Marker, 'waypoints_marker', 10)
 
-        with open("data_file_circular.json", 'r') as dt:
-            info = dt.read()
-            map_info = ast.literal_eval(info)
-        dt.close()
+        # with open("data_file_circular.json", 'r') as dt:
+        #     info = dt.read()
+        #     map_info = ast.literal_eval(info)
+        # dt.close()
 
         self.global_path = None
         self.global_path_length = None
         self.kd_tree = None
         self.local_path = None
         self.coord_x, self.coord_y = None, None
-        self.dist_tolerance = 0.30 # meters ## depends on the search distance (for nearby in rrty)
+        self.dist_tolerance = 0.50 # meters ## depends on the search distance (for nearby in rrty)
         self.yaw = None
         # FOR TESTING ------------------
         # ROOM
         # self.Grid = Occupancy(.05, (141, 124), (-1.31, -4.25), map_info)
 
         # TRACK
-        self.Grid = Occupancy(.057959, (2000,2000), (-84.85359914210505, -36.30299725862132), map_info)
+        # self.Grid = Occupancy(.057959, (2000,2000), (-84.85359914210505, -36.30299725862132), map_info)
 
         # ------------------------------
         self.mapped = False
@@ -105,8 +105,8 @@ class LBC(Node):
 
     def pose_callback(self,pose_msg):
         """ updates position and runs localizer (if can) """
-        print('calling Pose callback')
-        if self.pos_topic == self.param["pose_topic"]: # this one is prepped for real world
+        
+        if self.pose_topic == self.param["pose_topic"]: # this one is prepped for real world
             x,y = pose_msg.pose.position.x, pose_msg.pose.position.y
             self.yaw = self.quaternion_to_yaw(pose_msg.pose.orientation)
         else: # this should be prepped for simulation
@@ -128,6 +128,11 @@ class LBC(Node):
         future = self.map_client.call_async(req)
         rclpy.spin_until_future_complete(self,future)
         map_msg=future.result().map
+        self.Grid = Occupancy(map_msg.info.resolution, 
+                            (map_msg.info.width, map_msg.info.height), 
+                            (map_msg.info.origin.position.x,
+                            map_msg.info.origin.position.y),
+                            map_msg.data)
         print("got the map message!!!")
 
     def quaternion_to_yaw(self, orientation):
@@ -139,20 +144,20 @@ class LBC(Node):
     def scan_callback(self, msg):
         pass
 
-    def map_callback(self, msg):
-        print("Calling map callback")
-        """ only want to create one instance"""
-        if not self.mapped: # only want to create 1 class instance
-            # I believe width corresponds to x and height to y
-            # TODO - assumes "static" map doesn't update
-            self.Grid = Occupancy(msg.info.resolution, 
-                            (msg.info.width, msg.info.height), 
-                            (msg.info.origin.position.x,
-                            msg.info.origin.position.y),
-                            msg.data )
-            print(self.Grid)
-            self.goal_tolerance = int(0.5/self.Grid.scale)
-            self.mapped=True
+    # def map_callback(self, msg):
+    #     print("Calling map callback")
+    #     """ only want to create one instance"""
+    #     if not self.mapped: # only want to create 1 class instance
+    #         # I believe width corresponds to x and height to y
+    #         # TODO - assumes "static" map doesn't update
+    #         self.Grid = Occupancy(msg.info.resolution, 
+    #                         (msg.info.width, msg.info.height), 
+    #                         (msg.info.origin.position.x,
+    #                         msg.info.origin.position.y),
+    #                         msg.data)
+    #         print(self.Grid)
+    #         self.goal_tolerance = int(0.5/self.Grid.scale)
+    #         self.mapped=True
 
     def global_path_callback(self, msg):
         """ use the path given and construct trees etc """
@@ -273,7 +278,7 @@ class LBC(Node):
         # best_cost, best_p1, best_p2
         return best_path
 
-    def bezier_quintic(self, p0, p1, p2, p3, p4, p5, num_points = 10):
+    def bezier_quintic(self, p0, p1, p2, p3, p4, p5, num_points = 30):
         """ creates a quintic bezier curve for more flexibility in angle """
         # TODO - H -- likely much much quicker to interpolate the other points,
         #        and only generate about 10 - interpolate the rest because you 
