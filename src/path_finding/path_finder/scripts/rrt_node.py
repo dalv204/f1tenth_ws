@@ -49,7 +49,7 @@ class DualSearch(Node):
         with open(config, "r") as f:
             self.param = yaml.safe_load(f)
         
-        self.pose_topic = self.param["pose_topic"]
+        self.pose_topic = self.param["pose_topic_sim"]
         scan_topic = "/scan"
         clicked_topic = "/clicked_point"
         waypoints = "/custom_waypoints"
@@ -72,11 +72,11 @@ class DualSearch(Node):
         # TODO- PAUSE MAP SUB FOR TESTING
 
         self.global_cb_group = ReentrantCallbackGroup()
-        self.global_planner_timer = self.create_timer(5.0, self.update_publish_global, callback_group=self.global_cb_group)
+        self.global_planner_timer = self.create_timer(1.0, self.update_publish_global, callback_group=self.global_cb_group)
 
 
         self.pose_sub_ = self.create_subscription(
-            PoseStamped,
+            Odometry,
             self.pose_topic,
             self.pose_callback,
             1)
@@ -109,15 +109,17 @@ class DualSearch(Node):
         self.marker_pub = self.create_publisher(Marker, 'waypoints_marker', 10)
 
         # TODO - include the other listeners I have here
-        # with open("data_file_circular.json", 'r') as dt:
+        # with open("data_file_room.json", 'r') as dt:
         #     info = dt.read()
         #     map_info = ast.literal_eval(info)
         # dt.close()
+        # self.Grid = Occupancy(.06, (136, 142), (-1.56, -1.54), map_info)
+
 
         self.global_path = None
         self.local_path = None
         self.already_sampled = set()
-        self.last_global_update = time.time()
+        self.last_global_update = None
         self.global_update_interval = 5.0
         self.global_path_length = None
 
@@ -148,15 +150,15 @@ class DualSearch(Node):
         self.available_space = set()
         self.path = None
         self.ready = False
+        self.start_yaw = None
         # self.local_planner = RRT(True, parent=self)
-
-
 
 
     def goal_callback(self, msg):
         """ converts clicked point to goal """
         # self.goal = self.Grid.pos_to_coord(msg.point.x, msg.point.y)
         # print(self.goal)
+        print("should be ready")
         self.ready = True # self.ready is really only needed for testing purposes
         self.global_planner = RRT(False, parent=self)
 
@@ -212,12 +214,14 @@ class DualSearch(Node):
                 self.yaw = self.quaternion_to_yaw(pose_msg.pose.pose.orientation)
                 x = pose_msg.pose.pose.position.x
                 y = pose_msg.pose.pose.position.y
+            if self.start_yaw is None:
+                self.start_yaw = self.yaw
             self.coord_x, self.coord_y = self.Grid.pos_to_coord(x,y)
             # updates pos for both trees ^^
             if not self.created_bfs:
                 self.Grid.develop_area()
                 # self.waypoint_publish(False, self.available_space)
-                print("created!")
+                # print("created!")
                 self.created_bfs=True
 
 
@@ -230,6 +234,7 @@ class DualSearch(Node):
                 yaw_vec *= goal_distance/self.Grid.scale 
                 self.goal = tuple(np.array([self.coord_x, self.coord_y])-yaw_vec)
             if self.goal is not None and self.global_path is None and self.ready:
+                print("updating global path")
                 self.update_global_path()
                 # if (current_time - self.last_global_update > self.global_update_interval) \
                 #         or self.global_path is None:
@@ -281,6 +286,8 @@ class DualSearch(Node):
         msg = String()
         msg.data = str(self.global_path)
         self.global_path_pub.publish(msg)
+        if self.last_global_update is None:
+            self.last_global_update = time.time()
         self.get_logger().info("Sent the Global Path for Local Path Tracing")
         # self.global_path_length = len(self.global_path)
 
@@ -357,7 +364,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         self.am_local = am_i_local
         self.parent = parent
         self.record = set()
-        self.start_yaw = None
+        self.update=0
         
         
         # ------------------------------
@@ -398,7 +405,6 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
 
         if self.Grid is not None:
             if not self.tree:
-                self.start_yaw = self.yaw
                 start = TreeNode(self.coord_x, self.coord_y)
                 self.tree.append(start)
             else:
@@ -472,6 +478,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
                         new_node.is_stem=True
                     elif nearest_index <=3:
                         nearest_node.is_stem=True
+
                     
                     # self.waypoints.append(self.Grid.coord_to_pos(new_node))
                     # self.waypoint_publish(group=self.waypoints)
@@ -489,9 +496,12 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
                         # -----
                         print("found goal?")
                         path = self.find_path(self.tree, new_node)
+                        path[-1] = TreeNode(self.goal[0], self.goal[1])
                         # TODO - !L : make sure the sample rate not too high, 
                         #       meaning angle is less than 2 degrees for turns
-                        return self.identify_critical_points(ang_tolerance=2, dist_tolerance=self.dist_tolerance, coords=path)
+                        return self.identify_critical_points(ang_tolerance=2, 
+                                                             dist_tolerance=self.param["critical_point_tolerance"],
+                                                              coords=path)
 
         else:
             print("HUH")
@@ -565,7 +575,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         """ circles around car that represent turn radius, won't search here"""
         # TODO - CAN INSTEAD GIVE PSEUDO-POSITION OF CAR... MEANING EACH FIRST POINT HAS "POSITION" OF CAR
         # print(f"{self.coord_x=} {self.coord_y=}")
-        turning_radius = 0.1 / self.Grid.scale  # meters to pixels
+        turning_radius = 0.3 / self.Grid.scale  # meters to pixels
         # yaw is zero when in tune with the x-axis, not y axis 
         # print(f"{self.yaw=}")
         
@@ -628,13 +638,13 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         if length==0.0:
             direction=np.array([0,0])
         else: direction = direction/length
-        if nearest_index <= 3 or nearest_node.is_stem:
+        if nearest_index <=3 or nearest_node.is_stem:
             # first_nodes_v = self.tree[1] - self.tree[0]
             # node_heading = np.arctan2(first_nodes_v[1], first_nodes_v[0])
             node_heading = self.start_yaw
             # self.yaw # just give it yaw haha - close enough
             pseudo_heading = np.arctan2(direction[1], direction[0])
-            heading_tolerance = np.radians(60)
+            heading_tolerance = np.radians(40)
             
             if abs(pseudo_heading-node_heading) > heading_tolerance:
                 return None
@@ -642,7 +652,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         # CHOOSING CANDIDATE VERY DEPENDENT ON THIS STEP SIZE
         # TODO - !HH - step size should be large at first, then get smaller when improving path
 
-        step_size = int(0.20 / self.Grid.scale)
+        step_size = int(self.param["steer_step_size"] / self.Grid.scale)
         new_point = (nearest_node + (direction*step_size)).astype(int)
         return TreeNode(new_point[0], new_point[1], parent=nearest_node)
     
@@ -668,13 +678,14 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
 
         length = len(coords)
         dist=0
-        for i in range(1, length-1):
+        for i in range(length): # was range(1, length-1)
             v1 = coords[i] - coords[i-1]
-            v2 = coords[i+1] - coords[i]
+            v2 = coords[(i+1)%length-1] - coords[i]
             dist += LA.norm(coords[i]-coords[i-1])
             
-            angle = self.calculate_angle(v1, v2)
-            if angle > np.radians(ang_tolerance) or (dist/self.Grid.scale >= dist_tolerance):
+            # angle = self.calculate_angle(v1, v2)
+            # angle > np.radians(ang_tolerance) or 
+            if (dist/self.Grid.scale >= dist_tolerance):
                 dist=0
                 v21 = v2 + v1
                 segment_len = LA.norm(v21)
@@ -705,6 +716,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
                     new_value = (new_pos + (perp*mult)).astype(int)
                     new_pos.x = new_value[0]
                     new_pos.y = new_value[1]
+                bar.add((coords[i].x, coords[i].y))
                 critical_points.append((coords[i], bar, heading))
         bar_collection = []
         print(f"should be {len(critical_points)} points ----------------------------")
@@ -762,16 +774,32 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         # TODO - !H - kind of slow... since it only searches from one direction, in the future
         #       can make it two search trees that join - harder to mitigate that from one tree (in fast manner)
         # -----
+        # TODO - !HHHH - ADD GOAL LOGIC TO CHECK IF IT IS GOING IN DIRECTION OF INITIAL YAW
         counter=0
         node = latest_added_node
-        if LA.norm([goal_x - latest_added_node.x, goal_y - latest_added_node.y]) <= self.goal_tolerance:
+        subbed_values = np.array([goal_x - latest_added_node.x, goal_y-latest_added_node.y])
+        sub_norm = subbed_values / LA.norm(subbed_values)
+        dotted = np.dot(sub_norm, np.array([np.cos(self.start_yaw), np.sin(self.start_yaw)])) 
+        if (LA.norm(subbed_values) <= self.goal_tolerance) and dotted > 0 and self.time_valid():
             while node is not None:
                 counter+=1
                 node = node.parent
-            return counter > 10 
+                truthy = counter > 12 
+                if truthy:
+                    self.update +=1
+                    print(f"dotted value is {dotted=}")
+                    return truthy
+
 
         return False
         # return (LA.norm([goal_x - latest_added_node.x, goal_y - latest_added_node.y]) <= self.goal_tolerance) and counter>10
+
+    def time_valid(self):
+        """ creates a grace period for the updates - 10 seconds?"""
+        if self.last_global_update is not None:
+            return time.time() - self.last_global_update < 10
+        return True
+    
 
     def find_path(self, tree, latest_added_node): ## GLOBAL ##
         """
@@ -845,6 +873,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
         msg = String()
         data = tuple(map(self.Grid.coord_to_pos, path))
         msg.data = str(data)
+        print(ast.literal_eval(msg.data))
         # print(msg.data)
         length = len(data)
         self.waypoint_pub.publish(msg)

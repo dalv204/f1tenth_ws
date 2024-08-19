@@ -40,7 +40,7 @@ class LBC(Node):
         with open(config, "r") as f:
             self.param = yaml.safe_load(f)
 
-        self.pose_topic = self.param["pose_topic"]
+        self.pose_topic = self.param["pose_topic_sim"]
         scan_topic = "/scan"
         waypoints = "/custom_waypoints"
         global_path_topic = "/global_path"
@@ -48,8 +48,9 @@ class LBC(Node):
         self.map_client = self.create_client(GetMap, "/map_server/map")
         self.get_map()
 
+        # usually PoseStamped
         self.pose_sub_ = self.create_subscription(
-            PoseStamped,
+            Odometry,
             self.pose_topic,
             self.pose_callback,
             1
@@ -102,6 +103,9 @@ class LBC(Node):
         self.known_failures = set() # checked bezier points that fail
         self.start_time = time.time()
         self.counter=0
+        self.speed = 1.0
+        self.min_length,self.max_length = 20, 50 #empirically gathered
+        
 
     def pose_callback(self,pose_msg):
         """ updates position and runs localizer (if can) """
@@ -116,7 +120,7 @@ class LBC(Node):
          
         self.coord_x, self.coord_y = self.Grid.pos_to_coord(x,y)
         if self.kd_tree is not None:
-            print('should be updating local path')
+            # print('should be updating local path')
             self.update_local_path()
             self.publish_local_path()
     
@@ -163,6 +167,9 @@ class LBC(Node):
         """ use the path given and construct trees etc """
         print("calling global map callback")
         # TODO - !L -- will be better in the future to create custom ROS2 message type -> lower overhead
+        # print(msg.data)
+        # print(type(msg.data))
+        # print(ast.literal_eval(msg.data))
         self.global_path = tuple(map(lambda x: (np.array(x[0]), x[1], x[2]), ast.literal_eval(msg.data)))
         self.global_path_length = len(self.global_path)
         # print(self.global_path)
@@ -221,20 +228,21 @@ class LBC(Node):
 
         """
         # pretty sure pose_msg.pose.pose.position.x is required (remove verify later?)
-        print("CALLING PLAN")
+        # print("CALLING PLAN")
 
         if self.Grid is not None:
             priority = point[0]
             # ^^ don't do anything with priority pick for now 
             candidates = point[1]
             entry_angle = point[2]
-            control_point_dist = 0.30 / self.Grid.scale # 1 meter 
-            return self.candidate_selection(candidates, entry_angle, control_point_dist)
+            control_point_dist = 0.40 / self.Grid.scale # 1 meter # was .40 before (.40 works very well except turn 1) (.3 works great turn one, not turn 2)
+            control_point_dist_exit = 0.85 / self.Grid.scale # was .7 before (.85 and .9 and (sometimes .8) work decently for turn radius)
+            return self.candidate_selection(candidates, entry_angle, control_point_dist, control_point_dist_exit)
 
             # TODO - should do parallel processing with local and global so no interference
             # TODO - try out once having tested this current alg
 
-    def candidate_selection(self, candidates, angle, control_point_dist = 1, num_angles=5):
+    def candidate_selection(self, candidates, angle, control_point_dist, exit_control, num_angles=5):
         """ uses possible points and entry_angle buffer to decide best paths 
         
         candidates: must be iterable
@@ -247,7 +255,7 @@ class LBC(Node):
         best_path = None
         best_cost = float('inf')
         best_p1 = best_p2 = None
-        angle_buffer = np.radians(5) # current degree buffer in radians
+        angle_buffer = np.radians(10) # current degree buffer in radians
         angle_range = np.linspace(angle-angle_buffer, angle+angle_buffer, num_angles)
 
         for candidate in candidates:
@@ -255,28 +263,33 @@ class LBC(Node):
                 # create the control points 
                 # TODO - P0 and candidate are both Node objects, so need to do a __sub__ method
                 direction_vector = np.array([np.cos(angle), np.sin(angle)])
-                ex_shift = control_point_dist * direction_vector
+                ex_shift = exit_control * direction_vector
                 entrance_vector = np.array([np.cos(self.yaw), np.sin(self.yaw)])
                 ent_shift = control_point_dist * entrance_vector
                 # TODO - !M -  currently have simplified bezier quintic
                 #       may want to institute more complex way to define p2,p3
                 p1 = p0 + ent_shift
-                p2 = p1 + ent_shift
+                p2 = p1 + ent_shift*.50
                 p4 = candidate - ex_shift
-                p3 = p4 - ex_shift
+                p3 = p4 - ex_shift*.60 #adding a little more weight here to see if
+                # it helps with sharp turns
 
                 path = self.bezier_quintic(p0,p1,p2,p3,p4,candidate)
 
                 # path = self.bezier_cubic(p0, p1, p2, candidate)
-                cost = self.compute_cost(path)
+                # print(self.compute_cost(path))
+                cost, length, curvature = self.compute_cost(path)
                 if cost < best_cost:
                     best_cost = cost
                     best_path = path
+                    best_length, best_curvature = length, curvature
                     best_p1, best_p2 = p1, p2
-
-        print(best_cost)
+        if best_cost == float('inf'):
+            return None, None
+        # print(best_cost)
+        speed = self.compute_speed(best_length, best_curvature)
         # best_cost, best_p1, best_p2
-        return best_path
+        return best_path, speed
 
     def bezier_quintic(self, p0, p1, p2, p3, p4, p5, num_points = 30):
         """ creates a quintic bezier curve for more flexibility in angle """
@@ -344,12 +357,34 @@ class LBC(Node):
     def compute_cost(self, path): ## LOCAL ##
         """ simple cost estimation based on length and curvature """
         if path is None:
-            return float("inf")
+            return float("inf"), None, None
         else:
             length = np.sum(np.sqrt(np.sum(np.diff(path, axis=0)**2, axis=1)))
-            curvature = np.sum(np.abs(np.diff(np.arctan2(np.diff(path[:, 1]), np.diff(path[:, 0])))))
-            return length + 10*curvature
+            if length < self.min_length:
+                self.min_length=length
+            elif length > self.max_length:
+                self.max_length=length
+            curvature = np.sum(np.diff(np.arctan2(np.diff(path[:, 1]), np.diff(path[:, 0]))))  # taking out the abs for now np.abs() after np.sum()
+            # TODO -H --more accurate curvature given by dividing by length --
+            return (length**2 + 10*(curvature), length, curvature)
     
+    def compute_speed(self, length, curvature):
+        """ takes minimum speed, maximum speed and curvature / length - outputs target speed"""
+        min_speed=1.0
+        max_speed=1.5
+        normalized_curve = abs(curvature) / (abs(curvature) + 1) # (length +1)
+        normalized_length = self.normalize_length(length)
+        # normalized_length = length / (length + 1)
+        print(f"{normalized_curve=}, {normalized_length=}")
+        speed = (max_speed * (normalized_length *(abs(1-normalized_curve)))) + min_speed
+        print(f"{normalized_curve=}, {normalized_length=}, {speed=}, {self.min_length=}, {self.max_length=}")
+        speed = max(min_speed, min(speed, max_speed))
+        
+        print(f"{speed=}")
+        return speed
+
+    def normalize_length(self, length):
+        return (length - self.min_length)/ (self.max_length - self.min_length)
 
     def angle_within_band(self, desired_angle, band_min, band_max): ## LOCAL ##
         return band_min <= desired_angle <= band_max
@@ -357,7 +392,7 @@ class LBC(Node):
     def update_local_path(self):
         local_goal = self.extract_local_goal()
         # local path comes in the form of coords (in an array?)
-        self.local_path = self.plan(local_goal)
+        self.local_path, self.speed = self.plan(local_goal)
 
     def extract_local_goal(self):
         """
@@ -371,7 +406,7 @@ class LBC(Node):
         # checks if the closest point then looks for the next curve point 
         # and grabs the last point (looks for the next curve and goes back one index)
         lookahead_dist = 1.0 # meters
-        lookahead_shift = int(lookahead_dist / self.dist_tolerance)
+        lookahead_shift = int((lookahead_dist / self.param["critical_point_tolerance"])+0.5) # .5 rounds
 
         current_pose = np.array([self.coord_x, self.coord_y])
         distance, index = self.kd_tree.query(current_pose)
@@ -393,8 +428,8 @@ class LBC(Node):
         #       it doesn't turn too early
         if self.local_path is not None:
             msg = String()
-            data = tuple(map(self.Grid.coord_to_pos, self.local_path))
-            self.waypoint_publish(False, data)
+            data = (tuple(map(self.Grid.coord_to_pos, self.local_path)), self.speed)
+            self.waypoint_publish(False, data[0])
             msg.data = str(data)
             # print(msg.data)
             length = len(data)

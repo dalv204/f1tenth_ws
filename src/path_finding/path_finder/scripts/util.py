@@ -19,13 +19,13 @@ class Occupancy:
             static_grid - tuple of all map locations
         """
         
-        # with open("data_file_circular.json", 'w') as dt:
+        # with open("data_file_room.json", 'w') as dt:
         #     dt.write(str(list(static_grid)))
         #     print("wrote the file")
         # dt.close()
         
         self.dynamic_grid = set()
-        self.car_width = 0.3 # 40 centimeter
+        self.car_width = 0.3 # 30 centimeter
         self.scale = scale
         self.width = dimensions[0]
         self.height = dimensions[1]
@@ -118,7 +118,6 @@ class Occupancy:
                         for y in range(y_-offset, y_+(offset+1))]:
                     this_space.add(value)
                     self.available_space.add(value)
-        print(f"{self.available_space=}")
 
     
     
@@ -140,7 +139,7 @@ class Occupancy:
             # see if the kd_search is quicker
             current_pose = np.array([nearest_node.x, nearest_node.y])
             distance, index = self.KD_tree.query(current_pose)
-            return distance * self.scale  <= (self.car_width*.60) 
+            return distance * self.scale  <= (self.car_width*.8) 
             # .75 adds a little buffer since really we only need half width
                  
         else:
@@ -152,7 +151,7 @@ class Occupancy:
             path = set(tuple((array+(mult*direct_vector)).astype(int)) for mult in range(1, length+1) for array in square)
             for position in path:
                 distance, index = self.KD_tree.query(position)
-                if distance*self.scale <= (self.car_width*.60):
+                if distance*self.scale <= (self.car_width*.75):
                     return True
             
             return False

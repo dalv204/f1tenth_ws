@@ -34,7 +34,7 @@ class PurePursuit(Node):
         super().__init__('pure_pursuit_node')
         with open(config, "r") as f:
             self.param = yaml.safe_load(f)
-        self.pose_topic = self.param["pose_topic"]
+        self.pose_topic = self.param["pose_topic_sim"]
         pose_topic = "/ego_racecar/odom"
         map_topic = "/map"
         scan_topic = "/scan"
@@ -48,7 +48,7 @@ class PurePursuit(Node):
         # TODO - real code to use is above
         self.pose_sub = self.create_subscription(
 
-            PoseStamped,
+            Odometry,
             self.pose_topic,
             self.pose_callback,
             10,
@@ -96,7 +96,7 @@ class PurePursuit(Node):
         # also could do a bit more integration between systems 
         # safety system can be done by properly putting this as "autonomous" code - look at documentation
 
-        self.lookahead_distance = 0.30  # lookahead distance for pure pursuit
+        self.lookahead_distance = .50  # lookahead distance for pure pursuit
         self.current_pose = None
         self.last_position = None
         self.current_position = None
@@ -116,7 +116,9 @@ class PurePursuit(Node):
     def waypoint_callback(self, msg):
         """ should get it back as a group of tuples"""
         received_str = msg.data
-        self.waypoints = ast.literal_eval(received_str)
+        self.waypoints, self.set_speed = ast.literal_eval(received_str)
+        if self.set_speed is None:
+            self.set_speed=1.0
         self.publish_waypoints()
 
     def map_callback(self,msg):
@@ -258,7 +260,7 @@ class PurePursuit(Node):
         drive_msg.drive.speed = self.set_speed  # set constant speed
         self.last_position = np.array(goal_x, goal_y)
         self.drive_pub.publish(drive_msg)
-        y
+        
 
     def log_info(self):
         """ 
