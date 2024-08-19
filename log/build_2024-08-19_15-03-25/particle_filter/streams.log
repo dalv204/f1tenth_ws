@@ -1,0 +1,24 @@
+[2.938s] Invoking command in '/home/dalv204/sandbox/f1tenth_ws/src/particle_filter': PYTHONPATH=/home/dalv204/sandbox/f1tenth_ws/build/particle_filter/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/dalv204/sandbox/f1tenth_ws/install/particle_filter/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base ../../build/particle_filter build --build-base /home/dalv204/sandbox/f1tenth_ws/build/particle_filter/build install --record /home/dalv204/sandbox/f1tenth_ws/build/particle_filter/install.log --install-scripts $base/lib/particle_filter --single-version-externally-managed install_data
+[3.581s] running egg_info
+[3.585s] writing ../../build/particle_filter/particle_filter.egg-info/PKG-INFO
+[3.588s] writing dependency_links to ../../build/particle_filter/particle_filter.egg-info/dependency_links.txt
+[3.590s] writing entry points to ../../build/particle_filter/particle_filter.egg-info/entry_points.txt
+[3.591s] writing requirements to ../../build/particle_filter/particle_filter.egg-info/requires.txt
+[3.592s] writing top-level names to ../../build/particle_filter/particle_filter.egg-info/top_level.txt
+[3.709s] reading manifest file '../../build/particle_filter/particle_filter.egg-info/SOURCES.txt'
+[3.713s] writing manifest file '../../build/particle_filter/particle_filter.egg-info/SOURCES.txt'
+[3.715s] running build
+[3.715s] running build_py
+[3.717s] copying particle_filter/particle_filter.py -> /home/dalv204/sandbox/f1tenth_ws/build/particle_filter/build/lib/particle_filter
+[3.721s] running install
+[3.723s] running install_lib
+[3.751s] copying /home/dalv204/sandbox/f1tenth_ws/build/particle_filter/build/lib/particle_filter/particle_filter.py -> /home/dalv204/sandbox/f1tenth_ws/install/particle_filter/lib/python3.8/site-packages/particle_filter
+[3.767s] byte-compiling /home/dalv204/sandbox/f1tenth_ws/install/particle_filter/lib/python3.8/site-packages/particle_filter/particle_filter.py to particle_filter.cpython-38.pyc
+[3.768s] running install_data
+[3.772s] running install_egg_info
+[3.773s] removing '/home/dalv204/sandbox/f1tenth_ws/install/particle_filter/lib/python3.8/site-packages/particle_filter-0.2.0-py3.8.egg-info' (and everything under it)
+[3.776s] Copying ../../build/particle_filter/particle_filter.egg-info to /home/dalv204/sandbox/f1tenth_ws/install/particle_filter/lib/python3.8/site-packages/particle_filter-0.2.0-py3.8.egg-info
+[3.776s] running install_scripts
+[3.833s] Installing particle_filter script to /home/dalv204/sandbox/f1tenth_ws/install/particle_filter/lib/particle_filter
+[3.833s] writing list of installed files to '/home/dalv204/sandbox/f1tenth_ws/build/particle_filter/install.log'
+[3.973s] Invoked command in '/home/dalv204/sandbox/f1tenth_ws/src/particle_filter' returned '0': PYTHONPATH=/home/dalv204/sandbox/f1tenth_ws/build/particle_filter/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/dalv204/sandbox/f1tenth_ws/install/particle_filter/lib/python3.8/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated setup.py egg_info --egg-base ../../build/particle_filter build --build-base /home/dalv204/sandbox/f1tenth_ws/build/particle_filter/build install --record /home/dalv204/sandbox/f1tenth_ws/build/particle_filter/install.log --install-scripts $base/lib/particle_filter --single-version-externally-managed install_data

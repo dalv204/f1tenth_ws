@@ -96,7 +96,7 @@ class PurePursuit(Node):
         # also could do a bit more integration between systems 
         # safety system can be done by properly putting this as "autonomous" code - look at documentation
 
-        self.lookahead_distance = 0.5  # lookahead distance for pure pursuit
+        self.lookahead_distance = .50  # lookahead distance for pure pursuit
         self.current_pose = None
         self.last_position = None
         self.current_position = None
@@ -116,8 +116,10 @@ class PurePursuit(Node):
     def waypoint_callback(self, msg):
         """ should get it back as a group of tuples"""
         received_str = msg.data
-        self.waypoints = ast.literal_eval(received_str)
-        self.publish_waypoints()
+        self.waypoints, self.set_speed = ast.literal_eval(received_str)
+        if self.set_speed is None:
+            self.set_speed=1.0
+        # self.publish_waypoints()
 
     def map_callback(self,msg):
         """ checks the map data """
@@ -155,14 +157,14 @@ class PurePursuit(Node):
         return point
     
     def publish_waypoints(self):
-        print("MADE IT HERE")
+        
         start_marker = self.init_marker(g=1.0)
         start_marker.points.append(self.make_point(self.waypoints[0]))
-        print("MADE IT FURTHER")
+        
 
         end_marker = self.init_marker(r=1.0)
         end_marker.points.append(self.make_point(self.waypoints[-1]))
-        print("ALMOST THERE")
+        
 
         path_markers = self.init_marker(r=1.0, b=1.0)
 
@@ -258,7 +260,7 @@ class PurePursuit(Node):
         drive_msg.drive.speed = self.set_speed  # set constant speed
         self.last_position = np.array(goal_x, goal_y)
         self.drive_pub.publish(drive_msg)
-        print("should hav eprinted")
+        
 
     def log_info(self):
         """ 

@@ -1,0 +1,29 @@
+[0.666s] Invoking command in '/home/dalv204/sandbox/f1tenth_ws/build/pure_pursuit': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/dalv204/sandbox/f1tenth_ws/install/f1tenth_stack:/home/dalv204/sandbox/f1tenth_ws/install/joy_teleop:/home/dalv204/sandbox/f1tenth_ws/install/particle_filter:/home/dalv204/sandbox/f1tenth_ws/install/mouse_teleop:/home/dalv204/sandbox/f1tenth_ws/install/key_teleop /usr/bin/cmake --build /home/dalv204/sandbox/f1tenth_ws/build/pure_pursuit -- -j6 -l6
+[1.117s] [100%] Built target pure_pursuit_node
+[1.175s] Invoked command in '/home/dalv204/sandbox/f1tenth_ws/build/pure_pursuit' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/dalv204/sandbox/f1tenth_ws/install/f1tenth_stack:/home/dalv204/sandbox/f1tenth_ws/install/joy_teleop:/home/dalv204/sandbox/f1tenth_ws/install/particle_filter:/home/dalv204/sandbox/f1tenth_ws/install/mouse_teleop:/home/dalv204/sandbox/f1tenth_ws/install/key_teleop /usr/bin/cmake --build /home/dalv204/sandbox/f1tenth_ws/build/pure_pursuit -- -j6 -l6
+[1.615s] Invoking command in '/home/dalv204/sandbox/f1tenth_ws/build/pure_pursuit': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/dalv204/sandbox/f1tenth_ws/install/f1tenth_stack:/home/dalv204/sandbox/f1tenth_ws/install/joy_teleop:/home/dalv204/sandbox/f1tenth_ws/install/particle_filter:/home/dalv204/sandbox/f1tenth_ws/install/mouse_teleop:/home/dalv204/sandbox/f1tenth_ws/install/key_teleop /usr/bin/cmake --install /home/dalv204/sandbox/f1tenth_ws/build/pure_pursuit
+[1.745s] -- Install configuration: ""
+[1.747s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/pure_pursuit/lib/pure_pursuit/pure_pursuit_node
+[1.747s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/pure_pursuit/share/pure_pursuit/environment/pythonpath.sh
+[1.748s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/pure_pursuit/share/pure_pursuit/environment/pythonpath.dsv
+[1.748s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/pure_pursuit/lib/python3.8/site-packages/pure_pursuit
+[1.748s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/pure_pursuit/lib/python3.8/site-packages/pure_pursuit/__init__.py
+[1.961s] Listing '/home/dalv204/sandbox/f1tenth_ws/install/pure_pursuit/lib/python3.8/site-packages/pure_pursuit'...
+[2.061s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/pure_pursuit/lib/pure_pursuit/pure_pursuit_node.py
+[2.062s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/pure_pursuit/lib/pure_pursuit/waypoint_logger_node.py
+[2.063s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/pure_pursuit/share/ament_index/resource_index/package_run_dependencies/pure_pursuit
+[2.063s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/pure_pursuit/share/ament_index/resource_index/parent_prefix_path/pure_pursuit
+[2.064s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/pure_pursuit/share/pure_pursuit/environment/ament_prefix_path.sh
+[2.064s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/pure_pursuit/share/pure_pursuit/environment/ament_prefix_path.dsv
+[2.064s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/pure_pursuit/share/pure_pursuit/environment/path.sh
+[2.064s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/pure_pursuit/share/pure_pursuit/environment/path.dsv
+[2.064s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/pure_pursuit/share/pure_pursuit/local_setup.bash
+[2.065s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/pure_pursuit/share/pure_pursuit/local_setup.sh
+[2.065s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/pure_pursuit/share/pure_pursuit/local_setup.zsh
+[2.065s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/pure_pursuit/share/pure_pursuit/local_setup.dsv
+[2.065s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/pure_pursuit/share/pure_pursuit/package.dsv
+[2.065s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/pure_pursuit/share/ament_index/resource_index/packages/pure_pursuit
+[2.066s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/pure_pursuit/share/pure_pursuit/cmake/pure_pursuitConfig.cmake
+[2.066s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/pure_pursuit/share/pure_pursuit/cmake/pure_pursuitConfig-version.cmake
+[2.066s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/pure_pursuit/share/pure_pursuit/package.xml
+[2.076s] Invoked command in '/home/dalv204/sandbox/f1tenth_ws/build/pure_pursuit' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/dalv204/sandbox/f1tenth_ws/install/f1tenth_stack:/home/dalv204/sandbox/f1tenth_ws/install/joy_teleop:/home/dalv204/sandbox/f1tenth_ws/install/particle_filter:/home/dalv204/sandbox/f1tenth_ws/install/mouse_teleop:/home/dalv204/sandbox/f1tenth_ws/install/key_teleop /usr/bin/cmake --install /home/dalv204/sandbox/f1tenth_ws/build/pure_pursuit

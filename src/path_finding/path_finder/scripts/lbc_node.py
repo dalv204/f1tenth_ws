@@ -40,7 +40,7 @@ class LBC(Node):
         with open(config, "r") as f:
             self.param = yaml.safe_load(f)
 
-        self.pose_topic = self.param["pose_topic_sim"]
+        self.pose_topic = self.param["pose_topic"]
         scan_topic = "/scan"
         waypoints = "/custom_waypoints"
         global_path_topic = "/global_path"
@@ -50,7 +50,7 @@ class LBC(Node):
 
         # usually PoseStamped
         self.pose_sub_ = self.create_subscription(
-            Odometry,
+            PoseStamped,
             self.pose_topic,
             self.pose_callback,
             1
@@ -285,6 +285,23 @@ class LBC(Node):
                     best_length, best_curvature = length, curvature
                     best_p1, best_p2 = p1, p2
         if best_cost == float('inf'):
+            # try generating a simpler curve
+            for candidate in candidates:
+                for angle in angle_range:
+                    direction_vector = np.array([np.cos(angle), np.sin(angle)])
+                    ex_shift = exit_control * direction_vector
+                    entrance_vector = np.array([np.cos(self.yaw), np.sin(self.yaw)])
+                    ent_shift = control_point_dist * entrance_vector
+                    p1 = p0 + ent_shift
+                    p2 = p3 - ex_shift
+                    path = self.bezier_cubic(p0,p1,p2, candidate)
+                    if cost < best_cost:
+                        best_cost = cost
+                        best_path = path
+                        best_length, best_curvature = length, curvature
+
+        if best_cost==float("inf"):
+            
             return None, None
         # print(best_cost)
         speed = self.compute_speed(best_length, best_curvature)
@@ -325,7 +342,7 @@ class LBC(Node):
         return np.array(curve)
             
 
-    def bezier_cubic(self, p0, p1, p2, p3, num_points=50): ## LOCAL ##
+    def bezier_cubic(self, p0, p1, p2, p3, num_points=30): ## LOCAL ##
         """ creates bezier cubic points based on 4 contact points"""
         # TODO - !H -- this probably needs some testing to see how to position X and Y
         #       -- also need to figure out how to convert to real coords

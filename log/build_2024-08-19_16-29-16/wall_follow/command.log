@@ -1,0 +1,4 @@
+Invoking command in '/home/dalv204/sandbox/f1tenth_ws/build/wall_follow': /usr/bin/cmake --build /home/dalv204/sandbox/f1tenth_ws/build/wall_follow -- -j6 -l6
+Invoked command in '/home/dalv204/sandbox/f1tenth_ws/build/wall_follow' returned '0': /usr/bin/cmake --build /home/dalv204/sandbox/f1tenth_ws/build/wall_follow -- -j6 -l6
+Invoking command in '/home/dalv204/sandbox/f1tenth_ws/build/wall_follow': /usr/bin/cmake --install /home/dalv204/sandbox/f1tenth_ws/build/wall_follow
+Invoked command in '/home/dalv204/sandbox/f1tenth_ws/build/wall_follow' returned '0': /usr/bin/cmake --install /home/dalv204/sandbox/f1tenth_ws/build/wall_follow
