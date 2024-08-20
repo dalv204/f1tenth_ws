@@ -105,7 +105,8 @@ class LBC(Node):
         self.counter=0
         self.speed = 1.0
         self.min_length,self.max_length = 20, 50 #empirically gathered
-        
+        self.min_turning_radius = .80 # I believe it's 70 cm
+        self.lookahead_dist=None
 
     def pose_callback(self,pose_msg):
         """ updates position and runs localizer (if can) """
@@ -235,14 +236,16 @@ class LBC(Node):
             # ^^ don't do anything with priority pick for now 
             candidates = point[1]
             entry_angle = point[2]
-            control_point_dist = 0.40 / self.Grid.scale # 1 meter # was .40 before (.40 works very well except turn 1) (.3 works great turn one, not turn 2)
+            control_point_dist = 0.30 / self.Grid.scale # 1 meter # was .40 before (.40 works very well except turn 1) (.3 works great turn one, not turn 2)
             control_point_dist_exit = 0.85 / self.Grid.scale # was .7 before (.85 and .9 and (sometimes .8) work decently for turn radius)
-            return self.candidate_selection(candidates, entry_angle, control_point_dist, control_point_dist_exit)
+            return self.candidate_selection(priority,candidates, entry_angle, control_point_dist, control_point_dist_exit)
 
             # TODO - should do parallel processing with local and global so no interference
             # TODO - try out once having tested this current alg
 
-    def candidate_selection(self, candidates, angle, control_point_dist, exit_control, num_angles=5):
+    
+
+    def candidate_selection(self, main_point, candidates, angle, control_point_dist, exit_control, num_angles=5):
         """ uses possible points and entry_angle buffer to decide best paths 
         
         candidates: must be iterable
@@ -252,17 +255,34 @@ class LBC(Node):
         # TODO - NEED TO INTEGRATE THIS WITH OTHER LOCAL BEHAVIOR!! AND TEST THIS HAHAHA
         # TODO - MAKE SURE TO ALSO TEST THE BAND CREATION, DON'T KNOW IF THAT WORKS YET
         p0 = self.coord_x, self.coord_y
+        # p0 = p0 - (0.20/self.Grid.scale)*np.array([np.cos(self.yaw), np.sin(self.yaw)])
         best_path = None
         best_cost = float('inf')
         best_p1 = best_p2 = None
         angle_buffer = np.radians(10) # current degree buffer in radians
-        angle_range = np.linspace(angle-angle_buffer, angle+angle_buffer, num_angles)
+        angle_range = np.linspace(-angle_buffer, angle_buffer, num_angles)
+        threshold_distance = 1.1 # meters
+        candidate_threshold = 4
+        num_candidates = len(candidates)
+        candid_distance = np.linalg.norm(np.array(main_point) - p0) * self.Grid.scale
+        if candid_distance < threshold_distance:
+                ratio = candid_distance / threshold_distance
+                exit_control *= ratio
+                control_point_dist *=ratio
+        elif num_candidates < candidate_threshold:
+            ratio = num_candidates / candidate_threshold
+            exit_control *= ratio
+            control_point_dist *=ratio
+        
 
         for candidate in candidates:
-            for angle in angle_range:
+            
+            for angle_buff in angle_range:
                 # create the control points 
                 # TODO - P0 and candidate are both Node objects, so need to do a __sub__ method
-                direction_vector = np.array([np.cos(angle), np.sin(angle)])
+                direction_vector = np.array([np.cos(angle+angle_buff), np.sin(angle+angle_buff)])
+                
+
                 ex_shift = exit_control * direction_vector
                 entrance_vector = np.array([np.cos(self.yaw), np.sin(self.yaw)])
                 ent_shift = control_point_dist * entrance_vector
@@ -284,29 +304,71 @@ class LBC(Node):
                     best_path = path
                     best_length, best_curvature = length, curvature
                     best_p1, best_p2 = p1, p2
-        if best_cost == float('inf'):
-            # try generating a simpler curve
-            for candidate in candidates:
-                for angle in angle_range:
-                    direction_vector = np.array([np.cos(angle), np.sin(angle)])
-                    ex_shift = exit_control * direction_vector
-                    entrance_vector = np.array([np.cos(self.yaw), np.sin(self.yaw)])
-                    ent_shift = control_point_dist * entrance_vector
-                    p1 = p0 + ent_shift
-                    p2 = p3 - ex_shift
-                    path = self.bezier_cubic(p0,p1,p2, candidate)
-                    if cost < best_cost:
-                        best_cost = cost
-                        best_path = path
-                        best_length, best_curvature = length, curvature
+        # if best_cost == float('inf'):
+        #     # try generating a simpler curve
+        #     for candidate in candidates:
+        #         for angle in angle_range:
+        #             direction_vector = np.array([np.cos(angle), np.sin(angle)])
+        #             ex_shift = exit_control * direction_vector
+        #             entrance_vector = np.array([np.cos(self.yaw), np.sin(self.yaw)])
+        #             ent_shift = control_point_dist * entrance_vector
+        #             p1 = p0 + ent_shift
+        #             p2 = p3 - ex_shift
+        #             path = self.bezier_cubic(p0,p1,p2, candidate)
+        #             if cost < best_cost:
+        #                 best_cost = cost
+        #                 best_path = path
+        #                 best_length, best_curvature = length, curvature
 
         if best_cost==float("inf"):
+            print("NOOOO")
+            print(best_cost)
             
             return None, None
         # print(best_cost)
         speed = self.compute_speed(best_length, best_curvature)
         # best_cost, best_p1, best_p2
         return best_path, speed
+    
+
+    def bezier_quadratic(self, p0, p1, p2, num_points=15):
+        # print(f"{p0=},{p1=},{p2=}")
+        A = 0.5 * np.linalg.norm(np.cross(p1-p0, p2-p1))
+        m = 0.5 * (p0+p2)
+        k0 = A / (np.linalg.norm(p1-p0)**3)
+        k1 = A / (np.linalg.norm(p2-p1)**3)
+        # print(f"{np.linalg.norm(p1-m)=}")
+        k_max_curvature = (np.linalg.norm(p1-m)**3) / (A**2)
+        midpoint_dist = np.linalg.norm(p2-m)
+        if midpoint_dist < np.linalg.norm(p1- (.5*(p0+m))) and midpoint_dist < np.linalg.norm(p1-(.5*(m+p2))):
+            max_curvature = k_max_curvature
+        else:
+            max_curvature = max(k0,k1)
+        if 1/max_curvature < self.min_turning_radius:
+            print("CURVATURE FAILURE")
+            # return
+        t_values = np.linspace(0, 1, num_points)
+        curve = []
+        for t in t_values:
+            # print("trying a value")
+            point = ((1 - t) ** 2 * np.array(p0) +
+                        2 * ((1 - t)) * t * np.array(p1) +
+                         t ** 2 * np.array(p2)).astype(int)
+            # int_point = point.astype(int)
+            check_point = tuple(point)
+            point_node = TreeNode(point[0], point[1])
+            if check_point in self.known_failures:
+                # print("CAUGHT A FAILURE")
+                return 
+            # elif check_point not in self.checked:
+            #     self.checked.add(check_point)
+            #     if self.Grid.check_collision(point_node, point_node, kd_mode=True):
+            #         # print("CAN FIND COLLISIONS")
+            #         self.known_failures.add(check_point)
+            #         return  # don't want to get anything from it.. just give up
+            curve.append(point)
+        return np.array(curve)
+
 
     def bezier_quintic(self, p0, p1, p2, p3, p4, p5, num_points = 30):
         """ creates a quintic bezier curve for more flexibility in angle """
@@ -318,7 +380,7 @@ class LBC(Node):
 
         t_values = np.linspace(0, 1, num_points)
         curve = []
-        for t in t_values:
+        for num, t in enumerate(t_values):
             # print("trying a value")
             point = ((1 - t) ** 5 * np.array(p0) +
                         5 * ((1 - t) ** 4) * t * np.array(p1) +
@@ -392,9 +454,8 @@ class LBC(Node):
         normalized_curve = abs(curvature) / (abs(curvature) + 1) # (length +1)
         normalized_length = self.normalize_length(length)
         # normalized_length = length / (length + 1)
-        print(f"{normalized_curve=}, {normalized_length=}")
         speed = (max_speed * (normalized_length *(abs(1-normalized_curve)))) + min_speed
-        print(f"{normalized_curve=}, {normalized_length=}, {speed=}, {self.min_length=}, {self.max_length=}")
+        # print(f"{normalized_curve=}, {normalized_length=}, {speed=}, {self.min_length=}, {self.max_length=}")
         speed = max(min_speed, min(speed, max_speed))
         
         print(f"{speed=}")
@@ -422,13 +483,15 @@ class LBC(Node):
         # -- use s (straight) and c (curve) 
         # checks if the closest point then looks for the next curve point 
         # and grabs the last point (looks for the next curve and goes back one index)
-        lookahead_dist = 1.0 # meters
-        lookahead_shift = int((lookahead_dist / self.param["critical_point_tolerance"])+0.5) # .5 rounds
+        self.lookahead_dist = 1.0 # meters
+        lookahead_shift = int((self.lookahead_dist / self.param["critical_point_tolerance"])+0.60) # .5 rounds
 
         current_pose = np.array([self.coord_x, self.coord_y])
         distance, index = self.kd_tree.query(current_pose)
-        lookahead_index = (index + lookahead_shift) % self.global_path_length
-
+        lookahead_index = (index + lookahead_shift) % (self.global_path_length-1)
+        while np.linalg.norm(np.array([self.coord_x, self.coord_y]) - self.global_path[lookahead_index][0])*self.Grid.scale < self.lookahead_dist:
+            lookahead_index = (lookahead_index +1) % (self.global_path_length-1)
+        # print(f"{lookahead_shift=}")
         # returns the local goal
         return self.global_path[lookahead_index]
     

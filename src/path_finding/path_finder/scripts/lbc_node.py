@@ -40,7 +40,7 @@ class LBC(Node):
         with open(config, "r") as f:
             self.param = yaml.safe_load(f)
 
-        self.pose_topic = self.param["pose_topic_sim"]
+        self.pose_topic = self.param["pose_topic"]
         scan_topic = "/scan"
         waypoints = "/custom_waypoints"
         global_path_topic = "/global_path"
@@ -50,7 +50,7 @@ class LBC(Node):
 
         # usually PoseStamped
         self.pose_sub_ = self.create_subscription(
-            Odometry,
+            PoseStamped,
             self.pose_topic,
             self.pose_callback,
             1
@@ -236,79 +236,13 @@ class LBC(Node):
             # ^^ don't do anything with priority pick for now 
             candidates = point[1]
             entry_angle = point[2]
-            control_point_dist = 0.40 / self.Grid.scale # 1 meter # was .40 before (.40 works very well except turn 1) (.3 works great turn one, not turn 2)
+            control_point_dist = 0.30 / self.Grid.scale # 1 meter # was .40 before (.40 works very well except turn 1) (.3 works great turn one, not turn 2)
             control_point_dist_exit = 0.85 / self.Grid.scale # was .7 before (.85 and .9 and (sometimes .8) work decently for turn radius)
             return self.candidate_selection(priority,candidates, entry_angle, control_point_dist, control_point_dist_exit)
 
             # TODO - should do parallel processing with local and global so no interference
             # TODO - try out once having tested this current alg
 
-            
-
-    def candidate_selection__(self, candidates, angle, control_point_dist, exit_control, num_angles=5):
-        """ uses possible points and entry_angle buffer to decide best paths 
-        
-        candidates: must be iterable
-        angle: must be radians
-
-        """
-        # TODO - NEED TO INTEGRATE THIS WITH OTHER LOCAL BEHAVIOR!! AND TEST THIS HAHAHA
-        # TODO - MAKE SURE TO ALSO TEST THE BAND CREATION, DON'T KNOW IF THAT WORKS YET
-        p0 = self.coord_x, self.coord_y
-        curvature_factor = 1
-        best_path = None
-        best_cost = float('inf')
-        best_p1 = best_p2 = None
-        angle_buffer = np.radians(10) # current degree buffer in radians
-        angle_range = np.linspace(angle-angle_buffer, angle+angle_buffer, num_angles)
-        for candidate in candidates:
-            for angle in angle_range:
-                # create the control points 
-                # TODO - P0 and candidate are both Node objects, so need to do a __sub__ method
-                direction_vector = np.array([np.cos(angle), np.sin(angle)])
-                full_distance = np.linalg.norm(np.array(p0)-candidate)
-                ex_shift = exit_control * direction_vector
-                entrance_vector = np.array([np.cos(self.yaw), np.sin(self.yaw)])
-                ent_shift = control_point_dist * entrance_vector
-                # TODO - !M -  currently have simplified bezier quintic
-                #       may want to institute more complex way to define p2,p3
-                p1 = p0 + (entrance_vector * self.lookahead_dist/3)
-                
-                p3 = candidate - (direction_vector * self.lookahead_dist/3)
-                angle_diff = angle + self.yaw
-                weight1 = .5 + curvature_factor*angle_diff
-                weight3 = .5 - curvature_factor*angle_diff
-                p2 = p1 *weight1 + p3*weight3
-                # p2 = (p1+p3)/2
-                # print(f"{p0=}, {candidate=}")
-                # p3 = p4 - ex_shift*.60 #adding a little more weight here to see if
-                # p3 = 
-                # it helps with sharp turns
-                path = self.bezier_quadratic(p0, p1, p2)
-                second_path = self.bezier_quadratic(p2, p3, candidate)
-                if path is not None and second_path is not None:
-                    # print(f"{path=}")
-                    new_path = np.concatenate((path, second_path), axis=0)
-                else:
-                    continue
-                # path = self.bezier_quintic(p0,p1,p2,p3,p4,candidate)
-
-                # path = self.bezier_cubic(p0, p1, p2, candidate)
-                # print(self.compute_cost(path))
-                cost, length, curvature = self.compute_cost(new_path)
-                if cost < best_cost:
-                    best_cost = cost
-                    best_path = path
-                    best_length, best_curvature = length, curvature
-                    best_p1, best_p2 = p1, p2
-
-        if best_cost==float("inf"):
-            
-            return None, None
-        # print(best_cost)
-        speed = self.compute_speed(best_length, best_curvature)
-        # best_cost, best_p1, best_p2
-        return best_path, speed
     
 
     def candidate_selection(self, main_point, candidates, angle, control_point_dist, exit_control, num_angles=5):
@@ -321,13 +255,13 @@ class LBC(Node):
         # TODO - NEED TO INTEGRATE THIS WITH OTHER LOCAL BEHAVIOR!! AND TEST THIS HAHAHA
         # TODO - MAKE SURE TO ALSO TEST THE BAND CREATION, DON'T KNOW IF THAT WORKS YET
         p0 = self.coord_x, self.coord_y
-        p0 = (0.20/self.Grid.scale)*np.array([np.cos(self.yaw), np.sin(self.yaw)]) + p0
+        # p0 = p0 - (0.20/self.Grid.scale)*np.array([np.cos(self.yaw), np.sin(self.yaw)])
         best_path = None
         best_cost = float('inf')
         best_p1 = best_p2 = None
         angle_buffer = np.radians(10) # current degree buffer in radians
         angle_range = np.linspace(-angle_buffer, angle_buffer, num_angles)
-        threshold_distance = 1.5 # meters
+        threshold_distance = 1.1 # meters
         candidate_threshold = 4
         num_candidates = len(candidates)
         candid_distance = np.linalg.norm(np.array(main_point) - p0) * self.Grid.scale
@@ -550,11 +484,13 @@ class LBC(Node):
         # checks if the closest point then looks for the next curve point 
         # and grabs the last point (looks for the next curve and goes back one index)
         self.lookahead_dist = 1.0 # meters
-        lookahead_shift = int((self.lookahead_dist / self.param["critical_point_tolerance"])+0.51) # .5 rounds
+        lookahead_shift = int((self.lookahead_dist / self.param["critical_point_tolerance"])+0.60) # .5 rounds
 
         current_pose = np.array([self.coord_x, self.coord_y])
         distance, index = self.kd_tree.query(current_pose)
         lookahead_index = (index + lookahead_shift) % (self.global_path_length-1)
+        while np.linalg.norm(np.array([self.coord_x, self.coord_y]) - self.global_path[lookahead_index][0])*self.Grid.scale < self.lookahead_dist:
+            lookahead_index = (lookahead_index +1) % (self.global_path_length-1)
         # print(f"{lookahead_shift=}")
         # returns the local goal
         return self.global_path[lookahead_index]

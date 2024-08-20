@@ -678,10 +678,10 @@ class ParticleFiler(Node):
                 # compute the expected value of the robot pose
                 self.inferred_pose = self.expected_pose()
                 # NOTE - CHANGED BY ME TO REFLECT POSITION OF BASE LINK
-                yaw = self.quaternion_to_yaw(tf_transformations.quaternion_from_euler(0., 0., self.inferred_pose[2]))
-                vector = np.array([np.cos(yaw), np.sin(yaw)]) * .27 # 30 cm shift to base link
-                adjusted_pose = np.array([self.inferred_pose[0], self.inferred_pose[1]]) - vector
-                self.inferred_pose[0], self.inferred_pose[1]= adjusted_pose[0], adjusted_pose[1]
+                # yaw = self.quaternion_to_yaw(tf_transformations.quaternion_from_euler(0., 0., self.inferred_pose[2]))
+                # vector = np.array([np.cos(yaw), np.sin(yaw)]) * .27 # 30 cm shift to base link
+                # adjusted_pose = np.array([self.inferred_pose[0], self.inferred_pose[1]]) - vector
+                # self.inferred_pose[0], self.inferred_pose[1]= adjusted_pose[0], adjusted_pose[1]
 
 
                 self.state_lock.release()

@@ -34,7 +34,7 @@ class PurePursuit(Node):
         super().__init__('pure_pursuit_node')
         with open(config, "r") as f:
             self.param = yaml.safe_load(f)
-        self.pose_topic = self.param["pose_topic_sim"]
+        self.pose_topic = self.param["pose_topic"]
         pose_topic = "/ego_racecar/odom"
         map_topic = "/map"
         scan_topic = "/scan"
@@ -48,7 +48,7 @@ class PurePursuit(Node):
         # TODO - real code to use is above
         self.pose_sub = self.create_subscription(
 
-            Odometry,
+            PoseStamped,
             self.pose_topic,
             self.pose_callback,
             10,
