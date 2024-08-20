@@ -49,7 +49,7 @@ class DualSearch(Node):
         with open(config, "r") as f:
             self.param = yaml.safe_load(f)
         
-        self.pose_topic = self.param["pose_topic"]
+        self.pose_topic = self.param["pose_topic_sim"]
         scan_topic = "/scan"
         clicked_topic = "/clicked_point"
         waypoints = "/custom_waypoints"
@@ -76,7 +76,7 @@ class DualSearch(Node):
 
 
         self.pose_sub_ = self.create_subscription(
-            PoseStamped,
+            Odometry,
             self.pose_topic,
             self.pose_callback,
             1)

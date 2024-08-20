@@ -139,7 +139,7 @@ class Occupancy:
             # see if the kd_search is quicker
             current_pose = np.array([nearest_node.x, nearest_node.y])
             distance, index = self.KD_tree.query(current_pose)
-            return distance * self.scale  <= (self.car_width*.8) 
+            return distance * self.scale  <= (self.car_width*.5) 
             # .75 adds a little buffer since really we only need half width
                  
         else:
