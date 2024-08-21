@@ -107,6 +107,7 @@ class LBC(Node):
         self.min_length,self.max_length = 20, 50 #empirically gathered
         self.min_turning_radius = .80 # I believe it's 70 cm
         self.lookahead_dist=None
+        self.recursion_depth=0
 
     def pose_callback(self,pose_msg):
         """ updates position and runs localizer (if can) """
@@ -236,7 +237,7 @@ class LBC(Node):
             # ^^ don't do anything with priority pick for now 
             candidates = point[1]
             entry_angle = point[2]
-            control_point_dist = 0.30 / self.Grid.scale # 1 meter # was .40 before (.40 works very well except turn 1) (.3 works great turn one, not turn 2)
+            control_point_dist = 0.35 / self.Grid.scale # 1 meter # was .40 before (.40 works very well except turn 1) (.3 works great turn one, not turn 2)
             control_point_dist_exit = 0.85 / self.Grid.scale # was .7 before (.85 and .9 and (sometimes .8) work decently for turn radius)
             return self.candidate_selection(priority,candidates, entry_angle, control_point_dist, control_point_dist_exit)
 
@@ -245,7 +246,7 @@ class LBC(Node):
 
     
 
-    def candidate_selection(self, main_point, candidates, angle, control_point_dist, exit_control, num_angles=5):
+    def candidate_selection(self, main_point, candidates, angle, control_point_dist, exit_control, multiplier=1, num_angles=5):
         """ uses possible points and entry_angle buffer to decide best paths 
         
         candidates: must be iterable
@@ -255,7 +256,7 @@ class LBC(Node):
         # TODO - NEED TO INTEGRATE THIS WITH OTHER LOCAL BEHAVIOR!! AND TEST THIS HAHAHA
         # TODO - MAKE SURE TO ALSO TEST THE BAND CREATION, DON'T KNOW IF THAT WORKS YET
         p0 = self.coord_x, self.coord_y
-        # p0 = p0 - (0.20/self.Grid.scale)*np.array([np.cos(self.yaw), np.sin(self.yaw)])
+        # p0 = p0 - (0.05/self.Grid.scale)*np.array([np.cos(self.yaw), np.sin(self.yaw)])
         best_path = None
         best_cost = float('inf')
         best_p1 = best_p2 = None
@@ -285,7 +286,7 @@ class LBC(Node):
 
                 ex_shift = exit_control * direction_vector
                 entrance_vector = np.array([np.cos(self.yaw), np.sin(self.yaw)])
-                ent_shift = control_point_dist * entrance_vector
+                ent_shift = control_point_dist * entrance_vector * multiplier
                 # TODO - !M -  currently have simplified bezier quintic
                 #       may want to institute more complex way to define p2,p3
                 p1 = p0 + ent_shift
@@ -321,6 +322,14 @@ class LBC(Node):
         #                 best_length, best_curvature = length, curvature
 
         if best_cost==float("inf"):
+            if self.recursion_depth<6:
+                self.recursion_depth+=1
+                if self.candidate_selection(main_point,candidates, angle, control_point_dist, exit_control, multiplier=1/.75) is None:
+                    return self.candidate_selection(main_point,candidates, angle, control_point_dist, exit_control, multiplier=.75)
+
+            elif self.recursion_depth<12:
+                self.recursion_depth+=1
+                return self.candidate_selection(main_point,candidates, angle, control_point_dist, exit_control, multiplier=.75)
             print("NOOOO")
             print(best_cost)
             
@@ -483,15 +492,15 @@ class LBC(Node):
         # -- use s (straight) and c (curve) 
         # checks if the closest point then looks for the next curve point 
         # and grabs the last point (looks for the next curve and goes back one index)
-        self.lookahead_dist = 1.0 # meters
+        self.lookahead_dist = 1.5 # meters
         lookahead_shift = int((self.lookahead_dist / self.param["critical_point_tolerance"])+0.60) # .5 rounds
 
         current_pose = np.array([self.coord_x, self.coord_y])
         distance, index = self.kd_tree.query(current_pose)
         lookahead_index = (index + lookahead_shift) % (self.global_path_length-1)
-        while np.linalg.norm(np.array([self.coord_x, self.coord_y]) - self.global_path[lookahead_index][0])*self.Grid.scale < self.lookahead_dist:
-            lookahead_index = (lookahead_index +1) % (self.global_path_length-1)
-        # print(f"{lookahead_shift=}")
+        # while np.linalg.norm(np.array([self.coord_x, self.coord_y]) - self.global_path[lookahead_index][0])*self.Grid.scale < self.lookahead_dist:
+        #     lookahead_index = (lookahead_index +1) % (self.global_path_length-1)
+        # # print(f"{lookahead_shift=}")
         # returns the local goal
         return self.global_path[lookahead_index]
     

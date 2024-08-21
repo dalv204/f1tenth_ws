@@ -702,7 +702,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
                 # need to check this heading logic
                 heading = np.arctan2(v21[1],v21[0]) # y/x 
                 mult=0
-                while not self.Grid.check_collision(new_pos, new_pos, kd_mode=True):
+                while not self.Grid.check_collision(new_pos, new_pos, kd_mode=True) and abs(mult)<10:
                     mult +=1
                     bar.add((new_pos.x, new_pos.y))
                     new_value = (new_pos + (perp*mult)).astype(int)
@@ -711,7 +711,7 @@ class RRT(DualSearch):  # TODO - could make it a child class of dual search node
                 mult=0
                 new_pos = TreeNode(coords[i].x, coords[i].y)
 
-                while not self.Grid.check_collision(new_pos, new_pos, kd_mode=True):
+                while not self.Grid.check_collision(new_pos, new_pos, kd_mode=True) and abs(mult)<10:
                     mult -=1
                     bar.add((new_pos.x, new_pos.y))
                     new_value = (new_pos + (perp*mult)).astype(int)

@@ -1,0 +1,33 @@
+[1.021s] Invoking command in '/home/dalv204/sandbox/f1tenth_ws/build/path_finder': /usr/bin/cmake --build /home/dalv204/sandbox/f1tenth_ws/build/path_finder -- -j6 -l6
+[1.349s] [100%] Built target rrt_node
+[2.227s] Invoked command in '/home/dalv204/sandbox/f1tenth_ws/build/path_finder' returned '0': /usr/bin/cmake --build /home/dalv204/sandbox/f1tenth_ws/build/path_finder -- -j6 -l6
+[2.587s] Invoking command in '/home/dalv204/sandbox/f1tenth_ws/build/path_finder': /usr/bin/cmake --install /home/dalv204/sandbox/f1tenth_ws/build/path_finder
+[2.663s] -- Install configuration: ""
+[2.665s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/lib/path_finder/rrt_node
+[2.665s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/environment/pythonpath.sh
+[2.665s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/environment/pythonpath.dsv
+[2.665s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/lib/python3.8/site-packages/path_finder
+[2.668s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/lib/python3.8/site-packages/path_finder/__init__.py
+[2.922s] Listing '/home/dalv204/sandbox/f1tenth_ws/install/path_finder/lib/python3.8/site-packages/path_finder'...
+[2.972s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/lib/path_finder/rrt_node.py
+[2.972s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/lib/path_finder/pp_logic.py
+[2.972s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/lib/path_finder/lbc_node.py
+[2.972s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/lib/path_finder/util.py
+[2.973s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/config
+[2.973s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/config/params.yaml
+[2.977s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/ament_index/resource_index/package_run_dependencies/path_finder
+[2.978s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/ament_index/resource_index/parent_prefix_path/path_finder
+[2.978s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/environment/ament_prefix_path.sh
+[2.979s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/environment/ament_prefix_path.dsv
+[2.979s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/environment/path.sh
+[2.979s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/environment/path.dsv
+[2.982s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/local_setup.bash
+[2.983s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/local_setup.sh
+[2.983s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/local_setup.zsh
+[2.983s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/local_setup.dsv
+[2.983s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/package.dsv
+[2.983s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/ament_index/resource_index/packages/path_finder
+[2.983s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/cmake/path_finderConfig.cmake
+[2.983s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/cmake/path_finderConfig-version.cmake
+[2.984s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/path_finder/share/path_finder/package.xml
+[2.984s] Invoked command in '/home/dalv204/sandbox/f1tenth_ws/build/path_finder' returned '0': /usr/bin/cmake --install /home/dalv204/sandbox/f1tenth_ws/build/path_finder

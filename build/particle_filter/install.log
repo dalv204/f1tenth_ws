@@ -13,10 +13,12 @@
 /home/dalv204/sandbox/f1tenth_ws/install/particle_filter/share/particle_filter/maps/basement_fixed.map.yaml
 /home/dalv204/sandbox/f1tenth_ws/install/particle_filter/share/particle_filter/maps/new_circuit_ok_long.yaml
 /home/dalv204/sandbox/f1tenth_ws/install/particle_filter/share/particle_filter/maps/new_new_map_really_mid.pgm
+/home/dalv204/sandbox/f1tenth_ws/install/particle_filter/share/particle_filter/maps/beispiel_map_redo1.yaml
 /home/dalv204/sandbox/f1tenth_ws/install/particle_filter/share/particle_filter/maps/new_circuit_ok.yaml
 /home/dalv204/sandbox/f1tenth_ws/install/particle_filter/share/particle_filter/maps/new_circuit_ok.pgm
 /home/dalv204/sandbox/f1tenth_ws/install/particle_filter/share/particle_filter/maps/levine.pgm
 /home/dalv204/sandbox/f1tenth_ws/install/particle_filter/share/particle_filter/maps/new_new_map_ok_long.yaml
+/home/dalv204/sandbox/f1tenth_ws/install/particle_filter/share/particle_filter/maps/beispiel_map_redo1.pgm
 /home/dalv204/sandbox/f1tenth_ws/install/particle_filter/share/particle_filter/maps/basement_fixed.png
 /home/dalv204/sandbox/f1tenth_ws/install/particle_filter/share/particle_filter/launch/localize_launch.py
 /home/dalv204/sandbox/f1tenth_ws/install/particle_filter/share/particle_filter/config/localize.yaml

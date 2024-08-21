@@ -13,6 +13,8 @@ config/localize.yaml
 launch/localize_launch.py
 maps/basement_fixed.map.yaml
 maps/basement_fixed.png
+maps/beispiel_map_redo1.pgm
+maps/beispiel_map_redo1.yaml
 maps/levine.pgm
 maps/levine.yaml
 maps/new_circuit_ok.pgm

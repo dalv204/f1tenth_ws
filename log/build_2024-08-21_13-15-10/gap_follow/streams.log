@@ -1,0 +1,28 @@
+[1.785s] Invoking command in '/home/dalv204/sandbox/f1tenth_ws/build/gap_follow': /usr/bin/cmake --build /home/dalv204/sandbox/f1tenth_ws/build/gap_follow -- -j6 -l6
+[2.177s] [100%] Built target reactive_node
+[2.271s] Invoked command in '/home/dalv204/sandbox/f1tenth_ws/build/gap_follow' returned '0': /usr/bin/cmake --build /home/dalv204/sandbox/f1tenth_ws/build/gap_follow -- -j6 -l6
+[2.539s] Invoking command in '/home/dalv204/sandbox/f1tenth_ws/build/gap_follow': /usr/bin/cmake --install /home/dalv204/sandbox/f1tenth_ws/build/gap_follow
+[2.637s] -- Install configuration: ""
+[2.640s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/gap_follow/lib/gap_follow/reactive_node
+[2.641s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/gap_follow/share/gap_follow/environment/pythonpath.sh
+[2.641s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/gap_follow/share/gap_follow/environment/pythonpath.dsv
+[2.641s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/gap_follow/lib/python3.8/site-packages/gap_follow
+[2.642s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/gap_follow/lib/python3.8/site-packages/gap_follow/__init__.py
+[2.780s] Listing '/home/dalv204/sandbox/f1tenth_ws/install/gap_follow/lib/python3.8/site-packages/gap_follow'...
+[2.822s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/gap_follow/lib/gap_follow/reactive_node.py
+[2.822s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/gap_follow/share/ament_index/resource_index/package_run_dependencies/gap_follow
+[2.822s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/gap_follow/share/ament_index/resource_index/parent_prefix_path/gap_follow
+[2.822s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/gap_follow/share/gap_follow/environment/ament_prefix_path.sh
+[2.822s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/gap_follow/share/gap_follow/environment/ament_prefix_path.dsv
+[2.822s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/gap_follow/share/gap_follow/environment/path.sh
+[2.823s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/gap_follow/share/gap_follow/environment/path.dsv
+[2.823s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/gap_follow/share/gap_follow/local_setup.bash
+[2.823s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/gap_follow/share/gap_follow/local_setup.sh
+[2.823s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/gap_follow/share/gap_follow/local_setup.zsh
+[2.823s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/gap_follow/share/gap_follow/local_setup.dsv
+[2.823s] -- Installing: /home/dalv204/sandbox/f1tenth_ws/install/gap_follow/share/gap_follow/package.dsv
+[2.827s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/gap_follow/share/ament_index/resource_index/packages/gap_follow
+[2.827s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/gap_follow/share/gap_follow/cmake/gap_followConfig.cmake
+[2.827s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/gap_follow/share/gap_follow/cmake/gap_followConfig-version.cmake
+[2.827s] -- Up-to-date: /home/dalv204/sandbox/f1tenth_ws/install/gap_follow/share/gap_follow/package.xml
+[2.939s] Invoked command in '/home/dalv204/sandbox/f1tenth_ws/build/gap_follow' returned '0': /usr/bin/cmake --install /home/dalv204/sandbox/f1tenth_ws/build/gap_follow
